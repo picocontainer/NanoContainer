@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE container [
+<!ENTITY subone SYSTEM "subone.xml">
+]>
+
+<container>
+    &subone;
+</container>

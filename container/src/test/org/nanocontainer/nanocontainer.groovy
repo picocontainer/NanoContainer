@@ -1,0 +1,1 @@
+pico = new org.picocontainer.defaults.DefaultPicoContainer()

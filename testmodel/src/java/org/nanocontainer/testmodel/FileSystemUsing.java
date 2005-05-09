@@ -1,0 +1,22 @@
+package org.nanocontainer.testmodel;
+
+import junit.framework.Assert;
+
+import java.io.File;
+
+/**
+ * Used for testing permissions.
+ *
+ * @author Paul Hammant
+ * @version $Revision$
+ */
+public class FileSystemUsing {
+
+    public FileSystemUsing() {
+        File afile = File.listRoots()[0];
+        System.out.println("--> " + afile.getAbsolutePath());
+        new File(afile,"foo-bar-directory").mkdirs();
+        throw new RuntimeException("Whoa, should have barfed with access error");
+    }
+
+}

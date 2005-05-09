@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <id>nanocontainer-testmodel</id>
+    <name>nanocontainer-testmodel</name>
+
+    <dependencies>
+        <dependency>
+            <id>picocontainer</id>
+            <version>${picocontainer.version}</version>
+            <url>http://www.picocontainer.org/</url>
+        </dependency>
+
+        <dependency>
+            <groupId>picocontainer</groupId>
+            <artifactId>picocontainer-tck</artifactId>
+            <version>${picocontainer.version}</version>
+            <url>http://www.picocontainer.org/</url>
+        </dependency>
+    </dependencies>
+
+</project>
