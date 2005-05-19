@@ -1,106 +1,12 @@
-<project
-    default="binary:install"
-    xmlns:j="jelly:core"
-    xmlns:maven="jelly:maven"
-    xmlns:util="jelly:util"
-    xmlns:ant="jelly:ant">
+<project default="nano:install">
 
-    <goal
-        name="binary:install"
-        description="Build each sub project into a binary">
-
-        <property name="goals" value="binary:install"/>
-        <attainGoal name="generic"/>
-
+    <goal name="nano:install">
+        <attainGoal name="multiproject:install"/>
     </goal>
 
-    <goal
-        name="generic"
-        description="Build each sub project with a particular goal. e.g. maven -Dgoals=test generic">
-        
-        <attainGoal name="cleanall"/>
-
-        <available file="${basedir}/swt/lib/swt.jar" property="swt" value="dummy/*"/>
-        <property name="swt" value="swt/*"/>
-
-        <available file="${basedir}/idea/lib/openapi.jar" property="idea" value="dummy/*"/>
-        <property name="idea" value="idea/*"/>
-
-        <available classname="java.util.LinkedHashMap" property="microcontainer" value="dummy/*"/>
-        <property name="microcontainer" value="microcontainer/*"/>
-
-        <property name="excludes" value="pool/*,pool3/*,${swt},${idea},${microcontainer}"/>
-
-        <echo>Excluded from build: ${excludes}</echo>
-
-        <maven:reactor
-            basedir="${basedir}"
-            includes="*/project.xml"
-            excludes="${excludes}"
-            goals="${goals}"
-            banner="Building"
-            ignoreFailures="false"
-            />
+    <goal name="nano:deploy">
+        <attainGoal name="multiproject:deploy"/>
+        <attainGoal name="multiproject:site-deploy"/>
     </goal>
-
-    <goal name="cleanall" description="Delete all target folders">
-        <delete includeEmptyDirs="true">
-            <fileset dir="${basedir}">
-                <include name="*/target/**"/>
-            </fileset>
-        </delete>
-    </goal>
-
-    <goal name="site-deploy">
-        <attainGoal name="multiproject:site"/>
-        <attainGoal name="site:deploy"/>
-    </goal>
-
-    <goal name="nano:replace-index">
-        <j:set var="projectOverviewFile" value="${maven.docs.dest}/projects-overview.html" />
-        <util:available file="${projectOverviewFile}">
-            <ant:move file="${projectOverviewFile}" toFile="${maven.docs.dest}/index.html" />
-        </util:available>
-        <j:set var="replaceIndex" value="true" />
-        <util:available file="${basedir}/xdocs/navigation.xml">
-            <j:set var="replaceIndex" value="false" />
-        </util:available>
-        <j:if test="${replaceIndex}">
-                <ant:move file="${maven.docs.dest}/maven-reports.html" toFile="${maven.docs.dest}/index.html" />
-        </j:if>
-    </goal>
-
-    <goal name="nano:subnavigation">
-        <j:set var="createNavigation" value="true" />
-        <util:available file="${basedir}/xdocs/navigation.xml">
-            <j:set var="createNavigation" value="false" />
-        </util:available>
-        <j:if test="${createNavigation}">
-            <ant:filter token="pom.name" value="${pom.name}" />
-            <ant:filter token="pom.artifactId" value="${pom.artifactId}" />
-            <ant:mkdir dir="${maven.gen.docs}" />
-            <ant:delete file="${maven.gen.docs}/navigation.xml" />
-            <ant:copy file="${maven.multiproject.basedir}/navigation.template" toFile="${maven.gen.docs}/navigation.xml" filtering="true" />
-        </j:if>
-    </goal>
-    
-    <goal name="nano:site-directory">
-        <util:available file="${basedir}/xdocs/navigation.xml">
-            <j:set var="globalSiteDirectory">/home/projects/nanocontainer/public_html/versions/${pom.currentVersion}</j:set> 
-            ${pom.setSiteDirectory(globalSiteDirectory)}
-            <j:set var="_dev_null" value="${pom.reports.remove('maven-javadoc-plugin')}" />
-        </util:available>
-    </goal>
-
-    <preGoal name="site">
-        <attainGoal name="nano:site-directory" />
-    </preGoal>
-    <postGoal name="site">
-        <attainGoal name="nano:replace-index" />
-    </postGoal>
-    <postGoal name="xdoc:copy-resources">
-        <attainGoal name="nano:subnavigation" />
-    </postGoal>
-
 
 </project>

@@ -1,7 +1,7 @@
-<project xmlns:j="jelly:core" xmlns:u="jelly:util" default="binary:install">
-
-    <goal name="binary:install" prereqs="jar:install"/>
-    <goal name="binary:deploy" prereqs="jar:deploy"/>
+<project default="jar:install"
+    xmlns:j="jelly:core"
+    xmlns:util="jelly:util"
+    xmlns:ant="jelly:ant">
 
     <postGoal name="test:compile">
         <delete>
@@ -11,7 +11,7 @@
             </fileset>
         </delete>
         <j:if test="jvm.version == '1.4'">
-            <attainGoal name="setclasspath"/>
+            <attainGoal name="set-classpath"/>
             <copy todir="${basedir}/target/test-classes">
                 <fileset dir="${basedir}/src/test">
                     <include name="**/*.groovy"/>
@@ -24,7 +24,7 @@
         </j:if>
     </postGoal>
 
-    <goal name="setclasspath">
+    <goal name="set-classpath">
         <path id="test.classpath">
             <pathelement path="${maven.build.dest}"/>
             <pathelement path="target/clover/classes"/>
@@ -35,4 +35,53 @@
         <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="test.classpath"/>
     </goal>
 
+
+    <preGoal name="site">
+        <attainGoal name="nano:site-directory" />
+    </preGoal>
+    <postGoal name="site">
+        <attainGoal name="nano:replace-index" />
+    </postGoal>
+
+    <postGoal name="xdoc:copy-resources">
+        <attainGoal name="nano:subnavigation" />
+    </postGoal>
+
+    <goal name="nano:replace-index">
+        <j:set var="projectOverviewFile" value="${maven.docs.dest}/projects-overview.html" />
+        <util:available file="${projectOverviewFile}">
+            <ant:move file="${projectOverviewFile}" toFile="${maven.docs.dest}/index.html" />
+        </util:available>
+        <j:set var="replaceIndex" value="true" />
+        <util:available file="${basedir}/xdocs/navigation.xml">
+            <j:set var="replaceIndex" value="false" />
+        </util:available>
+        <j:if test="${replaceIndex}">
+                <ant:move file="${maven.docs.dest}/maven-reports.html" toFile="${maven.docs.dest}/index.html" />
+        </j:if>
+    </goal>
+
+    <goal name="nano:subnavigation">
+        <j:set var="createNavigation" value="true" />
+        <util:available file="${basedir}/xdocs/navigation.xml">
+            <j:set var="createNavigation" value="false" />
+        </util:available>
+        <j:if test="${createNavigation}">
+            <ant:filter token="pom.name" value="${pom.name}" />
+            <ant:filter token="pom.artifactId" value="${pom.artifactId}" />
+            <ant:mkdir dir="${maven.gen.docs}" />
+            <ant:delete file="${maven.gen.docs}/navigation.xml" />
+            <ant:copy file="${maven.multiproject.basedir}/navigation.template" toFile="${maven.gen.docs}/navigation.xml" filtering="true" />
+        </j:if>
+    </goal>
+    
+    <goal name="nano:site-directory">
+        <util:available file="${basedir}/xdocs/navigation.xml">
+            <j:set var="globalSiteDirectory">/home/projects/nanocontainer/public_html/versions/${pom.currentVersion}</j:set> 
+            ${pom.setSiteDirectory(globalSiteDirectory)}
+            <j:set var="_dev_null" value="${pom.reports.remove('maven-javadoc-plugin')}" />
+        </util:available>
+    </goal>
+
+    
 </project>

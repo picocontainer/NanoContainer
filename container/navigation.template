@@ -1,0 +1,24 @@
+<project name="nanocontainer" repository="nanocontainer" href="http://nanocontainer.codehaus.org">
+
+    <title>@pom.name@</title>
+
+    <body>
+        <links>
+            <item name="NanoContainer Reports" href="../../index.html"/>
+            <item name="NanoContainer main site" href="http://www.nanocontainer.org"/>
+            <item name="PicoContainer" href="http://www.picocontainer.org/"/>
+        </links>
+
+        <menu name="@pom.name@">
+            <item name="Reports" href="index.html">
+                <item name="Dependencies" href="dependencies.html"/>
+                <item name="License" href="license.html"/>
+                <item name="JavaDocs" href="apidocs/index.html"/>
+                <item name="Clover" href="clover/index.html"/>
+                <item name="JUnit" href="/junit-report.html"/>
+                <item name="Simian" href="simian-report.html"/>
+            </item>
+        </menu>
+    </body>
+
+</project>
