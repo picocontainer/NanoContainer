@@ -16,10 +16,12 @@ import java.io.Reader;
 import java.io.StringReader;
 
 /**
+ * Test with groovy classic parser - ie before jsr releases.
+ * 
  * @author Paul Hammant
  * @version $Revision$
  */
-public class NanoContainerBuilder2TestCase extends AbstractScriptedContainerBuilderTestCase {
+public class NanoContainerBuilderClassicTestCase extends AbstractScriptedContainerBuilderTestCase {
 
     public void testInstantiateBasicScriptable() throws PicoCompositionException {
         Reader script = new StringReader("" +

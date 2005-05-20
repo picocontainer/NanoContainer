@@ -54,18 +54,23 @@
 
         <dependency>
             <id>groovy</id>
-            <version>1.0-beta-7</version>
+            <version>1.0-jsr-01</version>
         </dependency>
 
         <dependency>
+            <id>antlr</id>
+            <version>2.7.5</version>
+        </dependency>
+        
+        <dependency>
             <id>asm</id>
-            <version>1.4.3</version>
+            <version>1.5.2</version>
         </dependency>
 
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm-util</artifactId>
-            <version>1.4.3</version>
+            <version>1.5.2</version>
         </dependency>
 
         <dependency>
@@ -136,7 +141,7 @@
             <version>1.0.1</version>
         </dependency>
 
-	<!-- required when building on jdk 1.3 -->
+	 	<!-- required when building on jdk 1.3 -->
         <dependency>
             <id>xml-apis</id>
             <version>1.0.b2</version>
@@ -144,4 +149,65 @@
 
     </dependencies>
 
+    <build>
+        <sourceDirectory>${basedir}/src/java</sourceDirectory>
+        <sourceModifications>
+            <sourceModification>
+                <!-- exclude groovy if < 1.4 -->
+                <className>java.util.LinkedHashMap</className>
+                <excludes>
+                    <exclude>org/nanocontainer/aop/**/*</exclude>
+                    <exclude>org/nanocontainer/script/groovy/**/*</exclude>
+                    <exclude>org/nanocontainer/script/jython/**/*</exclude>
+                    <exclude>org/nanocontainer/script/rhino/**/*</exclude>
+                </excludes>
+            </sourceModification>
+        </sourceModifications>
+        
+        <!-- Resources tat are packaged up inside the JAR file -->
+        <resources>
+            <resource>
+                <directory>${basedir}/src/java</directory>
+                <includes>
+                    <include>**/*.dtd</include>
+                    <include>**/*.xsd</include>
+                    <include>**/*.xhtml</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.png</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.gif</include>
+                </includes>
+            </resource>
+        </resources>     
+        
+        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/*Test.*</include>
+                <include>**/*TestCase.*</include>
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*.*</exclude>
+                <!-- Excluded because incompatible with new jsr parser -->
+                <exclude>org/nanocontainer/script/groovy/NanoContainerBuilderClassicTestCase.*</exclude>
+                <!-- UNCOMMENT TO BUILD FOR JDK 1.3
+                <exclude>org/nanocontainer/StandaloneTestCase.*</exclude>
+                <exclude>org/nanocontainer/aop/**/*</exclude>
+                <exclude>org/nanocontainer/script/groovy/**/*</exclude>
+                <exclude>org/nanocontainer/script/jython/**/*</exclude>
+                <exclude>org/nanocontainer/script/rhino/**/*</exclude>
+                <exclude>org/nanocontainer/script/xml/XStreamComponentInstanceFactoryTestCase.*</exclude>
+                -->
+            </excludes>
+            <resources>
+                <resource>
+                    <directory>${basedir}/src/test</directory>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                </resource>
+            </resources>
+        </unitTest>
+    </build>
+                   
 </project>

@@ -92,8 +92,6 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
             groovyScript = InvokerHelper.createScript(scriptClass, null);
         } catch (CompilationFailedException e) {
             throw new NanoContainerGroovyCompilationException("Compilation Failed '" + e.getMessage() + "'", e);
-        } catch (IOException e) {
-            throw new NanoContainerMarkupException(e);
         }
 
     }
