@@ -2,7 +2,7 @@
 <project xmlns:j="jelly:core">
 
     <pomVersion>3</pomVersion>
-    <currentVersion>1.0-SNAPSHOT</currentVersion>
+    <currentVersion>${nanocontainer.version}</currentVersion>
     <name>NanoContainer</name>
     <groupId>nanocontainer</groupId>
     <id>nanocontainer</id>
