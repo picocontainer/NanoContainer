@@ -28,17 +28,23 @@
     <distributionDirectory>/dist</distributionDirectory>
 
     <repository>
-        <connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/:java/nanocontainer</connection>
-        <developerConnection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/:java/nanocontainer</developerConnection>
-        <url>https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer</url>
+        <connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk</connection>
+        <developerConnection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk</developerConnection>
+        <url>https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk</url>
+    </repository>
+  <repository>
+        <connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/picocontainer/trunk</connection>
+        <developerConnection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/picocontainer/trunk</developerConnection>
+        <url>https://svn.picocontainer.codehaus.org/picocontainer/java/picocontainer/trunk</url>
     </repository>
 
-    <!--
-     ! Common dependencies.
-     ! Please place sub project-specific dependencies in the sub project's
-     ! project.xml
-    -->
     <dependencies>
+        <dependency>
+            <groupId>maven</groupId>
+            <artifactId>maven-scm-plugin</artifactId>
+            <type>plugin</type>
+            <version>1.5-beta-3</version>
+        </dependency>		
 
         <!-- Build/Test time only -->
         <dependency>
