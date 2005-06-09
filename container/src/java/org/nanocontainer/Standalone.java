@@ -49,6 +49,10 @@ public class Standalone {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+		new Standalone(args);
+    }
+
+    public Standalone(String[] args) throws IOException, ClassNotFoundException {
         CommandLine cl = null;
         Options options = createOptions();
         try {
@@ -73,6 +77,7 @@ public class Standalone {
         try {
             String compositionFile = cl.getOptionValue(COMPOSITION_OPT);
             String compositionResource = cl.getOptionValue(RESOURCE_OPT);
+			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
             if (compositionFile != null) {
                 File composition = new File(compositionFile);
                 buildAndStartContainer(composition, quiet, nowait);
