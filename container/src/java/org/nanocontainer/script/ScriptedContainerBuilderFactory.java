@@ -84,7 +84,7 @@ public class ScriptedContainerBuilderFactory {
     }
 
     private void createContainerBuilder(Object composition, ClassLoader classLoader, String builderClass) throws ClassNotFoundException {
-        DefaultNanoContainer defaultReflectionContainerAdapter;
+        DefaultNanoContainer defaultNanoContainer;
         {
             // disposable.
             DefaultPicoContainer factory = new DefaultPicoContainer();
@@ -98,10 +98,10 @@ public class ScriptedContainerBuilderFactory {
                 classLoader = getClass().getClassLoader();
             }
             factory.registerComponentInstance(classLoader);
-            defaultReflectionContainerAdapter = new DefaultNanoContainer(factory);
+            defaultNanoContainer = new DefaultNanoContainer(factory);
         }
-        ComponentAdapter componentAdapter = defaultReflectionContainerAdapter.registerComponentImplementation(builderClass);
-        containerBuilder = (ScriptedContainerBuilder) componentAdapter.getComponentInstance(defaultReflectionContainerAdapter.getPico());
+        ComponentAdapter componentAdapter = defaultNanoContainer.registerComponentImplementation(builderClass);
+        containerBuilder = (ScriptedContainerBuilder) componentAdapter.getComponentInstance(defaultNanoContainer.getPico());
     }
 
     private static File fileExists(File file) throws FileNotFoundException {

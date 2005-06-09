@@ -26,7 +26,7 @@ import java.io.Serializable;
  * This is a MutablePicoContainer that supports soft composition and hides implementations where it can.
  * <p/>
  * In terms of implementation it adopts the behaviour of ImplementationHidingPicoContainer
- * and DefaulReflectionContainerAdapter
+ * and DefaulNanoContainer
  *
  * @author Paul Hammant
  * @version $Revision$

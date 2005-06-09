@@ -27,7 +27,7 @@ import java.io.Serializable;
  * This is a MutablePicoContainer that also supports soft composition. i.e. assembly by class name rather that class
  * reference.
  * <p/>
- * In terms of implementation it adopts the behaviour of DefaultPicoContainer and DefaulReflectionContainerAdapter
+ * In terms of implementation it adopts the behaviour of DefaultPicoContainer and DefaultNanoContainer
  *
  * @author Paul Hammant
  * @author Mauro Talevi

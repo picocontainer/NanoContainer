@@ -24,7 +24,7 @@ import org.picocontainer.PicoRegistrationException;
 import java.io.File;
 import java.net.MalformedURLException;
 
-public class DefaultReflectionContainerAdapterTestCase extends TestCase {
+public class DefaultNanoContainerTestCase extends TestCase {
 
     public void testBasic() throws PicoRegistrationException, PicoInitializationException, ClassNotFoundException {
         NanoContainer nanoContainer = new DefaultNanoContainer();
