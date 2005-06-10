@@ -10,6 +10,15 @@
 
 package org.nanocontainer.script.xml;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Date;
+
+import javax.swing.JButton;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.NanoContainerMarkupException;
@@ -22,13 +31,6 @@ import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
-import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 
 /**
  * @author Paul Hammant
@@ -304,6 +306,31 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertTrue(instance instanceof TestBean);
         assertEquals(10, ((TestBean) instance).getFoo());
         assertEquals("hello", ((TestBean) instance).getBar());
+    }
+
+    public void testComponentInstanceWithBeanFactoryAndInstanceThatIsDefinedInContainer() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+        Reader script = new StringReader("" +
+                "<container>" +
+                "  <component-instance key='date' factory='org.nanocontainer.script.xml.BeanComponentInstanceFactory'>" +
+                "   <java.util.Date>" +
+                "       <time>0</time>" +
+                "   </java.util.Date>" +
+                "  </component-instance>" +
+                "  <component-instance factory='org.nanocontainer.script.xml.BeanComponentInstanceFactory'>" +
+                "   <org.nanocontainer.script.xml.SpecialDateFormat>" +
+                "       <lenient>true</lenient>" +
+                "       <someDate>date</someDate>" +
+                "   </org.nanocontainer.script.xml.SpecialDateFormat>" +
+                "  </component-instance>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        Object instance = pico.getComponentInstance(SpecialDateFormat.class);
+        assertNotNull(instance);
+        assertTrue(instance instanceof SpecialDateFormat);
+        SpecialDateFormat format = ((SpecialDateFormat) instance);
+        assertTrue(format.isLenient());
+        assertEquals(new Date(0), format.getSomeDate());
     }
 
     public void testComponentInstanceWithKey() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
