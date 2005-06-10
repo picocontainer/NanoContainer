@@ -58,7 +58,7 @@ public class Standalone {
         try {
             cl = getCommandLine(args, options);
         } catch (ParseException e) {
-            System.out.println("Error in parsing arguments: ");
+            System.out.println("NanoContainer-Standalone: Error in parsing arguments: ");
             e.printStackTrace();
             System.exit(-1);
         }
@@ -89,16 +89,16 @@ public class Standalone {
                 System.exit(0);
             }
         } catch (RuntimeException e) {
-            System.err.println("Failed to start application. Cause : " + e.getMessage());
+            System.err.println("NanoContainer-Standalone: Failed to start application. Cause : " + e.getMessage());
             e.printStackTrace();
             throw e;
         } catch (ClassNotFoundException e) {
-            System.err.println("Failed to start application. A Class was not found. Exception message : " + e.getMessage());
+            System.err.println("NanoContainer-Standalone: Failed to start application. A Class was not found. Exception message : " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
         if (!quiet) {
-            System.out.println("Exiting ScriptedContainerBuilderFactory's standalone main method.");
+            System.out.println("NanoContainer-Standalone: Exiting main method.");
         }
     }
 
@@ -161,7 +161,7 @@ public class Standalone {
             e.printStackTrace();
         } finally {
             if (!quiet) {
-                System.out.println("Exiting Virtual Machine");
+                System.out.println("NanoContainer-Standalone: Exiting Virtual Machine");
             }
         }
     }
@@ -180,7 +180,7 @@ public class Standalone {
 
         final StringBuffer usage = new StringBuffer();
         usage.append(lineSeparator);
-        usage.append("ScriptedContainerBuilderFactory: Standalone -c <composition> [-q|-n|-h|-v]");
+        usage.append("NanoContainer-Standalone: -c <composition-file> [-q|-n|-h|-v]");
         usage.append(options.getOptions());
         System.out.println(usage.toString());
     }
