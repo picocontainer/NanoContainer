@@ -187,11 +187,14 @@ public class NanoContainerBuilder extends BuilderSupport {
         Object instance = attributes.remove("instance");
         List parameters = (List) attributes.remove("parameters");
 
+        System.out.println("---> " + key + " " + classValue);
+
+        MutablePicoContainer pico = nano.getPico();
+
         Parameter[] parameterArray = getParameters(parameters);
         if (classValue instanceof Class) {
             Class clazz = (Class) classValue;
             key = key == null ? clazz : key;
-            MutablePicoContainer pico = nano.getPico();
             pico.registerComponentImplementation(key, clazz, parameterArray);
         } else if (classValue instanceof String) {
             String className = (String) classValue;
@@ -199,9 +202,9 @@ public class NanoContainerBuilder extends BuilderSupport {
             nano.registerComponentImplementation(key, className, parameterArray);
         } else if (instance != null) {
             key = key == null ? instance.getClass() : key;
-            nano.getPico().registerComponentInstance(key, instance);
+            pico.registerComponentInstance(key, instance);
         } else {
-            throw new NanoContainerMarkupException("Must specify a class attribute for a component. Attributes:" + attributes);
+            throw new NanoContainerMarkupException("Must specify a class attribute for a component as a class name (string) or Class. Attributes:" + attributes);
         }
 
         return name;
@@ -229,7 +232,17 @@ public class NanoContainerBuilder extends BuilderSupport {
 
         MutablePicoContainer decoratedPico = nanoContainerBuilderDecorationDelegate.decorate(wrappedPicoContainer);
 
-        return new DefaultNanoContainer(parentClassLoader, decoratedPico);
+        Class clazz = (Class) attributes.remove("class");
+        if (clazz != null)  {
+            DefaultPicoContainer tempContainer = new DefaultPicoContainer();
+            tempContainer.registerComponentInstance(ClassLoader.class, parentClassLoader);
+            tempContainer.registerComponentInstance(MutablePicoContainer.class, decoratedPico);
+            tempContainer.registerComponentImplementation(NanoContainer.class, clazz);
+            Object componentInstance = tempContainer.getComponentInstance(NanoContainer.class);
+            return (NanoContainer) componentInstance;
+        } else {
+            return new DefaultNanoContainer(parentClassLoader, decoratedPico);
+        }
     }
 
     protected Object createBean(Map attributes) {

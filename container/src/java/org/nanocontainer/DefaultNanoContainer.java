@@ -92,12 +92,19 @@ public class DefaultNanoContainer implements NanoContainer {
 
     public ComponentAdapter registerComponentImplementation(Object key, String componentImplementationClassName) throws ClassNotFoundException {
         Class componentImplementation = loadClass(componentImplementationClassName);
+        if (key instanceof ClassName) {
+            key = loadClass(((ClassName) key).getClassName());
+        }
         return picoContainer.registerComponentImplementation(key, componentImplementation);
     }
 
 
     public ComponentAdapter registerComponentImplementation(Object key, String componentImplementationClassName, Parameter[] parameters) throws ClassNotFoundException {
         Class componentImplementation = loadClass(componentImplementationClassName);
+        if (key instanceof ClassName) {
+            key = loadClass(((ClassName) key).getClassName());
+
+        }
         return picoContainer.registerComponentImplementation(key, componentImplementation, parameters);
     }
 
@@ -106,6 +113,10 @@ public class DefaultNanoContainer implements NanoContainer {
                                                             String[] parameterTypesAsString,
                                                             String[] parameterValuesAsString) throws PicoRegistrationException, ClassNotFoundException, PicoIntrospectionException {
         Class componentImplementation = getComponentClassLoader().loadClass(componentImplementationClassName);
+        if (key instanceof ClassName) {
+            key = loadClass(((ClassName) key).getClassName());
+
+        }
         return registerComponentImplementation(parameterTypesAsString, parameterValuesAsString, key, componentImplementation);
     }
 
@@ -125,9 +136,9 @@ public class DefaultNanoContainer implements NanoContainer {
         return picoContainer.registerComponentImplementation(key, componentImplementation, parameters);
     }
 
-    private Class loadClass(final String componentImplementationClassName) throws ClassNotFoundException {
+    private Class loadClass(final String className) throws ClassNotFoundException {
         ClassLoader classLoader = getComponentClassLoader();
-        String cn = getClassName(componentImplementationClassName);
+        String cn = getClassName(className);
         return classLoader.loadClass(cn);
     }
 
