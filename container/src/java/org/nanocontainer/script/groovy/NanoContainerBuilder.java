@@ -134,9 +134,10 @@ public class NanoContainerBuilder extends BuilderSupport {
             // TODO ????
             //BuilderSupport builder = (BuilderSupport) attributes.remove("class");
             return null;
-
         } else if (name.equals("newBuilder")) {
             return createNewBuilderNode(attributes, parentContainer);
+        } else if (name.equals("hidden")) {
+            return createComponentHider(parentContainer);
         } else {
             // we don't know how to handle it - delegate to the decorator.
             return nanoContainerBuilderDecorationDelegate.createNode(name, attributes, current);
@@ -186,8 +187,6 @@ public class NanoContainerBuilder extends BuilderSupport {
         Object classValue = attributes.remove("class");
         Object instance = attributes.remove("instance");
         List parameters = (List) attributes.remove("parameters");
-
-        System.out.println("---> " + key + " " + classValue);
 
         MutablePicoContainer pico = nano.getPico();
 
@@ -244,6 +243,12 @@ public class NanoContainerBuilder extends BuilderSupport {
             return new DefaultNanoContainer(parentClassLoader, decoratedPico);
         }
     }
+
+    protected NanoContainer createComponentHider(NanoContainer parent) {
+
+        return new DefaultNanoContainer(parent.getComponentClassLoader(), parent.getPico());
+    }
+
 
     protected Object createBean(Map attributes) {
         Class type = (Class) attributes.remove("beanClass");

@@ -92,8 +92,8 @@ public class DefaultNanoContainer implements NanoContainer {
 
     public ComponentAdapter registerComponentImplementation(Object key, String componentImplementationClassName) throws ClassNotFoundException {
         Class componentImplementation = loadClass(componentImplementationClassName);
-        if (key instanceof ClassName) {
-            key = loadClass(((ClassName) key).getClassName());
+        if (key instanceof ClassNameKey) {
+            key = loadClass(((ClassNameKey) key).getClassName());
         }
         return picoContainer.registerComponentImplementation(key, componentImplementation);
     }
@@ -101,8 +101,8 @@ public class DefaultNanoContainer implements NanoContainer {
 
     public ComponentAdapter registerComponentImplementation(Object key, String componentImplementationClassName, Parameter[] parameters) throws ClassNotFoundException {
         Class componentImplementation = loadClass(componentImplementationClassName);
-        if (key instanceof ClassName) {
-            key = loadClass(((ClassName) key).getClassName());
+        if (key instanceof ClassNameKey) {
+            key = loadClass(((ClassNameKey) key).getClassName());
 
         }
         return picoContainer.registerComponentImplementation(key, componentImplementation, parameters);
@@ -113,8 +113,8 @@ public class DefaultNanoContainer implements NanoContainer {
                                                             String[] parameterTypesAsString,
                                                             String[] parameterValuesAsString) throws PicoRegistrationException, ClassNotFoundException, PicoIntrospectionException {
         Class componentImplementation = getComponentClassLoader().loadClass(componentImplementationClassName);
-        if (key instanceof ClassName) {
-            key = loadClass(((ClassName) key).getClassName());
+        if (key instanceof ClassNameKey) {
+            key = loadClass(((ClassNameKey) key).getClassName());
 
         }
         return registerComponentImplementation(parameterTypesAsString, parameterValuesAsString, key, componentImplementation);

@@ -1,9 +1,9 @@
 package org.nanocontainer;
 
-public class ClassName {
+public class ClassNameKey {
     final String className;
 
-    public ClassName(String className) {
+    public ClassNameKey(String className) {
         this.className = className;
     }
 
