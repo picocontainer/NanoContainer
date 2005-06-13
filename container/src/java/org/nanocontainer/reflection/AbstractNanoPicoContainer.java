@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * A base class for SoftCompositionPicoContainers. As well as the functionality indicated by the interface it
+ * A base class for NanoPicoContainers. As well as the functionality indicated by the interface it
  * implements, extenders of this class will have named child component capability.
  *
  * @author Paul Hammant
