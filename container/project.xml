@@ -131,10 +131,12 @@
             <version>1.0</version>
         </dependency>
 
+<!-- Jython has ORO inside !!
         <dependency>
             <id>oro</id>
             <version>2.0.8</version>
         </dependency>
+-->
 
         <dependency>
             <id>jmock</id>
