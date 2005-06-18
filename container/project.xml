@@ -190,8 +190,6 @@
             </includes>
             <excludes>
                 <exclude>**/Abstract*.*</exclude>
-                <!-- Excluded because incompatible with new jsr parser -->
-                <exclude>org/nanocontainer/script/groovy/NanoContainerBuilderClassicTestCase.*</exclude>
                 <!-- UNCOMMENT TO BUILD FOR JDK 1.3
                 <exclude>org/nanocontainer/StandaloneTestCase.*</exclude>
                 <exclude>org/nanocontainer/aop/**/*</exclude>
