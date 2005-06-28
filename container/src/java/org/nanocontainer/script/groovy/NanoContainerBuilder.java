@@ -136,8 +136,8 @@ public class NanoContainerBuilder extends BuilderSupport {
             return null;
         } else if (name.equals("newBuilder")) {
             return createNewBuilderNode(attributes, parentContainer);
-        } else if (name.equals("hidden")) {
-            return createComponentHider(parentContainer);
+        } else if (name.equals("classloader")) {
+            return createComponentClassLoader(parentContainer);
         } else {
             // we don't know how to handle it - delegate to the decorator.
             return nanoContainerBuilderDecorationDelegate.createNode(name, attributes, current);
@@ -244,7 +244,7 @@ public class NanoContainerBuilder extends BuilderSupport {
         }
     }
 
-    protected NanoContainer createComponentHider(NanoContainer parent) {
+    protected NanoContainer createComponentClassLoader(NanoContainer parent) {
 
         return new DefaultNanoContainer(parent.getComponentClassLoader(), parent.getPico());
     }
