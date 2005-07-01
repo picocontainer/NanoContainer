@@ -136,12 +136,19 @@ public class NanoContainerBuilder extends BuilderSupport {
             return null;
         } else if (name.equals("newBuilder")) {
             return createNewBuilderNode(attributes, parentContainer);
+        } else if (name.equals("webcontainer")) {
+                return createWebContainerBuilder(attributes, parentContainer);
         } else if (name.equals("classloader")) {
             return createComponentClassLoader(parentContainer);
         } else {
             // we don't know how to handle it - delegate to the decorator.
             return nanoContainerBuilderDecorationDelegate.createNode(name, attributes, current);
         }
+
+    }
+
+    private Object createWebContainerBuilder(Map attributes, NanoContainer parentContainer) {
+        return new NanoGroovyWebContainerBuilder(attributes, parentContainer);
     }
 
     private Object createNewBuilderNode(Map attributes, NanoContainer parentContainer) {
