@@ -22,6 +22,7 @@ import groovy.util.BuilderSupport;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
+import org.nanocontainer.ClassNameKey;
 import org.nanocontainer.script.NanoContainerBuilderDecorationDelegate;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.NullNanoContainerBuilderDecorationDelegate;
@@ -128,7 +129,7 @@ public class NanoContainerBuilder extends BuilderSupport {
             return createComponentNode(attributes, parentContainer, name);
         } else if (name.equals("bean")) {
             return createBeanNode(attributes, parentContainer.getPico());
-        } else if (name.equals("classpathelement")) {
+        } else if (name.equals("classPathElement")) {
             return createClassPathElementNode(attributes, parentContainer);
         } else if (name.equals("doCall")) {
             // TODO ????
@@ -136,9 +137,9 @@ public class NanoContainerBuilder extends BuilderSupport {
             return null;
         } else if (name.equals("newBuilder")) {
             return createNewBuilderNode(attributes, parentContainer);
-        } else if (name.equals("webcontainer")) {
+        } else if (name.equals("webContainer")) {
                 return createWebContainerBuilder(attributes, parentContainer);
-        } else if (name.equals("classloader")) {
+        } else if (name.equals("classLoader")) {
             return createComponentClassLoader(parentContainer);
         } else {
             // we don't know how to handle it - delegate to the decorator.
@@ -191,11 +192,16 @@ public class NanoContainerBuilder extends BuilderSupport {
 
     private Object createComponentNode(Map attributes, NanoContainer nano, Object name) throws ClassNotFoundException {
         Object key = attributes.remove("key");
+        Object cnkey = attributes.remove("classNameKey");
         Object classValue = attributes.remove("class");
         Object instance = attributes.remove("instance");
         List parameters = (List) attributes.remove("parameters");
 
         MutablePicoContainer pico = nano.getPico();
+
+        if (cnkey != null)  {
+            key = new ClassNameKey((String)cnkey);
+        }
 
         Parameter[] parameterArray = getParameters(parameters);
         if (classValue instanceof Class) {

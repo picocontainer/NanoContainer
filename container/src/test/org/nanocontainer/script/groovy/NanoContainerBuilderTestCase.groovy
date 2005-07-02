@@ -108,11 +108,11 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
         builder = new NanoContainerBuilder()
         child = null
         parent = builder.container {
-            classpathelement(path:compJarPath)
+            classPathElement(path:compJarPath)
             component(class:StringBuffer)
             component(class:"TestComp")
             child = container() {
-                classpathelement(path:compJarPath2)
+                classPathElement(path:compJarPath2)
                 component(class:"TestComp2")
             }
         }
