@@ -9,10 +9,7 @@
  *****************************************************************************/
 package org.nanocontainer.script.groovy;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.MissingPropertyException;
-import groovy.lang.Script;
+import groovy.lang.*;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.nanocontainer.NanoContainer;
@@ -88,7 +85,8 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
                     return script.read();
                 }
             };
-            Class scriptClass = loader.parseClass(scriptIs, "nanocontainer.groovy");
+            GroovyCodeSource groovyCodeSource = new GroovyCodeSource(scriptIs,"nanocontainer.groovy","groovyGeneratedForNanoContainer");
+            Class scriptClass = loader.parseClass(groovyCodeSource);
             groovyScript = InvokerHelper.createScript(scriptClass, null);
         } catch (CompilationFailedException e) {
             throw new NanoContainerGroovyCompilationException("Compilation Failed '" + e.getMessage() + "'", e);
