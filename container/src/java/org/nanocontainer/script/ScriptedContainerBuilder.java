@@ -8,41 +8,51 @@
  *****************************************************************************/
 package org.nanocontainer.script;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+
 import org.nanocontainer.integrationkit.LifecycleContainerBuilder;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-
 /**
- * Baseclass for container builders based on scripting.
+ * Base abstract class for script-based container builders based.
  *
  * @author Aslak Helles&oslash;y
  * @author Obie Fernandez
+ * @author Mauro Talevi
  * @version $Revision$
  */
 public abstract class ScriptedContainerBuilder extends LifecycleContainerBuilder {
-    protected final Reader script;
-    protected final ClassLoader classLoader;
-    protected final URL scriptURL;
+    private final Reader scriptReader;
+    private final URL scriptURL;
+    private final ClassLoader classLoader;
 
-    public ScriptedContainerBuilder(URL scriptURL, ClassLoader classLoader) {
-        this.scriptURL = scriptURL;
+    public ScriptedContainerBuilder(Reader script, ClassLoader classLoader) {
+        this.scriptReader = script;
+        if (script == null) {
+            throw new NullPointerException("script");
+        }
+        this.scriptURL = null;
         this.classLoader = classLoader;
-        this.script = null;
+        if ( classLoader == null) {
+            throw new NullPointerException("classLoader");
+        }
     }
 
-    /**
-     * @deprecated
-     */
-    public ScriptedContainerBuilder(Reader script, ClassLoader classLoader) {
-        if(script == null) { throw new NullPointerException("script was null"); }
-        if(classLoader == null) { throw new NullPointerException("classLoader was null"); }
-        this.script = script;
+    public ScriptedContainerBuilder(URL script, ClassLoader classLoader) {
+        this.scriptReader = null;        
+        this.scriptURL = script;
+        if (script == null) {
+            throw new NullPointerException("script");
+        }
         this.classLoader = classLoader;
-        this.scriptURL = null;
+        if ( classLoader == null) {
+            throw new NullPointerException("classLoader");
+        }
     }
 
     protected final PicoContainer createContainer(PicoContainer parentContainer, Object assemblyScope) {
@@ -50,14 +60,38 @@ public abstract class ScriptedContainerBuilder extends LifecycleContainerBuilder
             return createContainerFromScript(parentContainer, assemblyScope);
         } finally {
             try {
-                if (script != null) {
-                    script.close();
+                Reader reader = getScriptReader();
+                if (reader != null) {
+                    reader.close();
                 }
             } catch (IOException e) {
+                // do nothing. we've given it our best try, now get on with it
             }
         }
     }
 
+    protected final ClassLoader getClassLoader() {
+        return classLoader;
+    }
+    
+    protected final InputStream getScriptInputStream() throws IOException{
+        if ( scriptReader != null ){
+            return new InputStream() {
+                public int read() throws IOException {
+                    return scriptReader.read();
+                }
+            };
+        }
+        return scriptURL.openStream();
+    }
+
+    protected final Reader getScriptReader() throws IOException{
+        if ( scriptReader != null ){
+            return scriptReader;
+        }
+        return new InputStreamReader(scriptURL.openStream());
+    }
+    
     // TODO: This should really return NanoContainer using a nano variable in the script. --Aslak
     protected abstract PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope);
 

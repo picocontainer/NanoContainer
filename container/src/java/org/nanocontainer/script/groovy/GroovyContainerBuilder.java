@@ -10,16 +10,18 @@
 package org.nanocontainer.script.groovy;
 
 import groovy.lang.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.ScriptedContainerBuilder;
 import org.picocontainer.PicoContainer;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 
 /**
  * {@inheritDoc}
@@ -37,6 +39,10 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
     private Script groovyScript;
 
     public GroovyContainerBuilder(final Reader script, ClassLoader classLoader) {
+        super(script, classLoader);
+    }
+    
+    public GroovyContainerBuilder(final URL script, ClassLoader classLoader) {
         super(script, classLoader);
     }
 
@@ -79,17 +85,15 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
 
     private void createGroovyScript() {
         try {
-            GroovyClassLoader loader = new GroovyClassLoader(classLoader);
-            InputStream scriptIs = new InputStream() {
-                public int read() throws IOException {
-                    return script.read();
-                }
-            };
+            GroovyClassLoader loader = new GroovyClassLoader(getClassLoader());
+            InputStream scriptIs = getScriptInputStream();            
             GroovyCodeSource groovyCodeSource = new GroovyCodeSource(scriptIs,"nanocontainer.groovy","groovyGeneratedForNanoContainer");
             Class scriptClass = loader.parseClass(groovyCodeSource);
             groovyScript = InvokerHelper.createScript(scriptClass, null);
         } catch (CompilationFailedException e) {
             throw new NanoContainerGroovyCompilationException("Compilation Failed '" + e.getMessage() + "'", e);
+        } catch (IOException e) {
+            throw new NanoContainerMarkupException(e);
         }
 
     }

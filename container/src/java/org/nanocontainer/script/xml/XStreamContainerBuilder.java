@@ -10,10 +10,15 @@
 
 package org.nanocontainer.script.xml;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.io.xml.DomReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.integrationkit.ContainerPopulator;
@@ -35,12 +40,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.DomReader;
 
 /**
  * This class builds up a hierarchy of PicoContainers from an XML configuration file.
@@ -70,8 +73,8 @@ public class XStreamContainerBuilder extends ScriptedContainerBuilder implements
     }
     
     /**
-    * construct with given script and specified classloader
-    */
+     * construct with given script and specified classloader
+     */
     public XStreamContainerBuilder(Reader script, ClassLoader classLoader) {
         this(script, classLoader, new DomDriver());
     }
@@ -81,6 +84,21 @@ public class XStreamContainerBuilder extends ScriptedContainerBuilder implements
         xsdriver = driver;
         InputSource inputSource = new InputSource(script);
         try {
+            rootElement = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputSource).getDocumentElement();
+        } catch (SAXException e) {
+            throw new NanoContainerMarkupException(e);
+        } catch (IOException e) {
+            throw new NanoContainerMarkupException(e);
+        } catch (ParserConfigurationException e) {
+            throw new NanoContainerMarkupException(e);
+        }
+    }
+
+    public XStreamContainerBuilder(URL script, ClassLoader classLoader, HierarchicalStreamDriver driver) {
+        super(script, classLoader);
+        xsdriver = driver;
+        try {
+            InputSource inputSource = new InputSource(getScriptReader());
             rootElement = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputSource).getDocumentElement();
         } catch (SAXException e) {
             throw new NanoContainerMarkupException(e);
@@ -141,7 +159,7 @@ public class XStreamContainerBuilder extends ScriptedContainerBuilder implements
             if (key != null) {
                 container.registerComponent((ComponentAdapter) nested.getComponentInstance(key));
             } else if (klass != null) {
-                Class clazz = classLoader.loadClass(klass);
+                Class clazz = getClassLoader().loadClass(klass);
                 container.registerComponent((ComponentAdapter) nested.getComponentInstanceOfType(clazz));
             } else {
                 container.registerComponent((ComponentAdapter) nested.getComponentInstanceOfType(ComponentAdapter.class));
@@ -163,7 +181,7 @@ public class XStreamContainerBuilder extends ScriptedContainerBuilder implements
             throw new NanoContainerMarkupException("class specification is required for component implementation");
         }
 
-        Class clazz = classLoader.loadClass(klass);
+        Class clazz = getClassLoader().loadClass(klass);
 
         List parameters = new ArrayList();
 
@@ -195,7 +213,7 @@ public class XStreamContainerBuilder extends ScriptedContainerBuilder implements
                         if (dependencyClass == null || "".equals(dependencyClass)) {
                             throw new NanoContainerMarkupException("either key or class must be present for dependency");
                         } else {
-                            parameters.add(new ComponentParameter(classLoader.loadClass(dependencyClass)));
+                            parameters.add(new ComponentParameter(getClassLoader().loadClass(dependencyClass)));
                         }
                     } else {
                         parameters.add(new ComponentParameter(dependencyKey));
@@ -266,10 +284,10 @@ public class XStreamContainerBuilder extends ScriptedContainerBuilder implements
             if ("".equals(cafName) || cafName == null) {
                 cafName = DefaultComponentAdapterFactory.class.getName();
             }
-            Class cafClass = classLoader.loadClass(cafName);
+            Class cafClass = getClassLoader().loadClass(cafName);
             ComponentAdapterFactory componentAdapterFactory = (ComponentAdapterFactory) cafClass.newInstance();
             MutablePicoContainer picoContainer = new DefaultPicoContainer(componentAdapterFactory);
-            NanoContainer nano = new DefaultNanoContainer(classLoader, picoContainer);
+            NanoContainer nano = new DefaultNanoContainer(getClassLoader(), picoContainer);
             populateContainer(nano.getPico());
             return nano.getPico();
         } catch (ClassNotFoundException e) {

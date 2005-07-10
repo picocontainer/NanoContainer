@@ -9,6 +9,10 @@
  *****************************************************************************/
 package org.nanocontainer.script.rhino;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.DefiningClassLoader;
 import org.mozilla.javascript.GeneratedClassLoader;
@@ -21,9 +25,6 @@ import org.mozilla.javascript.Scriptable;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.ScriptedContainerBuilder;
 import org.picocontainer.PicoContainer;
-
-import java.io.IOException;
-import java.io.Reader;
 
 /**
  * {@inheritDoc}
@@ -38,14 +39,20 @@ import java.io.Reader;
  * @author Mauro Talevi
  */
 public class JavascriptContainerBuilder extends ScriptedContainerBuilder {
+
     public JavascriptContainerBuilder(Reader script, ClassLoader classLoader) {
         super(script, classLoader);
     }
 
+    public JavascriptContainerBuilder(URL script, ClassLoader classLoader) {
+        super(script, classLoader);
+    }
+
     protected PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope) {
+        final ClassLoader loader = getClassLoader();
         Context cx = new Context() {
             public GeneratedClassLoader createClassLoader(ClassLoader parent) {
-                return new DefiningClassLoader(classLoader);
+                return new DefiningClassLoader(loader);
             }
         };
         cx = Context.enter(cx);
@@ -56,15 +63,15 @@ public class JavascriptContainerBuilder extends ScriptedContainerBuilder {
             scope.put("assemblyScope", scope, assemblyScope);
             ImporterTopLevel.importPackage(cx,
                     scope, new NativeJavaPackage[]{
-                        new NativeJavaPackage("org.picocontainer.defaults", classLoader),
-                        new NativeJavaPackage("org.nanocontainer", classLoader),
-                        new NativeJavaPackage("org.nanocontainer.reflection", classLoader),
+                        new NativeJavaPackage("org.picocontainer.defaults", loader),
+                        new NativeJavaPackage("org.nanocontainer", loader),
+                        new NativeJavaPackage("org.nanocontainer.reflection", loader),
                         // File, URL and URLClassLoader will be frequently used by scripts.
-                        new NativeJavaPackage("java.net", classLoader),
-                        new NativeJavaPackage("java.io", classLoader),
+                        new NativeJavaPackage("java.net", loader),
+                        new NativeJavaPackage("java.io", loader),
                     },
                     null);
-            Script scriptObject = cx.compileReader(scope, script, "javascript", 1, null);
+            Script scriptObject = cx.compileReader(scope, getScriptReader(), "javascript", 1, null);
             scriptObject.exec(cx, scope);
             Object pico = scope.get("pico", scope);
 

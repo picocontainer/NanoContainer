@@ -1,12 +1,15 @@
 package org.nanocontainer.script.bsh;
 
-import bsh.EvalError;
-import bsh.Interpreter;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.ScriptedContainerBuilder;
 import org.picocontainer.PicoContainer;
 
-import java.io.Reader;
+import bsh.EvalError;
+import bsh.Interpreter;
 
 /**
  * {@inheritDoc}
@@ -21,18 +24,25 @@ import java.io.Reader;
  * @version $Revision$
  */
 public class BeanShellContainerBuilder extends ScriptedContainerBuilder {
+
     public BeanShellContainerBuilder(Reader script, ClassLoader classLoader) {
         super(script, classLoader);
     }
 
+    public BeanShellContainerBuilder(URL script, ClassLoader classLoader) {
+        super(script, classLoader);
+    }
+    
     protected PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope) {
         Interpreter i = new Interpreter();
         try {
             i.set("parent", parentContainer);
             i.set("assemblyScope", assemblyScope);
-            i.eval(script, i.getNameSpace(), "nanocontainer.bsh");
+            i.eval(getScriptReader(), i.getNameSpace(), "nanocontainer.bsh");
             return (PicoContainer) i.get("pico");
         } catch (EvalError e) {
+            throw new NanoContainerMarkupException(e);
+        } catch (IOException e) {
             throw new NanoContainerMarkupException(e);
         }
     }

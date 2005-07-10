@@ -135,7 +135,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
     public void populateContainer(MutablePicoContainer container) {
         try {
-            NanoContainer nanoContainer = new DefaultNanoContainer(classLoader, container);
+            NanoContainer nanoContainer = new DefaultNanoContainer(getClassLoader(), container);
             registerComponentsAndChildContainers(nanoContainer, rootElement);
         } catch (ClassNotFoundException e) {
             throw new NanoContainerMarkupException("Class not found:" + e.getMessage(), e);
@@ -214,7 +214,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
         Parameter[] parameters = createChildParameters(container, element);
         String key = element.getAttribute(KEY);
-        Class clazz = classLoader.loadClass(className);
+        Class clazz = getClassLoader().loadClass(className);
         if (notSet(key)) {
             if (parameters == null) {
                 container.getPico().registerComponentImplementation(clazz);
@@ -259,14 +259,14 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         XMLComponentInstanceFactory factory = createComponentInstanceFactory(element.getAttribute(FACTORY));
 
         Element instanceElement = getFirstChildElement(element);
-        Object instance = factory.makeInstance(pico, instanceElement, classLoader);
+        Object instance = factory.makeInstance(pico, instanceElement, getClassLoader());
         return new ConstantParameter(instance);
     }
 
     private void registerComponentInstance(NanoContainer container, Element element) throws ClassNotFoundException, PicoCompositionException, MalformedURLException {
         XMLComponentInstanceFactory factory = createComponentInstanceFactory(element.getAttribute(FACTORY));
         Element componentElement = getFirstChildElement(element);
-        Object instance = factory.makeInstance(container.getPico(), componentElement, classLoader);
+        Object instance = factory.makeInstance(container.getPico(), componentElement, getClassLoader());
 
         String key = element.getAttribute(KEY);
         if (notSet(key)) {
@@ -319,14 +319,14 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         if (notSet(className)) {
             throw new NanoContainerMarkupException("'" + CLASS + "' attribute not specified for " + element.getNodeName());
         }
-        Class implementationClass = classLoader.loadClass(className);
+        Class implementationClass = getClassLoader().loadClass(className);
         Parameter[] parameters = createChildParameters(container, element);
         ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(factoryName);
         container.getPico().registerComponent(componentAdapterFactory.createComponentAdapter(key, implementationClass, parameters));
     }
 
     private ComponentAdapterFactory createComponentAdapterFactory(String factoryName) throws ClassNotFoundException, PicoCompositionException {
-        Class factoryClass = classLoader.loadClass(factoryName);
+        Class factoryClass = getClassLoader().loadClass(factoryName);
         try {
             return (ComponentAdapterFactory) factoryClass.newInstance();
         } catch (InstantiationException e) {

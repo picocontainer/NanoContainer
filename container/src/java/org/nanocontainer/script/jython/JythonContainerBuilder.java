@@ -9,13 +9,14 @@
  *****************************************************************************/
 package org.nanocontainer.script.jython;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+
+import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.ScriptedContainerBuilder;
 import org.picocontainer.PicoContainer;
 import org.python.util.PythonInterpreter;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 
 /**
  * {@inheritDoc}
@@ -32,24 +33,28 @@ import java.io.Reader;
  * @version $Revision$
  */
 public class JythonContainerBuilder extends ScriptedContainerBuilder {
+
     public JythonContainerBuilder(Reader script, ClassLoader classLoader) {
         super(script, classLoader);
     }
 
+    public JythonContainerBuilder(URL script, ClassLoader classLoader) {
+        super(script, classLoader);
+    }
+
     protected PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope) {
-        PythonInterpreter interpreter = new PythonInterpreter();
-        interpreter.exec("from org.picocontainer.defaults import *");
-        interpreter.exec("from org.nanocontainer import *");
-        interpreter.exec("from org.nanocontainer.reflection import *");
-        interpreter.exec("from java.net import *");
-        interpreter.set("parent", parentContainer);
-        interpreter.set("assemblyScope", assemblyScope);
-        interpreter.execfile(new InputStream() {
-            public int read() throws IOException {
-                int i = script.read();
-                return i;
-            }
-        }, "nanocontainer.py");
-        return (PicoContainer) interpreter.get("pico", PicoContainer.class);
+        try {
+            PythonInterpreter interpreter = new PythonInterpreter();
+            interpreter.exec("from org.picocontainer.defaults import *");
+            interpreter.exec("from org.nanocontainer import *");
+            interpreter.exec("from org.nanocontainer.reflection import *");
+            interpreter.exec("from java.net import *");
+            interpreter.set("parent", parentContainer);
+            interpreter.set("assemblyScope", assemblyScope);
+            interpreter.execfile(getScriptInputStream(), "nanocontainer.py");
+            return (PicoContainer) interpreter.get("pico", PicoContainer.class);
+        } catch (IOException e) {
+            throw new NanoContainerMarkupException(e);
+        }
     }
 }
