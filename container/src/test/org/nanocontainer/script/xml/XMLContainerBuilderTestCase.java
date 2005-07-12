@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -317,20 +318,20 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "   </java.util.Date>" +
                 "  </component-instance>" +
                 "  <component-instance factory='org.nanocontainer.script.xml.BeanComponentInstanceFactory'>" +
-                "   <org.nanocontainer.script.xml.SpecialDateFormat>" +
-                "       <lenient>true</lenient>" +
-                "       <someDate>date</someDate>" +
-                "   </org.nanocontainer.script.xml.SpecialDateFormat>" +
+                "   <java.text.SimpleDateFormat>" +
+                "       <lenient>false</lenient>" +
+                "       <date name='2DigitYearStart'>date</date>" +
+                "   </java.text.SimpleDateFormat>" +
                 "  </component-instance>" +
                 "</container>");
 
         PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
-        Object instance = pico.getComponentInstance(SpecialDateFormat.class);
+        Object instance = pico.getComponentInstance(SimpleDateFormat.class);
         assertNotNull(instance);
-        assertTrue(instance instanceof SpecialDateFormat);
-        SpecialDateFormat format = ((SpecialDateFormat) instance);
-        assertTrue(format.isLenient());
-        assertEquals(new Date(0), format.getSomeDate());
+        assertTrue(instance instanceof SimpleDateFormat);
+        SimpleDateFormat format = ((SimpleDateFormat) instance);
+        assertFalse(format.isLenient());
+        assertEquals(new Date(0), format.get2DigitYearStart());
     }
 
     public void testComponentInstanceWithKey() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {

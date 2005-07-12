@@ -30,7 +30,9 @@ import java.util.Properties;
  * @author Mauro Talevi
  */
 public class BeanComponentInstanceFactory implements XMLComponentInstanceFactory {
-
+    
+    private static final String NAME_ATTRIBUTE = "name";
+    
     public Object makeInstance(PicoContainer pico, Element element, ClassLoader classLoader) throws ClassNotFoundException, MalformedURLException {
         String className = element.getNodeName();
         Object instance = null;
@@ -58,9 +60,18 @@ public class BeanComponentInstanceFactory implements XMLComponentInstanceFactory
         for (int i = 0; i < nodes.getLength(); i++) {
             Node n = nodes.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                String key = n.getNodeName();
+                String name = n.getNodeName();
+                
+                //Provide for a new 'name' attribute in properties.
+                if (n.hasAttributes()) {
+                    String mappedName = n.getAttributes().getNamedItem(NAME_ATTRIBUTE).getNodeValue();
+                    if (mappedName != null) {
+                        name = mappedName;
+                    }
+                }
+
                 String value = n.getFirstChild().getNodeValue();
-                properties.setProperty(key, value);
+                properties.setProperty(name, value);
             }
         }
         return properties;

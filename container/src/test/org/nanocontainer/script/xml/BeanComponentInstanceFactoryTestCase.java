@@ -42,4 +42,22 @@ public class BeanComponentInstanceFactoryTestCase extends TestCase {
         assertEquals("hello", bean.getBar());
         assertEquals(10, bean.getFoo());
     }
+
+    public void testDeserializationWithMappedName() throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException {
+        BeanComponentInstanceFactory factory = new BeanComponentInstanceFactory();
+
+        StringReader sr = new StringReader("" +
+                "<org.nanocontainer.script.xml.TestBean>" +
+                "<any name='foo'>10</any>" +
+                "<bar>hello</bar>" +
+                "</org.nanocontainer.script.xml.TestBean>");
+        InputSource is = new InputSource(sr);
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = db.parse(is);
+
+        Object o = factory.makeInstance(null, doc.getDocumentElement(), Thread.currentThread().getContextClassLoader());
+        TestBean bean = (TestBean) o;
+        assertEquals("hello", bean.getBar());
+        assertEquals(10, bean.getFoo());
+    }
 }
