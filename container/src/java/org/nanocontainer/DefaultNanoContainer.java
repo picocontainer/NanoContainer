@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * The default implementation of {@link NanoContainer}.
@@ -186,7 +188,13 @@ public class DefaultNanoContainer implements NanoContainer {
             StringBuffer sb = new StringBuffer();
             while(classLoader != null) {
                 sb.append(classLoader.toString()).append("\n");
-                classLoader = classLoader.getParent();
+                final ClassLoader cl = classLoader;
+                classLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                    public Object run() {
+                        return cl.getParent();
+                    }
+                });
+
             }
             return sb.toString();
         }
