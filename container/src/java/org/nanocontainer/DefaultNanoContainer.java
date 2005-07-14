@@ -151,9 +151,13 @@ public class DefaultNanoContainer implements NanoContainer {
 
     public ClassLoader getComponentClassLoader() {
         if (componentClassLoader == null) {
-            URL[] urlz = (URL[]) urls.toArray(new URL[urls.size()]);
+            final URL[] urlz = (URL[]) urls.toArray(new URL[urls.size()]);
             componentClassLoaderLocked = true;
-            componentClassLoader = new URLPrintingClassLoader(urlz, parentClassLoader);
+            componentClassLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return new URLPrintingClassLoader(urlz, parentClassLoader);
+                }
+            });
         }
         return componentClassLoader;
     }

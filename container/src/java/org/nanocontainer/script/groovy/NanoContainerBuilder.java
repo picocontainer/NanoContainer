@@ -41,6 +41,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 /**
  * Builds trees of PicoContainers and Pico components using GroovyMarkup
@@ -168,13 +170,26 @@ public class NanoContainerBuilder extends BuilderSupport {
 
     private Object createClassPathElementNode(Map attributes, NanoContainer nanoContainer) {
 
-        String path = (String) attributes.remove("path");
+        final String path = (String) attributes.remove("path");
         URL pathURL = null;
         try {
             if (path.toLowerCase().startsWith("http://")) {
                 pathURL = new URL(path);
             } else {
-                pathURL = new File(path).toURL();
+                Object rVal = AccessController.doPrivileged(new PrivilegedAction() {
+                    public Object run() {
+                        try {
+                            return new File(path).toURL();
+                        } catch (MalformedURLException e) {
+                            return e;
+                        }
+
+                    }
+                });
+                if (rVal instanceof MalformedURLException) {
+                    throw (MalformedURLException) rVal;
+                }
+                pathURL = (URL) rVal;
             }
         } catch (MalformedURLException e) {
             throw new NanoContainerMarkupException("classpath '" + path + "' malformed ", e);
