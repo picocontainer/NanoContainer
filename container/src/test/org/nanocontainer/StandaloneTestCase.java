@@ -9,14 +9,14 @@
 
 package org.nanocontainer;
 
-import junit.framework.TestCase;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.ParseException;
-
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.ParseException;
 
 
 /**
