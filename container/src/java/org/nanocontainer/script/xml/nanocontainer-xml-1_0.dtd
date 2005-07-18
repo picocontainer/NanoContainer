@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	NanoContainer XML DTD
+	Authors: Mauro Talevi
+	
+	The doctype for XML documents conforming to this DTD is 
+	
+	<!DOCTYPE container PUBLIC "-//NanoContainer//DTD NanoContainer XML 1.0//EN"  
+								 "http://nanocontainer.org/dtd/nanocontainer-xml-1_0.dtd">
+-->
+
+<!--
+	The container is the document root.  A container element represents a PicoContainer.
+	A container allows to specify the classpath for the container, component implementations, 
+	component adapters and component instances.
+	A container may contain child containers. 
+-->
+<!ELEMENT container (
+	(classpath | container | component-implementation | component-adapter | component-instance )*
+)>
+
+<!--
+	Specifies the implementation class of the org.picocontainer.ComponentAdapterFactory 
+	used globally by the container
+-->
+<!ATTLIST container component-adapter-factory CDATA #IMPLIED>
+
+<!--
+	Specifies the implementation class of the org.nanocontainer.script.xml.XMLComponentInstanceFactory 
+	used globally by the container
+-->
+<!ATTLIST container component-instance-factory CDATA #IMPLIED>
+
+<!--
+	Defines the classpath for the parent container
+-->
+<!ELEMENT classpath (
+	(element)*
+)>
+
+<!--
+	Defines the classpath element
+-->
+<!ELEMENT element EMPTY>
+
+<!--
+	Classpath elements can be specified by file.
+-->
+<!ATTLIST element file CDATA #IMPLIED>
+
+<!--
+	Classpath elements can be specified by URL.
+-->
+<!ATTLIST element url CDATA #IMPLIED>
+
+<!--
+	Registers the implemention of a component
+-->
+<!ELEMENT component-implementation (
+	(parameter)*
+)>
+
+<!--
+	Component implementations must specify a class
+-->
+<!ATTLIST component-implementation class CDATA #IMPLIED>
+
+<!--
+	Component implementations may optionally specify a key with which to register the implementation
+-->
+<!ATTLIST component-implementation key CDATA #IMPLIED>
+
+<!--
+	Registers a org.picocontainer.ContainerAdapter
+-->
+<!ELEMENT component-adapter (
+	(parameter)*
+)>
+
+<!--
+	Component adapters must specify a class
+-->
+<!ATTLIST component-adapter class CDATA #IMPLIED>
+
+<!--
+	Component adapters must specify a key with which to register the adapter
+-->
+<!ATTLIST component-adapter key CDATA #IMPLIED>
+
+<!--
+	Component adapters may optionally specify a org.picocontainer.ComponentAdapterFactory
+	implementation class which overrides the globally specified one.
+-->
+<!ATTLIST component-adapter factory CDATA #IMPLIED>
+
+<!--
+	Registers an instance of a component
+-->
+<!ELEMENT component-instance (
+	(parameter)*
+)>
+
+<!--
+	Component instances may optionally specify a org.nanocontainer.script.xml.XMLComponentInstanceFactory
+	implementation class which overrides the globally specified one.
+-->
+<!ATTLIST component-instance factory CDATA #IMPLIED>
+
+<!--
+	Component instances may optionally specify a key with which to register the instance
+-->
+<!ATTLIST component-instance key CDATA #IMPLIED>
+
+<!--
+	Defines the parameter for component implementations and instances.
+	The parameter element may contain other elements - which are used by the NanoContainer 
+	default org.nanocontainer.script.xml.XMLComponentInstanceFactor.
+-->
+<!ELEMENT parameter (
+	(boolean|short|int|long|float|double|char|string|file|url|class)*
+)>
+
+<!--
+	Parameters may optionally specify a org.nanocontainer.script.xml.XMLComponentInstanceFactory
+	implementation class which overrides the globally specified one.
+-->
+<!ATTLIST parameter factory CDATA #IMPLIED>
+
+<!--
+	Parameters may specify a key which references other component-implementations or component-instances
+	defined in the container
+-->
+<!ATTLIST parameter key CDATA #IMPLIED>
+
+<!--
+	Defines the parameter element used by the NanoContainer 
+	default org.nanocontainer.script.xml.XMLComponentInstanceFactor.
+-->
+<!ELEMENT boolean (#PCDATA)>
+<!ELEMENT short (#PCDATA)>
+<!ELEMENT int (#PCDATA)>
+<!ELEMENT long (#PCDATA)>
+<!ELEMENT float (#PCDATA)>
+<!ELEMENT double (#PCDATA)>
+<!ELEMENT char (#PCDATA)>
+<!ELEMENT string (#PCDATA)>
+<!ELEMENT file (#PCDATA)>
+<!ELEMENT url (#PCDATA)>
+<!ELEMENT class (#PCDATA)>
+
