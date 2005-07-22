@@ -23,12 +23,8 @@ import org.picocontainer.defaults.BeanPropertyComponentAdapter;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.util.*;
+import java.security.*;
 
 /**
  * The default implementation of {@link NanoContainer}.
@@ -48,7 +44,7 @@ public class DefaultNanoContainer implements NanoContainer {
         primitiveNameToBoxedName.put("boolean", Boolean.class.getName());
     }
 
-    private final List urls = new ArrayList();
+    private final List classPathElements = new ArrayList();
     private final StringToObjectConverter confverter = new StringToObjectConverter();
     private final MutablePicoContainer picoContainer;
     private final ClassLoader parentClassLoader;
@@ -144,18 +140,21 @@ public class DefaultNanoContainer implements NanoContainer {
         return classLoader.loadClass(cn);
     }
 
-    public void addClassLoaderURL(URL url) {
+    public ClassPathElement addClassLoaderURL(URL url) {
         if (componentClassLoaderLocked) throw new IllegalStateException("ClassLoader URLs cannot be added once this instance is locked");
-        urls.add(url);
+
+        ClassPathElement classPathElement = new ClassPathElement(url);
+        classPathElements.add(classPathElement);
+        return classPathElement;
     }
 
     public ClassLoader getComponentClassLoader() {
         if (componentClassLoader == null) {
-            final URL[] urlz = (URL[]) urls.toArray(new URL[urls.size()]);
+            //final URL[] urlz = (URL[]) urls.toArray(new URL[urls.size()]);
             componentClassLoaderLocked = true;
             componentClassLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
-                    return new URLPrintingClassLoader(urlz, parentClassLoader);
+                    return new URLPrintingClassLoader(classPathElements, parentClassLoader);
                 }
             });
         }
@@ -167,8 +166,20 @@ public class DefaultNanoContainer implements NanoContainer {
     }
 
     public static class URLPrintingClassLoader extends URLClassLoader {
-        public URLPrintingClassLoader(URL[] urls, ClassLoader parent) {
-            super(urls, parent);
+        private final List classPathElements;
+        private Map permissionsMap;
+
+        public URLPrintingClassLoader(List classPathElements, ClassLoader parent) {
+            super(getURLs(classPathElements), parent);
+            this.classPathElements = classPathElements;
+        }
+
+        private static URL[] getURLs(List classPathElemelements) {
+            final URL[] urlz = new URL[classPathElemelements.size()];
+            for(int i = 0; i < urlz.length; i++) {
+                urlz[i] = ((ClassPathElement) classPathElemelements.get(i)).getUrl();
+            }
+            return urlz;
         }
 
         public Class loadClass(String name) throws ClassNotFoundException {
@@ -212,6 +223,27 @@ public class DefaultNanoContainer implements NanoContainer {
             }
 
             return result;
+        }
+
+        protected PermissionCollection getPermissions(CodeSource codeSource) {
+            {
+
+            }
+            if (permissionsMap == null ) {
+                permissionsMap = new HashMap();
+                for (int i = 0; i < classPathElements.size(); i++) {
+                    ClassPathElement cpe =  (ClassPathElement) classPathElements.get(i);
+                    PermissionCollection permissionCollection = cpe.getPermissionCollection();
+                    permissionsMap.put(cpe.getUrl(),permissionCollection);
+                }
+            }
+            Permissions perms = (Permissions) permissionsMap.get(codeSource.getLocation());
+            Enumeration enumeration = perms.elements();
+            while (enumeration.hasMoreElements()) {
+                Object o = enumeration.nextElement();
+            }
+            return (PermissionCollection) perms;
+            //return super.getPermissions(codeSource);
         }
     }
 

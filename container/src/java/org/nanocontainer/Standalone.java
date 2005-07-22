@@ -17,6 +17,7 @@ import org.apache.commons.cli.PosixParser;
 import org.nanocontainer.script.ScriptedContainerBuilderFactory;
 import org.picocontainer.defaults.ObjectReference;
 import org.picocontainer.defaults.SimpleReference;
+import org.picocontainer.PicoContainer;
 
 import java.io.File;
 import java.io.IOException;

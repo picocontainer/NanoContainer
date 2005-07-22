@@ -54,7 +54,7 @@ public interface NanoContainer {
      *
      * @param url
      */
-    void addClassLoaderURL(URL url);
+    ClassPathElement addClassLoaderURL(URL url);
 
     /**
      * Returns the wrapped PicoContainer instance (russian doll concept). The method name is short

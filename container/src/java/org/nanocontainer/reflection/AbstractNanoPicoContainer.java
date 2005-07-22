@@ -13,6 +13,7 @@ package org.nanocontainer.reflection;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.NanoPicoContainer;
+import org.nanocontainer.ClassPathElement;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
@@ -121,8 +122,8 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
     }
 
 
-    public void addClassLoaderURL(URL url) {
-        container.addClassLoaderURL(url);
+    public ClassPathElement addClassLoaderURL(URL url) {
+        return container.addClassLoaderURL(url);
     }
 
     public ComponentAdapter registerComponentImplementation(String componentImplementationClassName) throws PicoRegistrationException, ClassNotFoundException, PicoIntrospectionException {

@@ -23,11 +23,13 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.ClassNameKey;
+import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.script.NanoContainerBuilderDecorationDelegate;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.NullNanoContainerBuilderDecorationDelegate;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
+import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.ConstantParameter;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
@@ -36,13 +38,10 @@ import org.picocontainer.defaults.DefaultPicoContainer;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.security.PrivilegedAction;
 import java.security.AccessController;
+import java.security.Permission;
 
 /**
  * Builds trees of PicoContainers and Pico components using GroovyMarkup
@@ -114,6 +113,11 @@ public class NanoContainerBuilder extends BuilderSupport {
                     throw new NanoContainerMarkupException("ClassNotFoundException:" + e.getMessage(), e);
                 }
             }
+        } else if (current instanceof ClassPathElement) {
+            if (name.equals("grant")) {
+                return createGrantPermission(attributes, (ClassPathElement) current);
+            }
+            return "";
         } else {
             // we don't know how to handle it - delegate to the decorator.
             return nanoContainerBuilderDecorationDelegate.createNode(name, attributes, current);
@@ -123,6 +127,12 @@ public class NanoContainerBuilder extends BuilderSupport {
     private Object createChildBuilder(Object current, Object name, Map attributes) {
         GroovyObject groovyObject = (GroovyObject) current;
         return groovyObject.invokeMethod(name.toString(), attributes);
+    }
+
+    private Object createGrantPermission(Map attributes, ClassPathElement cpe) {
+        Permission perm = (Permission) attributes.remove("class");
+        return cpe.grantPermission(perm);
+
     }
 
     private Object createChildOfContainerNode(NanoContainer parentContainer, Object name, Map attributes, Object current) throws ClassNotFoundException {
@@ -162,7 +172,7 @@ public class NanoContainerBuilder extends BuilderSupport {
         return componentInstance;
     }
 
-    private Object createClassPathElementNode(Map attributes, NanoContainer nanoContainer) {
+    private ClassPathElement createClassPathElementNode(Map attributes, NanoContainer nanoContainer) {
 
         final String path = (String) attributes.remove("path");
         URL pathURL = null;
@@ -188,8 +198,9 @@ public class NanoContainerBuilder extends BuilderSupport {
         } catch (MalformedURLException e) {
             throw new NanoContainerMarkupException("classpath '" + path + "' malformed ", e);
         }
-        nanoContainer.addClassLoaderURL(pathURL);
-        return pathURL;
+        //ClassPathElement cpe = new ClassPathElement(pathURL);
+        return nanoContainer.addClassLoaderURL(pathURL);
+        //return cpe;
     }
 
     private Object createBeanNode(Map attributes, MutablePicoContainer pico) {
@@ -247,7 +258,15 @@ public class NanoContainerBuilder extends BuilderSupport {
             wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory, parent.getPico());
             parent.getPico().addChildContainer(wrappedPicoContainer);
         } else {
-            parentClassLoader = Thread.currentThread().getContextClassLoader();
+            //parentClassLoader = (ClassLoader) attributes.remove("parentClassLoader");
+            //if (parentClassLoader == null) {
+            //    parentClassLoader = Thread.currentThread().getContextClassLoader();
+            parentClassLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return PicoContainer.class.getClassLoader();
+                }
+            });
+            //}
             wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory);
         }
 
