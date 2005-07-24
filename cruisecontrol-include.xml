@@ -1,5 +1,5 @@
-
-  <project name="NanoContainer" buildafterfailed="true">
+<?xml version='1.0' ?>
+<project name="NanoContainer" buildafterfailed="true">
 
     <bootstrappers>
           <svnbootstrapper localworkingcopy="projects/picocontainer/java/nanocontainer/trunk"/>
@@ -19,4 +19,4 @@ projectfile="projects/picocontainer/java/nanocontainer/trunk/project.xml"
       /> 
     </schedule>
 
-  </project>
+</project>
