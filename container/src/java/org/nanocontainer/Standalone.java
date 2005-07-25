@@ -9,6 +9,10 @@
 
 package org.nanocontainer;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
@@ -17,12 +21,18 @@ import org.apache.commons.cli.PosixParser;
 import org.nanocontainer.script.ScriptedContainerBuilderFactory;
 import org.picocontainer.defaults.ObjectReference;
 import org.picocontainer.defaults.SimpleReference;
-import org.picocontainer.PicoContainer;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
+/**
+ * Standalone offers a command line interface to NanoContainer.
+ * Standalone options are: -c <composition-file> [-q|-n|-h|-v]
+ * <ul>
+ *  <li>-c: specifies composition file</li>
+ *  <li>-q: quite mode</li>
+ *  <li>-n: forces ScriptedContainerBuilderFactory to exit after start</li>
+ *  <li>-h: print usage</li>
+ *  <li>-v: print version</li>
+ * </ul>
+ */
 public class Standalone {
 
     private static final char HELP_OPT = 'h';
