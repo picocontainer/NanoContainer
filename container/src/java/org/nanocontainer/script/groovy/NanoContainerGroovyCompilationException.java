@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.codehaus.groovy.control.CompilationFailedException;
+import org.codehaus.groovy.control.ErrorCollector;
+import org.codehaus.groovy.control.ProcessingUnit;
 import org.codehaus.groovy.control.messages.ExceptionMessage;
 import org.nanocontainer.script.NanoContainerMarkupException;
 
@@ -33,12 +35,23 @@ public class NanoContainerGroovyCompilationException extends NanoContainerMarkup
         return sb.toString();
     }
 
-    private List getErrors(CompilationFailedException e) {
-        List errors = e.getUnit().getErrorCollector().getErrors();
-        // errors can definitely be null:
-        if ( errors == null ){
-            return Collections.EMPTY_LIST;                
+    /**
+     * Extract errors from groovy exception, coding defensively against
+     * possible null values.
+     * @param e the CompilationFailedException
+     * @return A List of errors
+     */
+    private List getErrors(CompilationFailedException e) {        
+        ProcessingUnit unit = e.getUnit();
+        if ( unit != null ){
+            ErrorCollector collector = unit.getErrorCollector();
+            if ( collector != null ){
+                List errors = collector.getErrors();
+                if ( errors != null ){
+                    return errors;
+                }
+            }
         }
-        return errors;
+        return Collections.EMPTY_LIST;
     }
 }
