@@ -9,12 +9,13 @@
  *****************************************************************************/
 package org.nanocontainer.script.bsh;
 
+import java.util.ArrayList;
+
 import junit.framework.TestCase;
+
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
-
-import java.util.ArrayList;
 
 /**
  * <a href="http://www.junit.org/">JUnit</a>
@@ -25,7 +26,7 @@ import java.util.ArrayList;
  * @author Nick Sieger
  * @version $Id$
  */
-public class BeanShellComponentAdapterFactoryTestCase extends TestCase {
+public class BeanShellComponentAdapterTestCase extends TestCase {
 
     private MutablePicoContainer pico;
 
@@ -33,8 +34,7 @@ public class BeanShellComponentAdapterFactoryTestCase extends TestCase {
         pico = new DefaultPicoContainer();
         pico.registerComponentImplementation("whatever", ArrayList.class);
 
-        ComponentAdapter adapter = new BeanShellComponentAdapterFactory().createComponentAdapter("thekey", implementation, null);
-
+        ComponentAdapter adapter = new BeanShellComponentAdapter("thekey", implementation, null);
         pico.registerComponent(adapter);
         return adapter;
     }
