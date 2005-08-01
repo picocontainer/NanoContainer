@@ -43,31 +43,45 @@ public class GroovyContainerBuilderTestCase extends AbstractScriptedContainerBui
     }
 
 	public void testAdditionalBindingViaSubClassing() {
-		// NOTE script does NOT define a "builder"
 		Reader script = new StringReader("" +
+                "builder = new org.nanocontainer.script.groovy.NanoContainerBuilder()\n" +
                 "pico = builder.container(parent:parent) { \n" +
-                "  component(StringBuffer)\n" +
+                "  component(key:String.class, instance:foo)\n" +
                 "}");   		
 
         PicoContainer parent = new DefaultPicoContainer();
-        PicoContainer pico = buildContainer(new ChildGroovyContainerBuilder(script, getClass().getClassLoader()), parent, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(new SubclassGroovyContainerBuilder(script, getClass().getClassLoader()), parent, "SOME_SCOPE");
 
 		assertNotSame(parent, pico.getParent());
-        assertEquals(StringBuffer.class, pico.getComponentInstance(StringBuffer.class).getClass());
+        assertEquals("bar", pico.getComponentInstance(String.class));
 	}
 
+    public void testBuildingWithDefaultBuilder() {
+        // NOTE script does NOT define a "builder"
+        Reader script = new StringReader("" +
+                "pico = builder.container(parent:parent) { \n" +
+                "  component(key:String.class, instance:'foo')\n" +
+                "}");
+
+        PicoContainer parent = new DefaultPicoContainer();
+        PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, getClass().getClassLoader()), parent, "SOME_SCOPE");
+
+        assertNotSame(parent, pico.getParent());
+        assertEquals("foo", pico.getComponentInstance(String.class));
+    }
+
 	/**
-	 * Child GroovyContainerBuilder which adds additional bindings
+	 * Child SubclassGroovyContainerBuilder which adds additional bindings
 	 */
-	private class ChildGroovyContainerBuilder extends GroovyContainerBuilder {
-		public ChildGroovyContainerBuilder(final Reader script, ClassLoader classLoader) {
+	private class SubclassGroovyContainerBuilder extends GroovyContainerBuilder {
+		public SubclassGroovyContainerBuilder(final Reader script, ClassLoader classLoader) {
 			super(script, classLoader);
 		}
 
 		protected void handleBinding(Binding binding) {
 			super.handleBinding(binding);
 
-			binding.setVariable("builder", new NanoContainerBuilder());
+			binding.setVariable("foo", "bar");
 		}
 
 	}

@@ -53,6 +53,7 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
         }
         Binding binding = new Binding();
         binding.setVariable("parent", parentContainer);
+        binding.setVariable("builder", new NanoContainerBuilder());
         binding.setVariable("assemblyScope", assemblyScope);
 		handleBinding(binding);
         groovyScript.setBinding(binding);
