@@ -6,6 +6,7 @@ import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.picocontainer.PicoContainer;
+import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.InstanceComponentAdapter;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
@@ -327,27 +328,28 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
 
 
 
-    //	public void testWithDynamicClassPath() {
-    //		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-    //
-    //		Reader script = new StringReader("" +
-    //                "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
-    //                "        compJarPath = testCompJar.getCanonicalPath()\n" +
-    //                "        child = null\n" +
-    //                "        pico = builder.container {\n" +
-    //                "            classPathElement(path:compJarPath)\n" +
-    //                "            component(class:\"TestComp\")\n" +
-    //                "        }" +
-    //                "");
-    //
-    //		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
-    //                new GroovyContainerBuilder(script, getClass().getClassLoader()),
-    //                parent,
-    //                "SOME_SCOPE");
-    //
-    //        assertTrue(pico.getComponentInstances().size() == 2);
-    //	}
-    //
+    	public void testWithDynamicClassPath() {
+    		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+
+    		Reader script = new StringReader("" +
+                    "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+                    "        compJarPath = testCompJar.getCanonicalPath()\n" +
+                    "        child = null\n" +
+                    "        pico = builder.container {\n" +
+                    "            classPathElement(path:compJarPath)\n" +
+                    "            component(class:\"TestComp\")\n" +
+                    "        }" +
+                    "");
+
+    		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+                    new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                    parent,
+                    "SOME_SCOPE");
+
+            assertTrue(pico.getComponentInstances().size() == 1);
+            assertEquals("TestComp",pico.getComponentInstances().get(0).getClass().getName());
+    	}
+
     //	public void testWithDynamicClassPathWithPermissions() {
     //		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
     //
