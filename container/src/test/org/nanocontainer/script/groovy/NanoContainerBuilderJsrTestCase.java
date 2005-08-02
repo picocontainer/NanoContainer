@@ -350,27 +350,31 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
             assertEquals("TestComp",pico.getComponentInstances().get(0).getClass().getName());
     	}
 
-    //	public void testWithDynamicClassPathWithPermissions() {
-    //		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-    //
-    //		Reader script = new StringReader("" +
-    //                "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
-    //                "        compJarPath = testCompJar.getCanonicalPath()\n" +
-    //                "        child = null\n" +
-    //                "        pico = builder.container {\n" +
-    //                "            classPathElement(path:compJarPath) " +
-    //                "            component(class:\"TestComp\")\n" +
-    //                "        }" +
-    //                "");
-    //
-    //		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
-    //                new GroovyContainerBuilder(script, getClass().getClassLoader()),
-    //                parent,
-    //                "SOME_SCOPE");
-    //
-    //
-    //        assertTrue(pico.getComponentInstances().size() == 2);
-    //	}
+    	public void testWithDynamicClassPathWithPermissions() {
+    		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+
+    		Reader script = new StringReader("" +
+                    "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+                    "        compJarPath = testCompJar.getCanonicalPath()\n" +
+                    "        child = null\n" +
+                    "        pico = builder.container {\n" +
+                    "            classPathElement(path:compJarPath) {\n" +
+                    "                grant(new java.net.SocketPermission('google.com','connect'))\n" +
+                    "            }\n" +
+                    "            component(class:\"TestComp\")\n" +
+                    "        }" +
+                    "");
+
+    		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+                    new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                    parent,
+                    "SOME_SCOPE");
+
+
+            assertTrue(pico.getComponentInstances().size() == 1);
+
+            // can;t actually test the permission under JUNIT control. We're just testing the syntax here.
+    	}
 
 
 }
