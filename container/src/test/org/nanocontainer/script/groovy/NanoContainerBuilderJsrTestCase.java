@@ -373,8 +373,33 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
 
             assertTrue(pico.getComponentInstances().size() == 1);
 
-            // can;t actually test the permission under JUNIT control. We're just testing the syntax here.
+            // can't actually test the permission under JUNIT control. We're just testing the syntax here.
     	}
+
+    public void testGrantPermissionInWrongPlace() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+
+        try {
+            Reader script = new StringReader("" +
+                    "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+                    "        compJarPath = testCompJar.getCanonicalPath()\n" +
+                    "        child = null\n" +
+                    "        pico = builder.container {\n" +
+                    "            grant(new java.net.SocketPermission('google.com','connect'))\n" +
+                    "        }" +
+                    "");
+
+            buildContainer(
+                    new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                    parent,
+                    "SOME_SCOPE");
+            fail("should barf with [Don't know how to create a 'grant' child] exception");
+        } catch (NanoContainerMarkupException e) {
+            assertTrue(e.getMessage().indexOf("Don't know how to create a 'grant' child") > -1);
+        }
+
+
+    }
 
 
 }
