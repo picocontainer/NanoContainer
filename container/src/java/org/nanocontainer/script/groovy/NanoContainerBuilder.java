@@ -183,7 +183,11 @@ public class NanoContainerBuilder extends BuilderSupport {
                 Object rVal = AccessController.doPrivileged(new PrivilegedAction() {
                     public Object run() {
                         try {
-                            return new File(path).toURL();
+                            File file = new File(path);
+                            if (!file.exists()) {
+                                return new NanoContainerMarkupException("classpath '" + path + "' does not exist ");
+                            }
+                            return file.toURL();
                         } catch (MalformedURLException e) {
                             return e;
                         }
@@ -192,6 +196,9 @@ public class NanoContainerBuilder extends BuilderSupport {
                 });
                 if (rVal instanceof MalformedURLException) {
                     throw (MalformedURLException) rVal;
+                }
+                if (rVal instanceof NanoContainerMarkupException) {
+                    throw (NanoContainerMarkupException) rVal;
                 }
                 pathURL = (URL) rVal;
             }

@@ -2,11 +2,9 @@ package org.nanocontainer.script.groovy;
 
 import org.jmock.Mock;
 import org.nanocontainer.integrationkit.PicoCompositionException;
+import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.NanoContainerMarkupException;
-import org.nanocontainer.script.groovy.A;
-import org.nanocontainer.script.groovy.B;
-import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.InstanceComponentAdapter;
@@ -17,13 +15,12 @@ import java.io.StringReader;
 
 /**
  * Test with groovy jsr parser
- * 
+ *
  * @author Paul Hammant
  * @author Mauro Talevi
  * @version $Revision: 1775 $
  */
 public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBuilderTestCase {
-
     public void testInstantiateBasicScriptable() throws PicoCompositionException {
         Reader script = new StringReader("" +
                 "import org.nanocontainer.script.groovy.X\n" +
@@ -265,27 +262,27 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
         assertEquals("Should match the expression", "<A<C<BB>C>A>!B!C!A", X.componentRecorder);
     }
 
-	public void testBuildContainerWithParentAttribute() {
-		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-		parent.registerComponentInstance("hello", "world");
+    public void testBuildContainerWithParentAttribute() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+        parent.registerComponentInstance("hello", "world");
 
-		Reader script = new StringReader("" +
+        Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "nano = new NanoContainerBuilder().container(parent:parent) {\n" +
                 "    component(A)\n" +
                 "}\n");
 
-		PicoContainer pico = buildContainer(
-				new GroovyContainerBuilder(script, getClass().getClassLoader()),
-				parent,
-				"SOME_SCOPE");
+        PicoContainer pico = buildContainer(
+                        new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                        parent,
+                        "SOME_SCOPE");
 
-		// Should be able to get instance that was registered in the parent container
+        // Should be able to get instance that was registered in the parent container
         assertEquals("world", pico.getComponentInstance("hello"));
-	}
+    }
 
-	public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
-		Reader script = new StringReader("" +
+    public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
+        Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "nano = new NanoContainerBuilder().container() {\n" +
                 "    component(A)\n" +
@@ -294,16 +291,84 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
                 "    }\n" +
                 "}\n");
 
-		try {
-			buildContainer(
-					new GroovyContainerBuilder(script, getClass().getClassLoader()),
-					new DefaultNanoPicoContainer(),
-					"SOME_SCOPE");
+        try {
+            buildContainer(
+                    new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                    new DefaultNanoPicoContainer(),
+                    "SOME_SCOPE");
 
-			fail("NanoContainerMarkupException should have been thrown.");
-		} catch (NanoContainerMarkupException ignore) {
-			// ignore
-		}
-	}
+            fail("NanoContainerMarkupException should have been thrown.");
+        } catch (NanoContainerMarkupException ignore) {
+            // ignore
+        }
+    }
+
+    public void testWithDynamicClassPathThatDoesNotExist() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+
+        try {
+            Reader script = new StringReader("" +
+                    "        child = null\n" +
+                    "        pico = builder.container {\n" +
+                    "            classPathElement(path:'this/path/does/not/exist.jar')\n" +
+                    "            component(class:\"FooBar\") " +
+                    "        }" +
+                    "");
+
+            buildContainer(new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                    parent,
+                    "SOME_SCOPE");
+            fail("should have barfed with bad path exception");
+        } catch (NanoContainerMarkupException e) {
+            // excpected
+        }
+
+    }
+
+
+
+    //	public void testWithDynamicClassPath() {
+    //		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+    //
+    //		Reader script = new StringReader("" +
+    //                "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+    //                "        compJarPath = testCompJar.getCanonicalPath()\n" +
+    //                "        child = null\n" +
+    //                "        pico = builder.container {\n" +
+    //                "            classPathElement(path:compJarPath)\n" +
+    //                "            component(class:\"TestComp\")\n" +
+    //                "        }" +
+    //                "");
+    //
+    //		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+    //                new GroovyContainerBuilder(script, getClass().getClassLoader()),
+    //                parent,
+    //                "SOME_SCOPE");
+    //
+    //        assertTrue(pico.getComponentInstances().size() == 2);
+    //	}
+    //
+    //	public void testWithDynamicClassPathWithPermissions() {
+    //		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+    //
+    //		Reader script = new StringReader("" +
+    //                "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+    //                "        compJarPath = testCompJar.getCanonicalPath()\n" +
+    //                "        child = null\n" +
+    //                "        pico = builder.container {\n" +
+    //                "            classPathElement(path:compJarPath) " +
+    //                "            component(class:\"TestComp\")\n" +
+    //                "        }" +
+    //                "");
+    //
+    //		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+    //                new GroovyContainerBuilder(script, getClass().getClassLoader()),
+    //                parent,
+    //                "SOME_SCOPE");
+    //
+    //
+    //        assertTrue(pico.getComponentInstances().size() == 2);
+    //	}
+
 
 }
