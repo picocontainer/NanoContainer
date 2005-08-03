@@ -10,21 +10,27 @@
 
 package org.nanocontainer;
 
-import org.nanocontainer.reflection.StringToObjectConverter;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
 import org.picocontainer.PicoIntrospectionException;
 import org.picocontainer.PicoRegistrationException;
+import org.picocontainer.defaults.BeanPropertyComponentAdapter;
 import org.picocontainer.defaults.ConstantParameter;
 import org.picocontainer.defaults.DefaultPicoContainer;
-import org.picocontainer.defaults.BeanPropertyComponentAdapter;
-
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
-import java.security.*;
 
 /**
  * The default implementation of {@link NanoContainer}.
@@ -45,7 +51,6 @@ public class DefaultNanoContainer implements NanoContainer {
     }
 
     private final List classPathElements = new ArrayList();
-    private final StringToObjectConverter confverter = new StringToObjectConverter();
     private final MutablePicoContainer picoContainer;
     private final ClassLoader parentClassLoader;
 
@@ -226,9 +231,6 @@ public class DefaultNanoContainer implements NanoContainer {
         }
 
         protected PermissionCollection getPermissions(CodeSource codeSource) {
-            {
-
-            }
             if (permissionsMap == null ) {
                 permissionsMap = new HashMap();
                 for (int i = 0; i < classPathElements.size(); i++) {
@@ -238,10 +240,6 @@ public class DefaultNanoContainer implements NanoContainer {
                 }
             }
             Permissions perms = (Permissions) permissionsMap.get(codeSource.getLocation());
-            Enumeration enumeration = perms.elements();
-            while (enumeration.hasMoreElements()) {
-                Object o = enumeration.nextElement();
-            }
             return (PermissionCollection) perms;
             //return super.getPermissions(codeSource);
         }
