@@ -10,18 +10,17 @@
 
 package org.nanocontainer.reflection;
 
+import java.io.Serializable;
+
 import org.nanocontainer.NanoPicoContainer;
-import org.picocontainer.defaults.ComponentMonitor;
+import org.picocontainer.ComponentMonitor;
+import org.picocontainer.LifecycleManager;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
-import org.picocontainer.LifecycleManager;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultPicoContainer;
-import org.picocontainer.defaults.NullComponentMonitor;
 import org.picocontainer.defaults.DefaultLifecycleManager;
-
-import java.io.Serializable;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
 /**
  * This is a MutablePicoContainer that also supports soft composition. i.e. assembly by class name rather that class
@@ -52,8 +51,8 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
     }
 
     public DefaultNanoPicoContainer(ClassLoader classLoader, PicoContainer parent) {
-        super(new DefaultPicoContainer(new DefaultComponentAdapterFactory(NullComponentMonitor.getInstance()), parent), classLoader);
-        this.lifecycleManager = new DefaultLifecycleManager(NullComponentMonitor.getInstance());
+        super(new DefaultPicoContainer(new DefaultComponentAdapterFactory(), parent), classLoader);
+        this.lifecycleManager = new DefaultLifecycleManager();
     }
 
     public DefaultNanoPicoContainer(ClassLoader classLoader, PicoContainer parent, ComponentMonitor componentMonitor) {

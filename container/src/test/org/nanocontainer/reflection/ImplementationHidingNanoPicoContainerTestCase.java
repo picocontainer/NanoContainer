@@ -13,7 +13,7 @@ package org.nanocontainer.reflection;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.LifecycleManager;
-import org.picocontainer.defaults.AbstractImplementationHidingPicoContainerTestCase;
+import org.picocontainer.tck.AbstractImplementationHidingPicoContainerTestCase;
 
 /**
  * @author Paul Hammant

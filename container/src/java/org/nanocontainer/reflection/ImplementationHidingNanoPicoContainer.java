@@ -10,6 +10,8 @@
 
 package org.nanocontainer.reflection;
 
+import java.io.Serializable;
+
 import org.nanocontainer.NanoPicoContainer;
 import org.picocontainer.LifecycleManager;
 import org.picocontainer.MutablePicoContainer;
@@ -18,9 +20,6 @@ import org.picocontainer.alternatives.ImplementationHidingPicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultLifecycleManager;
-import org.picocontainer.defaults.NullComponentMonitor;
-
-import java.io.Serializable;
 
 /**
  * This is a MutablePicoContainer that supports soft composition and hides implementations where it can.
@@ -57,7 +56,7 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
     }
 
     public ImplementationHidingNanoPicoContainer(ClassLoader classLoader, PicoContainer parent) {
-        super(new ImplementationHidingPicoContainer(new DefaultComponentAdapterFactory(NullComponentMonitor.getInstance()), parent), classLoader);
+        super(new ImplementationHidingPicoContainer(new DefaultComponentAdapterFactory(), parent), classLoader);
         this.lifecycleManager = new DefaultLifecycleManager();
     }
 
