@@ -50,7 +50,7 @@
 		<dependency>
             <groupId>maven</groupId>
             <artifactId>maven-clover-plugin</artifactId>
-            <version>1.9.1</version>
+            <version>1.10</version>
             <type>plugin</type>
         </dependency>		
 
