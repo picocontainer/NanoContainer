@@ -19,6 +19,7 @@ import org.picocontainer.defaults.ComponentAdapterFactory;
  * <code>AspectablePicoContainer</code>.
  *
  * @author Stephen Molitor
+ * @author Mauro Talevi
  * @version $Revision$
  */
 public interface AspectablePicoContainerFactory {
@@ -94,5 +95,24 @@ public interface AspectablePicoContainerFactory {
      * @return a new <code>AspectablePicoContainer</code>.
      */
     AspectablePicoContainer createContainer();
+
+    /**
+     * Make a child <code>AspectablePicoContainer</code> of a given <code>AspectablePicoContainer</code>.
+     * The child container will be obtained aspectifying <code>MutablePicoContainer#makeChildContainer()</code>.
+     * 
+     * @param aspectsManager the aspects manager used to register and apply aspects.
+     * @param parent the parent AspectablePicoContainer
+     * @return A child AspectablePicoContainer
+     */    
+    AspectablePicoContainer makeChildContainer(AspectsManager aspectsManager, AspectablePicoContainer parent);
+
+    /**
+     * Make a child <code>AspectablePicoContainer</code> of a given <code>AspectablePicoContainer</code>
+     * The child container will be obtained aspectifying <code>MutablePicoContainer#makeChildContainer()</code>.
+     * 
+     * @param parent the parent AspectablePicoContainer
+     * @return A child AspectablePicoContainer
+     */    
+    AspectablePicoContainer makeChildContainer(AspectablePicoContainer parent);
 
 }

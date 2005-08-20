@@ -26,6 +26,7 @@ import org.nanocontainer.aop.PointcutsFactory;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.testmodel.SimpleTouchable;
 
 /**
  * @author Stephen Molitor
@@ -174,6 +175,16 @@ public class DynaopAspectablePicoContainerFactoryTestCase extends AbstractNanoao
         AspectablePicoContainerFactory containerFactory = new DynaopAspectablePicoContainerFactory();
         PicoContainer child = containerFactory.createContainer(parent);
         assertEquals("value", child.getComponentInstance("key"));
+    }
+    
+    public void testMakeChildContainer(){
+        AspectablePicoContainerFactory aspectableContainerFactory = new DynaopAspectablePicoContainerFactory();
+        AspectablePicoContainer parent = aspectableContainerFactory.createContainer();
+        parent.registerComponentImplementation("t1", SimpleTouchable.class);
+        AspectablePicoContainer child = aspectableContainerFactory.makeChildContainer(parent);
+        Object t1 = child.getParent().getComponentInstance("t1");        
+        assertNotNull(t1);
+        assertTrue(t1 instanceof SimpleTouchable);        
     }
 
     public void testInterfacesWithClassPointcut() {

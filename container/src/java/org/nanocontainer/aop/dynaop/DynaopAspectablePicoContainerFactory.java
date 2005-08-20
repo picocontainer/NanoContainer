@@ -27,6 +27,7 @@ import org.picocontainer.defaults.DefaultPicoContainer;
  * Uses dynaop to create <code>AspectablePicoContainer</code> objects.
  *
  * @author Stephen Molitor
+ * @author Mauro Talevi
  * @version $Revision$
  */
 public class DynaopAspectablePicoContainerFactory implements AspectablePicoContainerFactory {
@@ -34,15 +35,10 @@ public class DynaopAspectablePicoContainerFactory implements AspectablePicoConta
     public AspectablePicoContainer createContainer(Class containerClass, AspectsManager aspectsManager,
                                                    ComponentAdapterFactory componentAdapterFactory, PicoContainer parent) {
 
-        ComponentAdapterFactory aspectsCaFactory = new AspectsComponentAdapterFactory(aspectsManager,
+        ComponentAdapterFactory aspectsComponentAdapterFactory = new AspectsComponentAdapterFactory(aspectsManager,
                 componentAdapterFactory);
-        MutablePicoContainer pico = createBasicContainer(containerClass, aspectsCaFactory, parent);
-
-        Aspects aspects = new Aspects();
-        aspects.mixin(Pointcuts.ALL_CLASSES, new Class[]{AspectsContainer.class}, new InstanceMixinFactory(aspectsManager));
-        aspects.interfaces(Pointcuts.ALL_CLASSES, new Class[]{AspectablePicoContainer.class});
-
-        return (AspectablePicoContainer) ProxyFactory.getInstance(aspects).wrap(pico);
+        MutablePicoContainer pico = createMutablePicoContainer(containerClass, aspectsComponentAdapterFactory, parent);
+        return mixinAspectablePicoContainer(aspectsManager, pico);
     }
 
     public AspectablePicoContainer createContainer(Class containerClass,
@@ -66,7 +62,15 @@ public class DynaopAspectablePicoContainerFactory implements AspectablePicoConta
         return createContainer(new DefaultComponentAdapterFactory());
     }
 
-    private MutablePicoContainer createBasicContainer(Class containerClass, ComponentAdapterFactory caFactory,
+    public AspectablePicoContainer makeChildContainer(AspectsManager aspectsManager, AspectablePicoContainer parent) {
+        return mixinAspectablePicoContainer(aspectsManager, parent.makeChildContainer());
+    }
+
+    public AspectablePicoContainer makeChildContainer(AspectablePicoContainer parent) {
+        return makeChildContainer(new DynaopAspectsManager(), parent);
+    }
+    
+    private MutablePicoContainer createMutablePicoContainer(Class containerClass, ComponentAdapterFactory caFactory,
                                                       PicoContainer parent) {
         MutablePicoContainer temp = new DefaultPicoContainer();
         temp.registerComponentImplementation(containerClass);
@@ -75,6 +79,14 @@ public class DynaopAspectablePicoContainerFactory implements AspectablePicoConta
             temp.registerComponentInstance(PicoContainer.class, parent);
         }
         return (MutablePicoContainer) temp.getComponentInstance(containerClass);
+    }
+
+    private AspectablePicoContainer mixinAspectablePicoContainer(AspectsManager aspectsManager,
+            MutablePicoContainer pico) {
+        Aspects aspects = new Aspects();
+        aspects.mixin(Pointcuts.ALL_CLASSES, new Class[]{AspectsContainer.class}, new InstanceMixinFactory(aspectsManager));
+        aspects.interfaces(Pointcuts.ALL_CLASSES, new Class[]{AspectablePicoContainer.class});
+        return (AspectablePicoContainer) ProxyFactory.getInstance(aspects).wrap(pico);
     }
 
 }
