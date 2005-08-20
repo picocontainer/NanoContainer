@@ -44,11 +44,20 @@ import java.security.AccessController;
 import java.security.Permission;
 
 /**
- * Builds trees of PicoContainers and Pico components using GroovyMarkup
- *
+ * Builds trees of PicoContainers and Pico components using GroovyMarkup.
+ * <p>Simple example usage in your groovy script:
+ * <code><pre>
+ * builder = new org.nanocontainer.script.groovy.NanoContainerBuilder()
+ * pico = builder.container(parent:parent) {
+ * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.DefaultWebServerConfig)
+ * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.WebServerImpl)
+ * }
+ * </pre></code>
+ * </p>
  * @author <a href="mailto:james@coredevelopers.net">James Strachan</a>
  * @author Paul Hammant
  * @author Aslak Helles&oslash;y
+ * @author Michael Rimov 
  * @version $Revision$
  */
 public class NanoContainerBuilder extends BuilderSupport {
@@ -90,6 +99,15 @@ public class NanoContainerBuilder extends BuilderSupport {
         return createNode(name, attributes);
     }
 
+    /**
+     * Override of create node.  Called by BuilderSupport.  It examines the
+     * current state of the builder and the given parameters and dispatches the
+     * code to one of the create* private functions in this object.
+     * @param name The name of the groovy node we're building.  Examples are
+     * 'container', and 'grant',
+     * @param attributes Map  attributes of the current invocation.
+     * @return Object the created object.
+     */
     protected Object createNode(Object name, Map attributes) {
         Object current = getCurrent();
         if (current != null && current instanceof GroovyObject) {
@@ -253,17 +271,34 @@ public class NanoContainerBuilder extends BuilderSupport {
         return createNode(name, attributes);
     }
 
+    /**
+     * Creates a new container.  There may or may not be a parent to this container.
+     * Supported attributes are:
+     * <ul>
+     *  <li><tt>componentAdapterFactory</tt>: The Component Adapter Factory to be used as default for the new
+     * container</li>
+     * </ul>
+     * @param attributes Map Attributes defined by the builder in the script.
+     * @param parent NanoContainer  The parent container.  May be null.
+     * @return constructed NanoContainer.
+     */
     protected NanoContainer createChildContainer(Map attributes, NanoContainer parent) {
-        ComponentAdapterFactory componentAdapterFactory = (ComponentAdapterFactory) attributes.remove("componentAdapterFactory");
-        componentAdapterFactory = componentAdapterFactory != null ? componentAdapterFactory : new DefaultComponentAdapterFactory();
+        final ComponentAdapterFactory specifiedComponentAdapterFactory = (ComponentAdapterFactory) attributes.remove("componentAdapterFactory");
+        ComponentAdapterFactory componentAdapterFactory = specifiedComponentAdapterFactory != null ? specifiedComponentAdapterFactory : new DefaultComponentAdapterFactory();
         ComponentAdapterFactory wrappedComponentAdapterFactory = nanoContainerBuilderDecorationDelegate.decorate(componentAdapterFactory, attributes);
 
         ClassLoader parentClassLoader = null;
         MutablePicoContainer wrappedPicoContainer = null;
         if (parent != null) {
             parentClassLoader = parent.getComponentClassLoader();
-            wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory, parent.getPico());
-            parent.getPico().addChildContainer(wrappedPicoContainer);
+            //If no specified adapter, then just propagate parent's
+            //adapter to child.
+            if (specifiedComponentAdapterFactory == null) {
+                wrappedPicoContainer = parent.getPico().makeChildContainer();
+            } else {
+                wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory, parent.getPico());
+                parent.getPico().addChildContainer(wrappedPicoContainer);
+            }
         } else {
             //parentClassLoader = (ClassLoader) attributes.remove("parentClassLoader");
             //if (parentClassLoader == null) {

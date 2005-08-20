@@ -8,11 +8,14 @@ import org.nanocontainer.script.NanoContainerMarkupException;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
+import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.InstanceComponentAdapter;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
 
 import java.io.Reader;
 import java.io.StringReader;
+import org.picocontainer.ComponentAdapter;
+import org.picocontainer.defaults.SetterInjectionComponentAdapter;
 
 /**
  * Test with groovy jsr parser
@@ -263,6 +266,9 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
         assertEquals("Should match the expression", "<A<C<BB>C>A>!B!C!A", X.componentRecorder);
     }
 
+
+
+
     public void testBuildContainerWithParentAttribute() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
         parent.registerComponentInstance("hello", "world");
@@ -281,6 +287,27 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
         // Should be able to get instance that was registered in the parent container
         assertEquals("world", pico.getComponentInstance("hello"));
     }
+
+    public void testBuildContainerWithParentAttributesPropagatesComponentAdapterFactory() {
+
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
+
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "nano = new NanoContainerBuilder().container(parent:parent) {\n" +
+                "}\n");
+
+        MutablePicoContainer pico = (MutablePicoContainer)buildContainer(
+                        new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                        parent,
+                        "SOME_SCOPE");
+
+        // Should be able to get instance that was registered in the parent container
+        ComponentAdapter componentAdapter = pico.registerComponentImplementation(String.class);
+        assertTrue("ComponentAdapter should be originally defined by parent" , componentAdapter instanceof SetterInjectionComponentAdapter);
+    }
+
+
 
     public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
         Reader script = new StringReader("" +
@@ -328,10 +355,10 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
 
 
 
-    	public void testWithDynamicClassPath() {
-    		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+            public void testWithDynamicClassPath() {
+                    DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
 
-    		Reader script = new StringReader("" +
+                    Reader script = new StringReader("" +
                     "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
                     "        compJarPath = testCompJar.getCanonicalPath()\n" +
                     "        child = null\n" +
@@ -341,19 +368,20 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
                     "        }" +
                     "");
 
-    		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+                    MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
                     new GroovyContainerBuilder(script, getClass().getClassLoader()),
                     parent,
                     "SOME_SCOPE");
 
             assertTrue(pico.getComponentInstances().size() == 1);
             assertEquals("TestComp",pico.getComponentInstances().get(0).getClass().getName());
-    	}
+            }
 
-    	public void testWithDynamicClassPathWithPermissions() {
-    		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
 
-    		Reader script = new StringReader("" +
+            public void testWithDynamicClassPathWithPermissions() {
+                    DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+
+                    Reader script = new StringReader("" +
                     "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
                     "        compJarPath = testCompJar.getCanonicalPath()\n" +
                     "        child = null\n" +
@@ -365,7 +393,7 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
                     "        }" +
                     "");
 
-    		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+                    MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
                     new GroovyContainerBuilder(script, getClass().getClassLoader()),
                     parent,
                     "SOME_SCOPE");
@@ -374,7 +402,7 @@ public class NanoContainerBuilderJsrTestCase extends AbstractScriptedContainerBu
             assertTrue(pico.getComponentInstances().size() == 1);
 
             // can't actually test the permission under JUNIT control. We're just testing the syntax here.
-    	}
+            }
 
     public void testGrantPermissionInWrongPlace() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();

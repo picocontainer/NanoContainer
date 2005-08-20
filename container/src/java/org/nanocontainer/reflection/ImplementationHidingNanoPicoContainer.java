@@ -28,13 +28,8 @@ import org.picocontainer.defaults.DefaultLifecycleManager;
  * and DefaulNanoContainer
  *
  * @author Paul Hammant
+ * @author Michael Rimov
  * @version $Revision$
- *          <p/>
- *          <p/>
- *          This is not not one for one advice - PH
- * @ not deprecated Use {@link org.nanocontainer.DefaultNanoContainer)
- * constructed with a {@link org.picocontainer.alternatives.ImplementationHidingPicoContainer}.
- * Suggest something with DefaultNanoPicoContainer and its ctor.
  */
 public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoContainer implements NanoPicoContainer, Serializable {
 
@@ -48,7 +43,6 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
     public ImplementationHidingNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent) {
         this(classLoader, caf, parent, new DefaultLifecycleManager());
     }
-
 
     public ImplementationHidingNanoPicoContainer(ClassLoader classLoader, PicoContainer parent, LifecycleManager lifecycleManager) {
         super(new ImplementationHidingPicoContainer(new DefaultComponentAdapterFactory(), parent, lifecycleManager), classLoader);
@@ -72,10 +66,29 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
         this(ImplementationHidingNanoPicoContainer.class.getClassLoader(), null);
     }
 
+    /**
+     * Copy Constructor.  Makes a new ImplementationHidingNanoPicoContainer with the same
+     * attributes - ClassLoader, LifecycleManager, child PicoContainer type, ComponentAdapterFactory - 
+     * as the parent.
+     * <p><tt>Note:</tt> This constructor is protected because are existing scripts
+     * that call <tt>new ImplementationHidingNanoPicoContainer(PicoContainer)</tt>, and they get this
+     * constructor instead (which has different behavior).</p>
+     * @param parent ImplementationHidingNanoPicoContainer
+     */
+    protected ImplementationHidingNanoPicoContainer(final ImplementationHidingNanoPicoContainer parent) {
+        super(parent.getDelegate().makeChildContainer(), parent.getComponentClassLoader());
+        this.lifecycleManager = parent.lifecycleManager;
+    }
+    
+
+    /**
+     * Makes a child container with the same basic characteristics of <tt>this</tt>
+     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
+     * @param name the name of the child container
+     * @return The child MutablePicoContainer
+     */    
     public MutablePicoContainer makeChildContainer(String name) {
-        ClassLoader currentClassloader = container.getComponentClassLoader();
-        ImplementationHidingNanoPicoContainer child = new ImplementationHidingNanoPicoContainer(currentClassloader, this, lifecycleManager);
-        getDelegate().addChildContainer(child);
+        ImplementationHidingNanoPicoContainer child = new ImplementationHidingNanoPicoContainer(this);
         namedChildContainers.put(name, child);
         return child;
     }

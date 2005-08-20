@@ -30,6 +30,7 @@ import org.picocontainer.defaults.DefaultPicoContainer;
  *
  * @author Paul Hammant
  * @author Mauro Talevi
+ * @author Michael Rimov
  * @version $Revision$
  */
 public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implements NanoPicoContainer, Serializable {
@@ -40,6 +41,7 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
         super(new DefaultPicoContainer(caf, parent, lifcycleManager), classLoader);
         this.lifecycleManager = lifcycleManager;
     }
+
 
     public DefaultNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent) {
         this(classLoader, caf, parent, new DefaultLifecycleManager());
@@ -79,11 +81,29 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
         super(new DefaultPicoContainer(), DefaultNanoPicoContainer.class.getClassLoader());
         this.lifecycleManager = new DefaultLifecycleManager();
     }
+    
+    /**
+     * Copy Constructor.  Makes a new DefaultNanoPicoContainer with the same
+     * attributes - ClassLoader, LifecycleManager, child PicoContainer type, ComponentAdapterFactory - 
+     * as the parent.
+     * <p><tt>Note:</tt> This constructor is protected because are existing scripts
+     * that call <tt>new DefaultNanoPicoContainer(PicoContainer)</tt>, and they get this
+     * constructor instead (which has different behavior).</p>
+     * @param parent  The object to copy.
+     */
+    protected DefaultNanoPicoContainer(final DefaultNanoPicoContainer parent) {
+        super(parent.getDelegate().makeChildContainer(),  parent.getComponentClassLoader());
+        this.lifecycleManager = parent.lifecycleManager;
+    }
 
+    /**
+     * Makes a child container with the same basic characteristics of <tt>this</tt>
+     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
+     * @param name the name of the child container
+     * @return The child MutablePicoContainer
+     */
     public MutablePicoContainer makeChildContainer(String name) {
-        ClassLoader currentClassloader = container.getComponentClassLoader();
-        DefaultNanoPicoContainer child = new DefaultNanoPicoContainer(currentClassloader, this, lifecycleManager);
-        getDelegate().addChildContainer(child);
+        DefaultNanoPicoContainer child = new DefaultNanoPicoContainer(this);
         namedChildContainers.put(name, child);
         return child;
     }
