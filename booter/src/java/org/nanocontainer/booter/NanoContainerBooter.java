@@ -7,7 +7,7 @@
  *                                                                           *
  * Original code by Aslak Hellesoy and Paul Hammant                          *
  *****************************************************************************/
-package org.nanocontainer.boot;
+package org.nanocontainer.booter;
 
 import java.io.File;
 import java.io.IOException;
