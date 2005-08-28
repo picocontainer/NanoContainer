@@ -1,4 +1,4 @@
-package org.nanocontainer.boot;
+package org.nanocontainer.booter;
 
 import org.picocontainer.Startable;
 import org.picocontainer.MutablePicoContainer;

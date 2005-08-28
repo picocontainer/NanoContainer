@@ -5,12 +5,12 @@ pico = builder.container(parent:parent, class:ImplementationHidingNanoPicoContai
     classPathElement(path:"comps/api.jar")
     classLoader {
         classPathElement(path:"comps/honeyimpl.jar")
-        component(classNameKey:"org.nanocontainer.boot.Honey", class:"org.nanocontainer.boot.BeeHiveHoney")
+        component(classNameKey:"org.nanocontainer.booter.Honey", class:"org.nanocontainer.booter.BeeHiveHoney")
     }
     classLoader {
         classPathElement(path:"comps/bearimpl.jar") {
              grant(new java.net.SocketPermission("yahoo.com:80", "connect"))
         }
-        component(class:"org.nanocontainer.boot.BrownBear")
+        component(class:"org.nanocontainer.booter.BrownBear")
     }
 }
