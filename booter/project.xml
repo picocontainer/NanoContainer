@@ -8,6 +8,12 @@
     <dependencies>
 
         <dependency>
+            <id>picocontainer</id>
+            <version>${picocontainer.version}</version>
+            <url>http://www.picocontainer.org/</url>
+        </dependency>
+
+        <dependency>
             <id>groovy</id>
             <version>1.0-jsr-03-SNAPSHOT</version>
         </dependency>
