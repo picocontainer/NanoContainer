@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <id>nanocontainer-deployer</id>
+    <name>Nanocontainer Deployer</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>nanocontainer</groupId>
+            <artifactId>nanocontainer</artifactId>
+            <version>${nanocontainer.version}</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-vfs</id>
+            <version>20030518103800</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-logging</id>
+            <version>1.0.4</version>
+            <url>http://jakarta.apache.org/commons/logging.html</url>
+        </dependency>
+
+        <dependency>
+            <id>log4j</id>
+            <version>1.2.8</version>
+        </dependency>
+
+        <dependency>
+            <id>antlr</id>
+            <version>2.7.5</version>
+        </dependency>
+
+        <dependency>
+            <id>groovy</id>
+            <version>1.0-jsr-03-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <id>asm</id>
+            <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-util</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

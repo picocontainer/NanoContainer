@@ -1,0 +1,34 @@
+<project default="jar:install"
+    xmlns:j="jelly:core">
+
+    <postGoal name="jar:install">
+        <mkdir dir="${maven.build.dir}/dist/lib"/>
+
+        <copy
+            todir="${maven.build.dir}/dist/lib"
+            file="${maven.build.dir}/${maven.final.name}.jar"/>
+
+        <j:forEach var="lib" items="${pom.artifacts}">
+            <copy
+                todir="${maven.build.dir}/dist/lib"
+                file="${lib.path}"/>
+        </j:forEach>
+
+        <delete>
+            <fileset dir="${maven.build.dir}/dist/lib">
+                <include name="jmock*.jar"/>
+                <include name="js*.jar"/>
+                <include name="junit*.jar"/>
+                <include name="nanocontainer-testmodel*.jar"/>
+            </fileset>
+        </delete>
+
+        <mkdir dir="${maven.build.dir}/dist/bin"/>
+        <copy todir="${maven.build.dir}/dist/bin">
+            <fileset dir="${basedir}/src/bin"/>
+        </copy>
+
+        <mkdir dir="${maven.build.dir}/dist/apps"/>
+    </postGoal>
+
+</project>
