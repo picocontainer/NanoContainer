@@ -1,4 +1,4 @@
-package org.nanocontainer.tools.deployer;
+package org.nanocontainer.deployer;
 
 import org.picocontainer.PicoException;
 

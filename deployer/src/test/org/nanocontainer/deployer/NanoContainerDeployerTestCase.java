@@ -1,4 +1,4 @@
-package org.nanocontainer.tools.deployer;
+package org.nanocontainer.deployer;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -6,8 +6,8 @@ import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.impl.VFSClassLoader;
 import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
 import org.apache.commons.vfs.provider.zip.ZipFileProvider;
-import org.nanocontainer.tools.deployer.Deployer;
-import org.nanocontainer.tools.deployer.NanoContainerDeployer;
+import org.nanocontainer.deployer.Deployer;
+import org.nanocontainer.deployer.NanoContainerDeployer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ObjectReference;
 import junit.framework.TestCase;

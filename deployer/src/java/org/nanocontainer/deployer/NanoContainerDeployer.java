@@ -12,7 +12,7 @@
  * @author Aslak Helles&oslash;y
  * @version $Revision$
  */
-package org.nanocontainer.tools.deployer;
+package org.nanocontainer.deployer;
 
 import java.io.InputStreamReader;
 import java.io.Reader;

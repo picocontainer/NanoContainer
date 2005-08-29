@@ -1,10 +1,10 @@
-package org.nanocontainer.tools.deployer;
+package org.nanocontainer.deployer;
 
 import org.apache.commons.vfs.FileObject;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.nanocontainer.tools.deployer.FolderContentHandler;
-import org.nanocontainer.tools.deployer.FolderContentPoller;
+import org.nanocontainer.deployer.FolderContentHandler;
+import org.nanocontainer.deployer.FolderContentPoller;
 
 /**
  * @author Aslak Helles&oslash;y

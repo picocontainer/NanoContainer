@@ -3,6 +3,10 @@
 	<classpathentry kind="src" path="container/src/java"/>
 	<classpathentry kind="src" path="container/src/test"/>
 	<classpathentry kind="src" path="container/src/test-comp"/>
+	<classpathentry kind="src" path="booter/src/java"/>
+	<classpathentry kind="src" path="booter/src/test"/>
+	<classpathentry kind="src" path="deployer/src/java"/>
+	<classpathentry kind="src" path="deployer/src/test"/>
 	<classpathentry kind="src" path="testmodel/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry sourcepath="PICOCONTAINER_SRC" kind="var" path="MAVEN_REPO/picocontainer/jars/picocontainer-1.2-SNAPSHOT.jar"/>
@@ -27,5 +31,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/jmock/jars/jmock-1.0.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xml-apis/jars/xml-apis-1.0.b2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-vfs/jars/commons-vfs-20050307052300.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
