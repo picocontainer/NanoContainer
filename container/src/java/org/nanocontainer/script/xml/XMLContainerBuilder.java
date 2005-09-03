@@ -10,12 +10,25 @@
 
 package org.nanocontainer.script.xml;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.integrationkit.ContainerPopulator;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.ScriptedContainerBuilder;
+import org.picocontainer.ComponentMonitor;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
@@ -24,22 +37,12 @@ import org.picocontainer.defaults.ComponentParameter;
 import org.picocontainer.defaults.ConstantParameter;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.defaults.DelegatingComponentMonitor;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class builds up a hierarchy of PicoContainers from an XML configuration file.
@@ -54,6 +57,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
     private final static String DEFAULT_COMPONENT_ADAPTER_FACTORY = DefaultComponentAdapterFactory.class.getName();
     private final static String DEFAULT_COMPONENT_INSTANCE_FACTORY = BeanComponentInstanceFactory.class.getName();
+    private final static String DEFAULT_COMPONENT_MONITOR = DelegatingComponentMonitor.class.getName();
 
     private final static String CONTAINER = "container";
     private final static String CLASSPATH = "classpath";
@@ -63,6 +67,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     private final static String COMPONENT_ADAPTER = "component-adapter";
     private final static String COMPONENT_ADAPTER_FACTORY = "component-adapter-factory";
     private final static String COMPONENT_INSTANCE_FACTORY = "component-instance-factory";
+    private final static String COMPONENT_MONITOR = "component-monitor";
     private final static String CLASS = "class";
     private final static String FACTORY = "factory";
     private final static String FILE = "file";
@@ -117,15 +122,14 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
     protected PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope) {
         try {
-            // create XMLComponentInstanceFactory for the container
+            // create ComponentInstanceFactory for the container
             componentInstanceFactory = createComponentInstanceFactory(rootElement.getAttribute(COMPONENT_INSTANCE_FACTORY));
-            // create child Container with defined ComponentAdapterFactory
-            String cafName = rootElement.getAttribute(COMPONENT_ADAPTER_FACTORY);
-            if (notSet(cafName)) {
-                cafName = DEFAULT_COMPONENT_ADAPTER_FACTORY;
-            }
-            ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(cafName);
+            // create ComponentAdapterFactory for the container 
+            ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(rootElement.getAttribute(COMPONENT_ADAPTER_FACTORY));
             MutablePicoContainer childContainer = new DefaultPicoContainer(componentAdapterFactory, parentContainer);
+            // change ComponentMonitor if defined
+            ComponentMonitor componentMonitor = createComponentMonitor(rootElement.getAttribute(COMPONENT_MONITOR));
+            ((DefaultPicoContainer)childContainer).changeMonitor(componentMonitor);
             populateContainer(childContainer);
             return childContainer;
         } catch (ClassNotFoundException e) {
@@ -167,8 +171,6 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
                     MutablePicoContainer childContainer = parentContainer.getPico().makeChildContainer();
                     NanoContainer childNanoContainer = new DefaultNanoContainer(parentContainer.getComponentClassLoader(), childContainer);
                     registerComponentsAndChildContainers(childNanoContainer, childElement);
-                } else if (CLASSPATH.equals(name)) {
-                    // already registered
                 } else if (COMPONENT_IMPLEMENTATION.equals(name)
                         || COMPONENT.equals(name)) {
                     registerComponentImplementation(parentContainer, childElement);
@@ -292,7 +294,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     }
 
     private XMLComponentInstanceFactory createComponentInstanceFactory(String factoryClass) throws ClassNotFoundException {
-        if (factoryClass == null || factoryClass.equals(EMPTY)) {
+        if ( notSet(factoryClass)) {
             // no factory has been specified for the node
             // return globally defined factory for the container - if there is one
             if (componentInstanceFactory != null) {
@@ -324,8 +326,11 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(factoryName);
         container.getPico().registerComponent(componentAdapterFactory.createComponentAdapter(key, implementationClass, parameters));
     }
-
+    
     private ComponentAdapterFactory createComponentAdapterFactory(String factoryName) throws ClassNotFoundException, PicoCompositionException {
+        if (notSet(factoryName)) {
+            factoryName = DEFAULT_COMPONENT_ADAPTER_FACTORY;
+        }
         Class factoryClass = getClassLoader().loadClass(factoryName);
         try {
             return (ComponentAdapterFactory) factoryClass.newInstance();
@@ -336,6 +341,19 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         }
     }
 
+    private ComponentMonitor createComponentMonitor(String monitorName) throws ClassNotFoundException, PicoCompositionException {
+        if (notSet(monitorName)) {
+            monitorName = DEFAULT_COMPONENT_MONITOR;
+        }
+        Class monitorClass = getClassLoader().loadClass(monitorName);
+        try {
+            return (ComponentMonitor) monitorClass.newInstance();
+        } catch (InstantiationException e) {
+            throw new NanoContainerMarkupException(e);
+        } catch (IllegalAccessException e) {
+            throw new NanoContainerMarkupException(e);
+        }
+    }    
     private boolean notSet(String string) {
         return string == null || string.equals(EMPTY);
     }

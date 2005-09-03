@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,6 +32,7 @@ import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
+import org.picocontainer.monitors.WriterComponentMonitor;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -598,6 +601,30 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         Object wsc2 = pico.getComponentInstanceOfType(WebServerConfig.class);
 
         assertNotSame(wsc1, wsc2);
+    }
+    
+    public void testComponentMonitorCanBeSpecified() throws IOException, ParserConfigurationException, SAXException {
+        Reader script = new StringReader("" +
+                "<container component-monitor='" + StringWriterComponentMonitor.class.getName() + "'>" +
+                "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        pico.getComponentInstanceOfType(WebServerConfig.class);
+        assertTrue(StringWriterComponentMonitor.WRITER.toString().length() > 0);
+    }
+    
+    
+    static public class StringWriterComponentMonitor extends WriterComponentMonitor {        
+        static Writer WRITER = new StringWriter();
+        
+        public StringWriterComponentMonitor() {
+            this(WRITER);
+        }
+        
+        public StringWriterComponentMonitor(Writer out) {
+            super(out);
+        }
     }
 
 }
