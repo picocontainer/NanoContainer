@@ -230,8 +230,4 @@ public class NanoContainerBuilderAopTestCase extends AbstractScriptedContainerBu
         assertEquals("id", identifiable.getId());
     }
 
-    private void verifyNoMixin(Object component) {
-        assertFalse(component instanceof Identifiable);
-    }
-
 }

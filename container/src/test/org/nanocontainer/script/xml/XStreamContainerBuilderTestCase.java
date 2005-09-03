@@ -117,16 +117,16 @@ public class XStreamContainerBuilderTestCase extends AbstractScriptedContainerBu
     public void testThatDependencyUsesClassAsKey() {
         Reader script = new StringReader("" +
         "<container>" +                                          
+        "   <implementation class='java.lang.String'/>" +
         "   <implementation key='foo' class='org.nanocontainer.script.xml.TestBean'>" +
         "       <dependency class='java.lang.String'/>" +
-        "       <dependency class='java.lang.Integer'/>" + 
         "   </implementation>" + 
         "</container>"
         );
         
        PicoContainer pico = buildContainer(new XStreamContainerBuilder(script, getClass().getClassLoader()), null,null);
        DecoratingComponentAdapter adapter = (DecoratingComponentAdapter)pico.getComponentAdapter("foo");
-       
+       assertNotNull(adapter);
     }
     
     

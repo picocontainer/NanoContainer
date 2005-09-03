@@ -13,13 +13,11 @@ package org.nanocontainer.reflection;
 import java.io.Serializable;
 
 import org.nanocontainer.NanoPicoContainer;
-import org.picocontainer.LifecycleManager;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.alternatives.ImplementationHidingPicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultLifecycleManager;
 
 /**
  * This is a MutablePicoContainer that supports soft composition and hides implementations where it can.
@@ -33,25 +31,13 @@ import org.picocontainer.defaults.DefaultLifecycleManager;
  */
 public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoContainer implements NanoPicoContainer, Serializable {
 
-    private LifecycleManager lifecycleManager;
-
-    public ImplementationHidingNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent, LifecycleManager lifecycleManager) {
-        super(new ImplementationHidingPicoContainer(caf, parent, lifecycleManager), classLoader);
-        this.lifecycleManager = lifecycleManager;
-    }
-
     public ImplementationHidingNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent) {
-        this(classLoader, caf, parent, new DefaultLifecycleManager());
+        super(new ImplementationHidingPicoContainer(caf, parent), classLoader);
     }
 
-    public ImplementationHidingNanoPicoContainer(ClassLoader classLoader, PicoContainer parent, LifecycleManager lifecycleManager) {
-        super(new ImplementationHidingPicoContainer(new DefaultComponentAdapterFactory(), parent, lifecycleManager), classLoader);
-        this.lifecycleManager = lifecycleManager;
-    }
 
     public ImplementationHidingNanoPicoContainer(ClassLoader classLoader, PicoContainer parent) {
         super(new ImplementationHidingPicoContainer(new DefaultComponentAdapterFactory(), parent), classLoader);
-        this.lifecycleManager = new DefaultLifecycleManager();
     }
 
     public ImplementationHidingNanoPicoContainer(PicoContainer pc) {
@@ -68,7 +54,7 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
 
     /**
      * Copy Constructor.  Makes a new ImplementationHidingNanoPicoContainer with the same
-     * attributes - ClassLoader, LifecycleManager, child PicoContainer type, ComponentAdapterFactory - 
+     * attributes - ClassLoader, child PicoContainer type, ComponentAdapterFactory - 
      * as the parent.
      * <p><tt>Note:</tt> This constructor is protected because are existing scripts
      * that call <tt>new ImplementationHidingNanoPicoContainer(PicoContainer)</tt>, and they get this
@@ -77,7 +63,6 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
      */
     protected ImplementationHidingNanoPicoContainer(final ImplementationHidingNanoPicoContainer parent) {
         super(parent.getDelegate().makeChildContainer(), parent.getComponentClassLoader());
-        this.lifecycleManager = parent.lifecycleManager;
     }
     
 

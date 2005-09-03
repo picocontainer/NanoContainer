@@ -12,7 +12,6 @@ package org.nanocontainer.reflection;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
-import org.picocontainer.LifecycleManager;
 import org.picocontainer.tck.AbstractImplementationHidingPicoContainerTestCase;
 
 /**
@@ -29,10 +28,5 @@ public class ImplementationHidingNanoPicoContainerTestCase extends AbstractImple
     protected MutablePicoContainer createPicoContainer(PicoContainer parent) {
         return new ImplementationHidingNanoPicoContainer(this.getClass().getClassLoader(), parent);
     }
-
-    protected MutablePicoContainer createPicoContainer(PicoContainer parent, LifecycleManager lifecycleManager) {
-        return new ImplementationHidingNanoPicoContainer(this.getClass().getClassLoader(), parent, lifecycleManager);
-    }
-
     // test methods inherited. This container is part compliant.
 }

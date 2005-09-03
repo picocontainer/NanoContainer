@@ -14,12 +14,10 @@ import java.io.Serializable;
 
 import org.nanocontainer.NanoPicoContainer;
 import org.picocontainer.ComponentMonitor;
-import org.picocontainer.LifecycleManager;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultLifecycleManager;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 /**
@@ -35,56 +33,37 @@ import org.picocontainer.defaults.DefaultPicoContainer;
  */
 public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implements NanoPicoContainer, Serializable {
 
-    private LifecycleManager lifecycleManager;
-
-    public DefaultNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent, LifecycleManager lifcycleManager) {
-        super(new DefaultPicoContainer(caf, parent, lifcycleManager), classLoader);
-        this.lifecycleManager = lifcycleManager;
-    }
-
-
     public DefaultNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent) {
-        this(classLoader, caf, parent, new DefaultLifecycleManager());
-
-    }
-
-    public DefaultNanoPicoContainer(ClassLoader classLoader, PicoContainer parent, LifecycleManager lifcycleManager) {
-        this(classLoader, new DefaultComponentAdapterFactory(), parent, lifcycleManager);
+        super(new DefaultPicoContainer(caf, parent), classLoader);
     }
 
     public DefaultNanoPicoContainer(ClassLoader classLoader, PicoContainer parent) {
         super(new DefaultPicoContainer(new DefaultComponentAdapterFactory(), parent), classLoader);
-        this.lifecycleManager = new DefaultLifecycleManager();
     }
 
     public DefaultNanoPicoContainer(ClassLoader classLoader, PicoContainer parent, ComponentMonitor componentMonitor) {
         super(new DefaultPicoContainer(new DefaultComponentAdapterFactory(componentMonitor), parent), classLoader);
-        this.lifecycleManager = new DefaultLifecycleManager(componentMonitor);
     }
 
     public DefaultNanoPicoContainer(ComponentAdapterFactory caf) {
         super(new DefaultPicoContainer(caf, null), DefaultNanoPicoContainer.class.getClassLoader());
-        this.lifecycleManager = new DefaultLifecycleManager();
     }
 
     public DefaultNanoPicoContainer(PicoContainer pc) {
         super(new DefaultPicoContainer(pc), DefaultNanoPicoContainer.class.getClassLoader());
-        this.lifecycleManager = new DefaultLifecycleManager();
     }
 
     public DefaultNanoPicoContainer(ClassLoader classLoader) {
         super(new DefaultPicoContainer(), classLoader);
-        this.lifecycleManager = new DefaultLifecycleManager();
     }
 
     public DefaultNanoPicoContainer() {
         super(new DefaultPicoContainer(), DefaultNanoPicoContainer.class.getClassLoader());
-        this.lifecycleManager = new DefaultLifecycleManager();
     }
     
     /**
      * Copy Constructor.  Makes a new DefaultNanoPicoContainer with the same
-     * attributes - ClassLoader, LifecycleManager, child PicoContainer type, ComponentAdapterFactory - 
+     * attributes - ClassLoader, child PicoContainer type, ComponentAdapterFactory - 
      * as the parent.
      * <p><tt>Note:</tt> This constructor is protected because are existing scripts
      * that call <tt>new DefaultNanoPicoContainer(PicoContainer)</tt>, and they get this
@@ -93,7 +72,6 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
      */
     protected DefaultNanoPicoContainer(final DefaultNanoPicoContainer parent) {
         super(parent.getDelegate().makeChildContainer(),  parent.getComponentClassLoader());
-        this.lifecycleManager = parent.lifecycleManager;
     }
 
     /**
