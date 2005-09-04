@@ -33,6 +33,12 @@
 <!ATTLIST container component-instance-factory CDATA #IMPLIED>
 
 <!--
+	Specifies the implementation class of the org.picocontainer.ComponentMonitor
+	used globally by the container
+-->
+<!ATTLIST container component-monitor CDATA #IMPLIED>
+
+<!--
 	Defines the classpath for the parent container
 -->
 <!ELEMENT classpath (

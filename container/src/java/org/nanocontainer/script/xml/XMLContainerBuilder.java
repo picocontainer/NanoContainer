@@ -124,17 +124,20 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         try {
             // create ComponentInstanceFactory for the container
             componentInstanceFactory = createComponentInstanceFactory(rootElement.getAttribute(COMPONENT_INSTANCE_FACTORY));
-            // create ComponentAdapterFactory for the container 
-            ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(rootElement.getAttribute(COMPONENT_ADAPTER_FACTORY));
-            MutablePicoContainer childContainer = new DefaultPicoContainer(componentAdapterFactory, parentContainer);
-            // change ComponentMonitor if defined
-            ComponentMonitor componentMonitor = createComponentMonitor(rootElement.getAttribute(COMPONENT_MONITOR));
-            ((DefaultPicoContainer)childContainer).changeMonitor(componentMonitor);
+            MutablePicoContainer childContainer = createMutablePicoContainer(rootElement.getAttribute(COMPONENT_ADAPTER_FACTORY), 
+                    rootElement.getAttribute(COMPONENT_MONITOR), parentContainer);
             populateContainer(childContainer);
             return childContainer;
         } catch (ClassNotFoundException e) {
             throw new NanoContainerMarkupException("Class not found:" + e.getMessage(), e);
         }
+    }
+
+    private MutablePicoContainer createMutablePicoContainer(String cafName, String monitorName, PicoContainer parentContainer) throws PicoCompositionException, ClassNotFoundException {
+        if ( notSet(cafName) ){
+            return new DefaultPicoContainer(createComponentMonitor(monitorName), parentContainer);
+        } 
+        return new DefaultPicoContainer(createComponentAdapterFactory(cafName), parentContainer);
     }
 
     public void populateContainer(MutablePicoContainer container) {

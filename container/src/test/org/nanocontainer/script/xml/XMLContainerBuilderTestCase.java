@@ -605,26 +605,49 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
     
     public void testComponentMonitorCanBeSpecified() throws IOException, ParserConfigurationException, SAXException {
         Reader script = new StringReader("" +
-                "<container component-monitor='" + StringWriterComponentMonitor.class.getName() + "'>" +
+                "<container component-monitor='" + AWriterComponentMonitor.class.getName() + "'>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
                 "</container>");
 
         PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
         pico.getComponentInstanceOfType(WebServerConfig.class);
-        assertTrue(StringWriterComponentMonitor.WRITER.toString().length() > 0);
+        assertTrue(AWriterComponentMonitor.WRITER.toString().length() > 0);
     }
     
+    public void testComponentMonitorIsIgnoredIfCAFIsSpecified() throws IOException, ParserConfigurationException, SAXException {
+        Reader script = new StringReader("" +
+                "<container component-adapter-factory='" +DefaultComponentAdapterFactory.class.getName() + 
+                "' component-monitor='" + AnotherWriterComponentMonitor.class.getName() + "'>" +
+                "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        pico.getComponentInstanceOfType(WebServerConfig.class);
+        assertTrue(AnotherWriterComponentMonitor.WRITER.toString().length() == 0);
+    }
     
-    static public class StringWriterComponentMonitor extends WriterComponentMonitor {        
+    static public class AWriterComponentMonitor extends WriterComponentMonitor {        
         static Writer WRITER = new StringWriter();
         
-        public StringWriterComponentMonitor() {
+        public AWriterComponentMonitor() {
             this(WRITER);
         }
         
-        public StringWriterComponentMonitor(Writer out) {
+        public AWriterComponentMonitor(Writer out) {
             super(out);
         }
     }
+    
+    static public class AnotherWriterComponentMonitor extends WriterComponentMonitor {        
+        static Writer WRITER = new StringWriter();
+        
+        public AnotherWriterComponentMonitor() {
+            this(WRITER);
+        }
+        
+        public AnotherWriterComponentMonitor(Writer out) {
+            super(out);
+        }
+    }    
 
 }
