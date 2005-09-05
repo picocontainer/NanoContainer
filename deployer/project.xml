@@ -44,7 +44,7 @@
         <dependency>
             <groupId>groovy</groupId>
             <artifactId>groovy</artifactId>
-            <version>1.0-jsr-03-SNAPSHOT</version>
+            <version>1.0-jsr-03</version>
         </dependency>
 
         <dependency>
