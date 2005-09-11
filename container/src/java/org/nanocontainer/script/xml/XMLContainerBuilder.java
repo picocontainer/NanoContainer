@@ -245,7 +245,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
         Parameter[] parameters = createChildParameters(container, element);
         String key = element.getAttribute(KEY);
-        Class clazz = getClassLoader().loadClass(className);
+        Class clazz = container.getComponentClassLoader().loadClass(className);
         if (notSet(key)) {
             if (parameters == null) {
                 container.getPico().registerComponentImplementation(clazz);
