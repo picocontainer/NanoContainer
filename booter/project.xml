@@ -2,8 +2,8 @@
 
 <project>
     <extend>${basedir}/../project.xml</extend>
-    <id>nanocontainer-boot</id>
-    <name>Nanocontainer Boot</name>
+    <id>nanocontainer-booter</id>
+    <name>Nanocontainer Booter</name>
 
     <dependencies>
 
