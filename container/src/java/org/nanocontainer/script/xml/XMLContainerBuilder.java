@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.security.Permission;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,6 +25,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
+import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.integrationkit.ContainerPopulator;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.NanoContainerMarkupException;
@@ -74,6 +76,10 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     private final static String KEY = "key";
     private final static String PARAMETER = "parameter";
     private final static String URL = "url";
+
+    private final static String CLASSNAME = "classname";
+    private final static String CONTEXT = "context";
+    private final static String VALUE = "value";
 
     private static final String EMPTY = "";
 
@@ -181,14 +187,14 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
                     registerComponentInstance(parentContainer, childElement);
                 } else if (COMPONENT_ADAPTER.equals(name)) {
                     registerComponentAdapter(parentContainer, childElement);
-                } else {
+                } else if (CLASSPATH.equals(name) != true) {
                     throw new NanoContainerMarkupException("Unsupported element:" + name);
                 }
             }
         }
     }
 
-    private void registerClasspath(NanoContainer container, Element classpathElement) throws IOException {
+    private void registerClasspath(NanoContainer container, Element classpathElement) throws IOException, ClassNotFoundException {
         NodeList children = classpathElement.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             if (children.item(i) instanceof Element) {
@@ -206,9 +212,29 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
                     }
                     url = file.toURL();
                 }
-                container.addClassLoaderURL(url);
+                ClassPathElement cpe = container.addClassLoaderURL(url);
+                registerPermissions(cpe, childElement);
             }
         }
+    }
+
+    private void registerPermissions(ClassPathElement classPathElement, Element classPathXmlElement) throws ClassNotFoundException {
+        NodeList children = classPathXmlElement.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            if (children.item(i) instanceof Element) {
+                Element childElement = (Element) children.item(i);
+
+                String permissionClassName = childElement.getAttribute(CLASSNAME);
+                String action = childElement.getAttribute(CONTEXT);
+                String value = childElement.getAttribute(VALUE);
+                MutablePicoContainer mpc = new DefaultPicoContainer();
+                mpc.registerComponentImplementation(Permission.class, Class.forName(permissionClassName),new Parameter[] {new ConstantParameter(action), new ConstantParameter(value)});
+
+                Permission permission = (Permission) mpc.getComponentInstanceOfType(Permission.class);
+                classPathElement.grantPermission(permission);
+            }
+        }
+
     }
 
     private PicoContainer registerComponentImplementation(NanoContainer container, Element element) throws ClassNotFoundException, MalformedURLException {

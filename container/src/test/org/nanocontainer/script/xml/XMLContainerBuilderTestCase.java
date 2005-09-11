@@ -123,8 +123,6 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
 
     public void XXX_testClassLoaderHierarchy() throws ParserConfigurationException, ClassNotFoundException, SAXException, IOException, PicoCompositionException {
         String testcompJarFileName = System.getProperty("testcomp.jar");
-        // Paul's path to TestComp. PLEASE do not take out.
-        //testcompJarFileName = "D:/OSS/PN/java/nanocontainer/src/test-comp/TestComp.jar";
 
         assertNotNull("The testcomp.jar system property should point to nanocontainer/src/test-comp/TestComp.jar", testcompJarFileName);
         File testCompJar = new File(testcompJarFileName);
@@ -137,7 +135,9 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <classpath>" +
-                "    <element file='" + testCompJar.getCanonicalPath() + "'/>" +
+                "    <element file='" + testCompJar.getCanonicalPath() + "'>" +
+                "      <permission classname='java.io.FilePermission' context='*' value='read' />" +
+                "    </element>" +
                 "  </classpath>" +
                 "  <component-implementation key='foo' class='TestComp'/>" +
                 "  <container>" +
