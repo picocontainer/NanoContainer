@@ -19,28 +19,14 @@ package org.nanocontainer.script.groovy;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
 import groovy.util.BuilderSupport;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.AccessController;
-import java.security.Permission;
-import java.security.PrivilegedAction;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.codehaus.groovy.runtime.InvokerHelper;
-import org.nanocontainer.ClassNameKey;
-import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
+import org.nanocontainer.ClassNameKey;
+import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.script.NanoContainerBuilderDecorationDelegate;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.NullNanoContainerBuilderDecorationDelegate;
-import org.picocontainer.ComponentMonitor;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
@@ -48,7 +34,14 @@ import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.ConstantParameter;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
-import org.picocontainer.defaults.DelegatingComponentMonitor;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
+import java.security.Permission;
 
 /**
  * Builds trees of PicoContainers and Pico components using GroovyMarkup.
@@ -83,7 +76,7 @@ public class NanoContainerBuilder extends BuilderSupport {
     }
 
     protected Object doInvokeMethod(String s, Object name, Object args) {
-        //TODO use setDelegate() from Groovy JSR
+        //TODO use setDelegate() from Groovy beta 7
         Object answer = super.doInvokeMethod(s, name, args);
         List list = InvokerHelper.asList(args);
         if (!list.isEmpty()) {
@@ -109,7 +102,7 @@ public class NanoContainerBuilder extends BuilderSupport {
     /**
      * Override of create node.  Called by BuilderSupport.  It examines the
      * current state of the builder and the given parameters and dispatches the
-     * code to one of the create private functions in this object.
+     * code to one of the create* private functions in this object.
      * @param name The name of the groovy node we're building.  Examples are
      * 'container', and 'grant',
      * @param attributes Map  attributes of the current invocation.
@@ -154,7 +147,7 @@ public class NanoContainerBuilder extends BuilderSupport {
         return groovyObject.invokeMethod(name.toString(), attributes);
     }
 
-    private Permission createGrantPermission(Map attributes, ClassPathElement cpe) {
+    private Object createGrantPermission(Map attributes, ClassPathElement cpe) {
         Permission perm = (Permission) attributes.remove("class");
         return cpe.grantPermission(perm);
 
@@ -169,7 +162,7 @@ public class NanoContainerBuilder extends BuilderSupport {
         } else if (name.equals("classPathElement")) {
             return createClassPathElementNode(attributes, parentContainer);
         } else if (name.equals("doCall")) {
-            //TODO are handling this node?    
+            // TODO ????
             //BuilderSupport builder = (BuilderSupport) attributes.remove("class");
             return null;
         } else if (name.equals("newBuilder")) {
@@ -231,11 +224,12 @@ public class NanoContainerBuilder extends BuilderSupport {
             throw new NanoContainerMarkupException("classpath '" + path + "' malformed ", e);
         }
         //ClassPathElement cpe = new ClassPathElement(pathURL);
-        //return cpe;
         return nanoContainer.addClassLoaderURL(pathURL);
+        //return cpe;
     }
 
     private Object createBeanNode(Map attributes, MutablePicoContainer pico) {
+        // lets create a bean
         Object answer = createBean(attributes);
         pico.registerComponentInstance(answer);
         return answer;
@@ -281,47 +275,41 @@ public class NanoContainerBuilder extends BuilderSupport {
      * Creates a new container.  There may or may not be a parent to this container.
      * Supported attributes are:
      * <ul>
-     *  <li><tt>componentAdapterFactory</tt>: The Component Adapter Factory to be used for container</li>
-     *  <li><tt>componentMonitor</tt>: The ComponentMonitor to be used for container</li>
+     *  <li><tt>componentAdapterFactory</tt>: The Component Adapter Factory to be used as default for the new
+     * container</li>
      * </ul>
      * @param attributes Map Attributes defined by the builder in the script.
      * @param parent NanoContainer  The parent container.  May be null.
      * @return constructed NanoContainer.
      */
     protected NanoContainer createChildContainer(Map attributes, NanoContainer parent) {
-        // component adapter factory - if null set to default
         final ComponentAdapterFactory specifiedComponentAdapterFactory = (ComponentAdapterFactory) attributes.remove("componentAdapterFactory");
         ComponentAdapterFactory componentAdapterFactory = specifiedComponentAdapterFactory != null ? specifiedComponentAdapterFactory : new DefaultComponentAdapterFactory();
         ComponentAdapterFactory wrappedComponentAdapterFactory = nanoContainerBuilderDecorationDelegate.decorate(componentAdapterFactory, attributes);
-        // component monitor - may be null
-        ComponentMonitor componentMonitor = (ComponentMonitor) attributes.remove("componentMonitor");
-        
+
         ClassLoader parentClassLoader = null;
         MutablePicoContainer wrappedPicoContainer = null;
         if (parent != null) {
             parentClassLoader = parent.getComponentClassLoader();
-            if (specifiedComponentAdapterFactory == null && componentMonitor == null ) {
+            //If no specified adapter, then just propagate parent's
+            //adapter to child.
+            if (specifiedComponentAdapterFactory == null) {
                 wrappedPicoContainer = parent.getPico().makeChildContainer();
-            } else if (specifiedComponentAdapterFactory == null && componentMonitor != null ) {
-                wrappedPicoContainer = new DefaultPicoContainer(componentMonitor, parent.getPico());
-                parent.getPico().addChildContainer(wrappedPicoContainer);                
             } else {
                 wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory, parent.getPico());
                 parent.getPico().addChildContainer(wrappedPicoContainer);
             }
         } else {
+            //parentClassLoader = (ClassLoader) attributes.remove("parentClassLoader");
+            //if (parentClassLoader == null) {
+            //    parentClassLoader = Thread.currentThread().getContextClassLoader();
             parentClassLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     return PicoContainer.class.getClassLoader();
                 }
             });
-            if (specifiedComponentAdapterFactory == null && componentMonitor == null ) {
-                wrappedPicoContainer = new DefaultPicoContainer();
-            } else if (specifiedComponentAdapterFactory == null && componentMonitor != null ) {
-                wrappedPicoContainer = new DefaultPicoContainer(componentMonitor);
-            } else {
-                wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory);                
-            }
+            //}
+            wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory);
         }
 
         MutablePicoContainer decoratedPico = nanoContainerBuilderDecorationDelegate.decorate(wrappedPicoContainer);
@@ -340,6 +328,7 @@ public class NanoContainerBuilder extends BuilderSupport {
     }
 
     protected NanoContainer createComponentClassLoader(NanoContainer parent) {
+
         return new DefaultNanoContainer(parent.getComponentClassLoader(), parent.getPico());
     }
 

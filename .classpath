@@ -9,8 +9,8 @@
 	<classpathentry kind="src" path="deployer/src/test"/>
 	<classpathentry kind="src" path="testmodel/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry sourcepath="PICOCONTAINER_SRC" kind="var" path="MAVEN_REPO/picocontainer/jars/picocontainer-1.2-SNAPSHOT.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/picocontainer/jars/picocontainer-tck-1.2-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/picocontainer/jars/picocontainer-1.2-RC-1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/picocontainer/jars/picocontainer-tck-1.2-RC-1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/nanocontainer/jars/nanocontainer-testmodel-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/groovy/jars/groovy-1.0-jsr-02.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/antlr/jars/antlr-2.7.5.jar"/>
