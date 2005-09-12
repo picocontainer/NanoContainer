@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Paul Hammant
  * @version $Revision$
  */
-public class NullNanoContainerBuilderDecorationDelegate implements NanoContainerBuilderDecorationDelegate {
+public class NullNodeBuilderDecorationDelegate implements NodeBuilderDecorationDelegate {
     public ComponentAdapterFactory decorate(ComponentAdapterFactory componentAdapterFactory, Map attributes) {
         return componentAdapterFactory;
     }

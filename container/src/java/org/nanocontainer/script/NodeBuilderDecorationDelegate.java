@@ -16,18 +16,18 @@ import org.picocontainer.defaults.ComponentAdapterFactory;
 import java.util.Map;
 
 /**
- * Implementors of this class can be passed to {@link org.nanocontainer.script.groovy.NanoContainerBuilder}'s constructor
+ * Implementors of this class can be passed to {@link org.nanocontainer.script.groovy.GroovyNodeBuilder}'s constructor
  * to dynamically extend the core builder syntax.
  *
- * Note: Although this interface is currently only used by the Groovy {@link org.nanocontainer.script.groovy.NanoContainerBuilder}
- * class, there is nothing groovy going on here - nor in the AOP subclass {@link org.nanocontainer.aop.defaults.AopDecorationDelegate}
+ * Note: Although this interface is currently only used by the Groovy {@link org.nanocontainer.script.groovy.GroovyNodeBuilder}
+ * class, there is nothing groovy going on here - nor in the AOP subclass {@link org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate}
  * class. In other words, it should be easy to add AOP capabilities to the other scripting engines such as the XML ones.
  *
  * @author Paul Hammant
  * @author Aslak Helles&oslash;y
  * @version $Revision$
  */
-public interface NanoContainerBuilderDecorationDelegate {
+public interface NodeBuilderDecorationDelegate {
 
     ComponentAdapterFactory decorate(ComponentAdapterFactory componentAdapterFactory, Map attributes);
 

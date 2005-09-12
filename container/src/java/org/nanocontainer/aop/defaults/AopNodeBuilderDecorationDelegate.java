@@ -22,7 +22,7 @@ import org.nanocontainer.aop.ClassPointcut;
 import org.nanocontainer.aop.ComponentPointcut;
 import org.nanocontainer.aop.MethodPointcut;
 import org.nanocontainer.aop.dynaop.InstanceMixinFactory;
-import org.nanocontainer.script.NanoContainerBuilderDecorationDelegate;
+import org.nanocontainer.script.NodeBuilderDecorationDelegate;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Paul Hammant
  * @version $Revision$
  */
-public class AopDecorationDelegate implements NanoContainerBuilderDecorationDelegate {
+public class AopNodeBuilderDecorationDelegate implements NodeBuilderDecorationDelegate {
 
     private final AspectsManager aspectsManager;
     private Object currentKey;
@@ -43,7 +43,7 @@ public class AopDecorationDelegate implements NanoContainerBuilderDecorationDele
     private ClassPointcut currentClassCut;
     private MethodPointcut currentMethodCut;
 
-    public AopDecorationDelegate(AspectsManager aspectsManager) {
+    public AopNodeBuilderDecorationDelegate(AspectsManager aspectsManager) {
         this.aspectsManager = aspectsManager;
     }
 

@@ -9,7 +9,7 @@
  *****************************************************************************/
 package org.nanocontainer.aop.dynaop;
 
-import org.nanocontainer.aop.AbstractNanoaopTestCase;
+import org.nanocontainer.aop.AbstractAopTestCase;
 import org.nanocontainer.aop.AnotherInterface;
 import org.nanocontainer.aop.AspectablePicoContainer;
 import org.nanocontainer.aop.AspectablePicoContainerFactory;
@@ -31,7 +31,7 @@ import org.picocontainer.testmodel.SimpleTouchable;
 /**
  * @author Stephen Molitor
  */
-public class DynaopAspectablePicoContainerFactoryTestCase extends AbstractNanoaopTestCase {
+public class DynaopAspectablePicoContainerFactoryTestCase extends AbstractAopTestCase {
 
     private AspectablePicoContainerFactory containerFactory = new DynaopAspectablePicoContainerFactory();
     private AspectablePicoContainer pico = containerFactory.createContainer();

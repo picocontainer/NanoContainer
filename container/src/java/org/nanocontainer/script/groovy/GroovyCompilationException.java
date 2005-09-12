@@ -13,10 +13,10 @@ import org.nanocontainer.script.NanoContainerMarkupException;
  * @author Paul Hammant
  * @version $Revision$
  */
-public class NanoContainerGroovyCompilationException extends NanoContainerMarkupException {
+public class GroovyCompilationException extends NanoContainerMarkupException {
     private CompilationFailedException compilationFailedException;
 
-    public NanoContainerGroovyCompilationException(String message, CompilationFailedException e) {
+    public GroovyCompilationException(String message, CompilationFailedException e) {
         super(message);
         this.compilationFailedException = e;
     }

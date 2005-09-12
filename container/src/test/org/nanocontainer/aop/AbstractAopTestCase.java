@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 /**
  * @author Stephen Molitor
  */
-public abstract class AbstractNanoaopTestCase extends TestCase {
+public abstract class AbstractAopTestCase extends TestCase {
 
     protected void verifyIntercepted(Dao dao, StringBuffer log) {
         String before = log.toString();

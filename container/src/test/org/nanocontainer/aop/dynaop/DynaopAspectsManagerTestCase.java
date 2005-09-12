@@ -9,7 +9,7 @@
  *****************************************************************************/
 package org.nanocontainer.aop.dynaop;
 
-import org.nanocontainer.aop.AbstractNanoaopTestCase;
+import org.nanocontainer.aop.AbstractAopTestCase;
 import org.nanocontainer.aop.AnotherInterface;
 import org.nanocontainer.aop.AspectsManager;
 import org.nanocontainer.aop.ClassPointcut;
@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
 /**
  * @author Stephen Molitor
  */
-public class DynaopAspectsManagerTestCase extends AbstractNanoaopTestCase {
+public class DynaopAspectsManagerTestCase extends AbstractAopTestCase {
 
     private AspectsManager aspects = new DynaopAspectsManager();
     private ComponentAdapterFactory caFactory = new AspectsComponentAdapterFactory(aspects);

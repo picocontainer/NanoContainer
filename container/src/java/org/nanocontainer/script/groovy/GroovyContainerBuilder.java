@@ -53,7 +53,7 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
         }
         Binding binding = new Binding();
         binding.setVariable("parent", parentContainer);
-        binding.setVariable("builder", new NanoContainerBuilder());
+        binding.setVariable("builder", new GroovyNodeBuilder());
         binding.setVariable("assemblyScope", assemblyScope);
 		handleBinding(binding);
         groovyScript.setBinding(binding);
@@ -92,7 +92,7 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
             Class scriptClass = loader.parseClass(groovyCodeSource);
             groovyScript = InvokerHelper.createScript(scriptClass, null);
         } catch (CompilationFailedException e) {
-            throw new NanoContainerGroovyCompilationException("Compilation Failed '" + e.getMessage() + "'", e);
+            throw new GroovyCompilationException("Compilation Failed '" + e.getMessage() + "'", e);
         } catch (IOException e) {
             throw new NanoContainerMarkupException(e);
         }

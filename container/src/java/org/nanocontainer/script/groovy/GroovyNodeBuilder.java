@@ -24,9 +24,9 @@ import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.ClassNameKey;
 import org.nanocontainer.ClassPathElement;
-import org.nanocontainer.script.NanoContainerBuilderDecorationDelegate;
+import org.nanocontainer.script.NodeBuilderDecorationDelegate;
 import org.nanocontainer.script.NanoContainerMarkupException;
-import org.nanocontainer.script.NullNanoContainerBuilderDecorationDelegate;
+import org.nanocontainer.script.NullNodeBuilderDecorationDelegate;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
@@ -47,7 +47,7 @@ import java.security.Permission;
  * Builds trees of PicoContainers and Pico components using GroovyMarkup.
  * <p>Simple example usage in your groovy script:
  * <code><pre>
- * builder = new org.nanocontainer.script.groovy.NanoContainerBuilder()
+ * builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()
  * pico = builder.container(parent:parent) {
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.DefaultWebServerConfig)
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.WebServerImpl)
@@ -60,16 +60,16 @@ import java.security.Permission;
  * @author Michael Rimov 
  * @version $Revision$
  */
-public class NanoContainerBuilder extends BuilderSupport {
+public class GroovyNodeBuilder extends BuilderSupport {
 
-    private final NanoContainerBuilderDecorationDelegate nanoContainerBuilderDecorationDelegate;
+    private final NodeBuilderDecorationDelegate nanoContainerBuilderDecorationDelegate;
 
-    public NanoContainerBuilder(NanoContainerBuilderDecorationDelegate nanoContainerBuilderDecorationDelegate) {
+    public GroovyNodeBuilder(NodeBuilderDecorationDelegate nanoContainerBuilderDecorationDelegate) {
         this.nanoContainerBuilderDecorationDelegate = nanoContainerBuilderDecorationDelegate;
     }
 
-    public NanoContainerBuilder() {
-        this(new NullNanoContainerBuilderDecorationDelegate());
+    public GroovyNodeBuilder() {
+        this(new NullNodeBuilderDecorationDelegate());
     }
 
     protected void setParent(Object parent, Object child) {

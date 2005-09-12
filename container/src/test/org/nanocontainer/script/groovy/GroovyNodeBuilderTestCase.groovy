@@ -11,13 +11,13 @@ import org.nanocontainer.testmodel.WebServerConfigBean
 import org.nanocontainer.testmodel.WebServerImpl
 import java.io.File
 
-class NanoContainerBuilderTestCase extends GroovyTestCase {
+class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
     void testInstantiateBasicComponent() {
 
         Xxx.reset()
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container() {
             component(Xxx$A)
         }
@@ -31,7 +31,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 
         Xxx.reset()
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container {
             container() {
                 component(Xxx$A)
@@ -48,7 +48,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
         // A and C have no no dependencies. B Depends on A.
 
         try {
-            builder = new NanoContainerBuilder()
+            builder = new GroovyNodeBuilder()
             nano = builder.container {
                 component(Xxx$B)
                 container() {
@@ -69,7 +69,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 
         sb = new StringBuffer();
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         caf = new TestComponentAdapterFactory(sb)
         nano = builder.container(componentAdapterFactory:caf) {
             component(key:WebServerConfig, class:DefaultWebServerConfig)
@@ -83,7 +83,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 
     void testInstantiateWithInlineConfiguration() {
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container {
             bean(beanClass:WebServerConfigBean, host:'foobar.com', port:4321)
             component(key:WebServer, class:WebServerImpl)
@@ -134,7 +134,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 
         Xxx.reset()
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container(class:TestContainer) {
             component(Xxx$A)
         }
@@ -148,7 +148,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 
        Xxx.reset()
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container {
             container() {
                 container() {
@@ -167,7 +167,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 
         Xxx.reset()
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container {
             container(name:"huey") {
                 container(name:"duey") {
@@ -186,7 +186,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
     
     public void testComponentInstances() {
     
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container {
             component(key:"Louis", instance:"Armstrong")
             component(key:"Duke", instance: "Ellington")
@@ -198,7 +198,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 	
     public void testConstantParameters() {
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container {
             component(key:"cat", class:HasParams, parameters:[ "c", "a", "t" ])
             component(key:"dog", class:HasParams, parameters:[ "d", "o", "g" ])
@@ -212,7 +212,7 @@ class NanoContainerBuilderTestCase extends GroovyTestCase {
 
     public void testComponentParameters() {
 
-        builder = new NanoContainerBuilder()
+        builder = new GroovyNodeBuilder()
         nano = builder.container {
             component(key:"a", class:Xxx$A)
             component(key:"b", class:Xxx$B, parameters:[ new ComponentParameter("a") ])
