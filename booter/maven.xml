@@ -24,6 +24,9 @@
             file="src/test/composition.groovy"/>
         <copy
             todir="${maven.build.dir}/dist"
+            file="src/test/composition.xml"/>
+        <copy
+            todir="${maven.build.dir}/dist"
             file="src/nanocontainer.sh"/>
         <copy
             todir="${maven.build.dir}/dist/lib"

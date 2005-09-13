@@ -51,14 +51,6 @@ public class StandaloneTestCase extends TestCase {
         return absoluteScriptPath;
     }
 
-    public void testCommandLineWithNoArgs() throws Exception {
-        try {
-            Standalone.getCommandLine(new String[]{}, Standalone.createOptions());
-        } catch (ParseException e) {
-            assertEquals("Exception message", "No arguments specified", e.getMessage());
-        }
-    }
-
     public void testCommandLineWithHelp() throws Exception {
         CommandLine cl = Standalone.getCommandLine(new String[]{"-h"}, Standalone.createOptions());
         assertTrue(cl.hasOption('h'));

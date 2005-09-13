@@ -90,14 +90,14 @@ public class Standalone {
             String compositionResource = cl.getOptionValue(RESOURCE_OPT);
 			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
             if (compositionFile != null) {
-                File composition = new File(compositionFile);
-                buildAndStartContainer(composition, quiet, nowait);
+                buildAndStartContainer(new File(compositionFile), quiet, nowait);
             } else if (compositionResource != null) {
-                URL composition = Standalone.class.getResource(compositionResource);
-                buildAndStartContainer(composition, quiet, nowait);
+                buildAndStartContainer(Standalone.class.getResource(compositionResource), quiet, nowait);
+            } else if (new File("composition.groovy").exists()) {
+                buildAndStartContainer(new File("composition.groovy"), quiet, nowait);
             } else {
                 printUsage(options);
-                System.exit(0);
+                System.exit(10);
             }
         } catch (RuntimeException e) {
             System.err.println("NanoContainer-Standalone: Failed to start application. Cause : " + e.getMessage());
@@ -112,6 +112,7 @@ public class Standalone {
             System.out.println("NanoContainer-Standalone: Exiting main method.");
         }
     }
+
 
     /*
     Now that the breadth/depth-first traversal of "child" containers, we should consider adding support
@@ -179,9 +180,6 @@ public class Standalone {
 
 
     static CommandLine getCommandLine(String[] args, Options options) throws ParseException {
-        if (args.length == 0) {
-            throw new ParseException("No arguments specified");
-        }
         CommandLineParser parser = new PosixParser();
         return parser.parse(options, args);
     }

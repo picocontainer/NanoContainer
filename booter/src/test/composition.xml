@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<container>
+    <component class="org.nanocontainer.DefaultNanoContainer"/> <!-- a simple class defn -->
+    <classpath>
+        <element file="comps/api.jar"/>
+    </classpath>
+    <classloader>
+        <classpath>
+            <element file="comps/honeyimpl.jar"/>
+        </classpath>
+        <component key="org.nanocontainer.booter.Honey" class="org.nanocontainer.booter.BeeHiveHoney"/>
+    </classloader>
+    <classloader>
+        <classpath>
+            <element file="comps/bearimpl.jar">
+                <grant classname="java.net.SocketPermission" context="yahoo.com:80" value="connect"/>
+            </element>
+        </classpath>
+        <component class="org.nanocontainer.booter.BrownBear"/>
+    </classloader>
+
+</container>

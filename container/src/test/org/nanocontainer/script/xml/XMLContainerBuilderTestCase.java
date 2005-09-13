@@ -136,7 +136,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "<container>" +
                 "  <classpath>" +
                 "    <element file='" + testCompJar.getCanonicalPath() + "'>" +
-                "      <permission classname='java.io.FilePermission' context='*' value='read' />" +
+                "      <grant classname='java.io.FilePermission' context='*' value='read' />" +
                 "    </element>" +
                 "  </classpath>" +
                 "  <component-implementation key='foo' class='TestComp'/>" +

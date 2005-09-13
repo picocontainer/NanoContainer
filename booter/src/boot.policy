@@ -3,7 +3,7 @@ grant codeBase "file:lib${/}hidden${/}*" {
 	permission java.security.AllPermission;
 };
 
-grant codeBase "file:lib${/}nanocontainer-boot-1.0-SNAPSHOT.jar" {
+grant codeBase "file:lib${/}nanocontainer-booter-1.0-SNAPSHOT.jar" {
 	permission java.security.AllPermission;
 };
 

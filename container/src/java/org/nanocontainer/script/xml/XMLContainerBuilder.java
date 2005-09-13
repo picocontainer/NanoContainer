@@ -63,6 +63,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
     private final static String CONTAINER = "container";
     private final static String CLASSPATH = "classpath";
+    private final static String CLASSLOADER = "classloader";
     private final static String COMPONENT = "component";
     private final static String COMPONENT_IMPLEMENTATION = "component-implementation";
     private final static String COMPONENT_INSTANCE = "component-instance";
@@ -187,11 +188,18 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
                     registerComponentInstance(parentContainer, childElement);
                 } else if (COMPONENT_ADAPTER.equals(name)) {
                     registerComponentAdapter(parentContainer, childElement);
+                } else if (CLASSLOADER.equals(name)) {
+                    registerClassLoader(parentContainer, childElement);
                 } else if (CLASSPATH.equals(name) != true) {
                     throw new NanoContainerMarkupException("Unsupported element:" + name);
                 }
             }
         }
+    }
+
+    private void registerClassLoader(NanoContainer parentContainer, Element childElement) throws IOException, SAXException, ClassNotFoundException {
+        NanoContainer nano = new DefaultNanoContainer(parentContainer.getComponentClassLoader(), parentContainer.getPico());
+        registerComponentsAndChildContainers(nano, childElement);
     }
 
     private void registerClasspath(NanoContainer container, Element classpathElement) throws IOException, ClassNotFoundException {
