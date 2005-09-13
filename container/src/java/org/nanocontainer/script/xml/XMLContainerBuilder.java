@@ -15,17 +15,17 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
-import java.security.Permission;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
-import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.integrationkit.ContainerPopulator;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.NanoContainerMarkupException;
@@ -35,6 +35,7 @@ import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
+import org.picocontainer.defaults.ComponentMonitorStrategy;
 import org.picocontainer.defaults.ComponentParameter;
 import org.picocontainer.defaults.ConstantParameter;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
@@ -141,10 +142,12 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     }
 
     private MutablePicoContainer createMutablePicoContainer(String cafName, String monitorName, PicoContainer parentContainer) throws PicoCompositionException, ClassNotFoundException {
-        if ( notSet(cafName) ){
-            return new DefaultPicoContainer(createComponentMonitor(monitorName), parentContainer);
-        } 
-        return new DefaultPicoContainer(createComponentAdapterFactory(cafName), parentContainer);
+        MutablePicoContainer container = new DefaultPicoContainer(createComponentAdapterFactory(cafName), parentContainer);
+        if ( !notSet(monitorName) ){
+            ComponentMonitor monitor = createComponentMonitor(monitorName);
+            ((ComponentMonitorStrategy)container).changeMonitor(monitor);
+        }
+        return container;
     }
 
     public void populateContainer(MutablePicoContainer container) {

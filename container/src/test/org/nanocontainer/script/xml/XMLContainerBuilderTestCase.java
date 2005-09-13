@@ -28,7 +28,6 @@ import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.testmodel.DefaultWebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfigComp;
-import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
@@ -56,8 +55,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-implementation key='org.nanocontainer.testmodel.WebServer' class='org.nanocontainer.testmodel.WebServerImpl'/>" +
                 "</container>");
 
-        XMLContainerBuilder builder = new XMLContainerBuilder(script, getClass().getClassLoader());
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertEquals(3, pico.getComponentInstances().size());
         assertNotNull(pico.getComponentInstance(StringBuffer.class));
         assertNotNull(pico.getComponentInstance(DefaultWebServerConfig.class));
@@ -75,8 +73,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-implementation>" +
                 "</container>");
 
-        XMLContainerBuilder builder = new XMLContainerBuilder(script, getClass().getClassLoader());
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertEquals(3, pico.getComponentInstances().size());
         assertNotNull(pico.getComponentInstance("aBuffer"));
         assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServerConfig"));
@@ -95,8 +92,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-implementation>" +
                 "</container>");
 
-        XMLContainerBuilder builder = new XMLContainerBuilder(script, getClass().getClassLoader());
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertEquals(3, pico.getComponentInstances().size());
         assertNotNull(pico.getComponentInstance("aBuffer"));
         assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServerConfig"));
@@ -113,8 +109,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </container>" +
                 "</container>");
 
-        XMLContainerBuilder builder = new XMLContainerBuilder(script, getClass().getClassLoader());
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertNotNull(pico.getComponentInstance(DefaultWebServerConfig.class));
 
         StringBuffer sb = (StringBuffer) pico.getComponentInstance(StringBuffer.class);
@@ -151,9 +146,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-implementation class='java.lang.StringBuffer'/>" +
                 "</container>");
 
-        XMLContainerBuilder builder = new XMLContainerBuilder(script, getClass().getClassLoader());
-        MutablePicoContainer pico = (MutablePicoContainer) buildContainer(builder, null, "SOME_SCOPE");
-
+        PicoContainer pico = buildContainer(script);
         Object fooTestComp = pico.getComponentInstance("foo");
         assertNotNull("Container should have a 'foo' component", fooTestComp);
 
@@ -170,7 +163,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                     "<container>" +
                     "  <component-implementation class='Foo'/>" +
                     "</container>");
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+            buildContainer(script);
             fail();
         } catch (NanoContainerMarkupException expected) {
             assertTrue(expected.getCause() instanceof ClassNotFoundException);
@@ -183,8 +176,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-implementation/>" +
                 "</container>");
         try {
-            buildContainer(new XMLContainerBuilder(script,
-                    getClass().getClassLoader()), null, "SOME_SCOPE");
+            buildContainer(script);
         } catch (NanoContainerMarkupException expected) {
             assertEquals("'class' attribute not specified for component-implementation", expected.getMessage());
         }
@@ -200,7 +192,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "</container>");
 
         try {
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+            buildContainer(script);
         } catch (NanoContainerMarkupException e) {
             assertEquals("parameter needs a child element", e.getMessage());
         }
@@ -208,7 +200,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
 
     public void testEmptyScriptDoesNotThrowsEmptyCompositionException() throws Exception, SAXException, ParserConfigurationException, IOException {
         Reader script = new StringReader("<container/>");
-        buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        buildContainer(script);
     }
 
     public void testCreateContainerFromScriptThrowsSAXException() {
@@ -217,7 +209,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
                 "<container>");
         try {
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+            buildContainer(script);
         } catch (NanoContainerMarkupException e) {
             assertTrue("SAXException", e.getCause() instanceof SAXException);
         }
@@ -226,8 +218,8 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
     public void testCreateContainerFromNullScriptThrowsNullPointerException() {
         Reader script = null;
         try {
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
-            fail();
+            buildContainer(script);
+            fail("NullPointerException expected");
         } catch (NullPointerException expected) {
         }
     }
@@ -238,7 +230,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
                 "</container>");
         try {
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+            buildContainer(script);
             fail();
         } catch (NanoContainerMarkupException expected) {
             assertEquals("Class not found:org.nanocontainer.SomeInexistantFactory", expected.getMessage());
@@ -253,7 +245,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "</container>");
 
         try {
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+            buildContainer(script);
             fail();
         } catch (NanoContainerMarkupException expected) {
             assertEquals("component-instance needs a child element", expected.getMessage());
@@ -268,7 +260,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-instance>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         Object instance = pico.getComponentInstances().get(0);
         assertNotNull(instance);
         assertTrue(instance instanceof String);
@@ -286,7 +278,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-instance>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         Object instance = pico.getComponentInstances().get(0);
         assertNotNull(instance);
         assertTrue(instance instanceof TestBean);
@@ -305,7 +297,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-instance>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         Object instance = pico.getComponentInstances().get(0);
         assertNotNull(instance);
         assertTrue(instance instanceof TestBean);
@@ -329,7 +321,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-instance>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         Object instance = pico.getComponentInstance(SimpleDateFormat.class);
         assertNotNull(instance);
         assertTrue(instance instanceof SimpleDateFormat);
@@ -357,7 +349,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-instance>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertEquals("Hello", pico.getComponentInstance("aString"));
         assertEquals(new Long(22), pico.getComponentInstance("aLong"));
         JButton button = (JButton) pico.getComponentInstance("aButton");
@@ -374,7 +366,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-instance>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         Object instance = pico.getComponentInstance("aKey");
         assertNotNull(instance);
         assertTrue(instance instanceof String);
@@ -393,7 +385,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-instance>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         Object first = pico.getComponentInstance("firstKey");
         assertNotNull(first);
         assertTrue(first instanceof String);
@@ -425,7 +417,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  </component-implementation>" +
                 "  <component-implementation key='org.nanocontainer.testmodel.WebServer' class='org.nanocontainer.testmodel.WebServerImpl'/>" +
                 "</container>");
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertNotNull(pico.getComponentInstance(WebServerConfigComp.class));
         WebServerConfigComp config = (WebServerConfigComp) pico.getComponentInstanceOfType(WebServerConfigComp.class);
         assertEquals("localhost", config.getHost());
@@ -450,7 +442,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "		</parameter>" +
                 "  </component-implementation>" +
                 "</container>");
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertNotNull(pico.getComponentInstance(TestBeanComposer.class));
         TestBeanComposer composer = (TestBeanComposer) pico.getComponentInstance(TestBeanComposer.class);
         assertEquals("bean1", "hello1", composer.getBean1().getBar());
@@ -475,7 +467,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "		</parameter>" +
                 "  </component-implementation>" +
                 "</container>");
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertNotNull(pico.getComponentInstance(TestBeanComposer.class));
         TestBeanComposer composer = (TestBeanComposer) pico.getComponentInstance(TestBeanComposer.class);
         assertEquals("bean1", "hello1", composer.getBean1().getBar());
@@ -502,7 +494,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 " 		<parameter key='bean2'/>" +
                 "  </component-implementation>" +
                 "</container>");
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertNotNull(pico.getComponentInstance(TestBeanComposer.class));
         TestBeanComposer composer = (TestBeanComposer) pico.getComponentInstance(TestBeanComposer.class);
         assertEquals("bean1", "hello1", composer.getBean1().getBar());
@@ -529,7 +521,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 " 		<parameter key='bean2'/>" +
                 "  </component-adapter>" +
                 "</container>");
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertNotNull(pico.getComponentInstance("beanKey"));
         TestBeanComposer composer = (TestBeanComposer) pico.getComponentInstance("beanKey");
         assertEquals("bean1", "hello1", composer.getBean1().getBar());
@@ -557,7 +549,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 " 		<parameter key='bean2'/>" +
                 "  </component-adapter>" +
                 "</container>");
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         assertNotNull(pico.getComponentInstance("beanKey"));
         TestBeanComposer composer = (TestBeanComposer) pico.getComponentInstance("beanKey");
         assertEquals("bean1", "hello1", composer.getBean1().getBar());
@@ -570,7 +562,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-adapter class='org.nanocontainer.script.xml.TestBeanComposer'/>" +
                 "</container>");
         try {
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+             buildContainer(script);
             fail();
         } catch (NanoContainerMarkupException expected) {
             assertEquals("'key' attribute not specified for component-adapter", expected.getMessage());
@@ -583,7 +575,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-adapter key='beanKey'/> " +
                 "</container>");
         try {
-            buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+            buildContainer(script);
             fail();
         } catch (NanoContainerMarkupException expected) {
             assertEquals("'class' attribute not specified for component-adapter", expected.getMessage());
@@ -597,7 +589,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         Object wsc1 = pico.getComponentInstanceOfType(WebServerConfig.class);
         Object wsc2 = pico.getComponentInstanceOfType(WebServerConfig.class);
 
@@ -606,49 +598,38 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
     
     public void testComponentMonitorCanBeSpecified() throws IOException, ParserConfigurationException, SAXException {
         Reader script = new StringReader("" +
-                "<container component-monitor='" + AWriterComponentMonitor.class.getName() + "'>" +
+                "<container component-monitor='" + StaticWriterComponentMonitor.class.getName() + "'>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         pico.getComponentInstanceOfType(WebServerConfig.class);
-        assertTrue(AWriterComponentMonitor.WRITER.toString().length() > 0);
+        assertTrue(StaticWriterComponentMonitor.WRITER.toString().length() > 0);
     }
     
-    public void testComponentMonitorIsIgnoredIfCAFIsSpecified() throws IOException, ParserConfigurationException, SAXException {
+    public void testComponentMonitorCanBeSpecifiedIfCAFIsSpecified() throws IOException, ParserConfigurationException, SAXException {
         Reader script = new StringReader("" +
                 "<container component-adapter-factory='" +DefaultComponentAdapterFactory.class.getName() + 
-                "' component-monitor='" + AnotherWriterComponentMonitor.class.getName() + "'>" +
+                "' component-monitor='" + StaticWriterComponentMonitor.class.getName() + "'>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
                 "</container>");
 
-        PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+        PicoContainer pico = buildContainer(script);
         pico.getComponentInstanceOfType(WebServerConfig.class);
-        assertTrue(AnotherWriterComponentMonitor.WRITER.toString().length() == 0);
+        assertTrue(StaticWriterComponentMonitor.WRITER.toString().length() > 0);
     }
     
-    static public class AWriterComponentMonitor extends WriterComponentMonitor {        
-        static Writer WRITER = new StringWriter();
-        
-        public AWriterComponentMonitor() {
-            this(WRITER);
-        }
-        
-        public AWriterComponentMonitor(Writer out) {
-            super(out);
-        }
+    private PicoContainer buildContainer(Reader script) {
+        return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
     }
-    
-    static public class AnotherWriterComponentMonitor extends WriterComponentMonitor {        
-        static Writer WRITER = new StringWriter();
-        
-        public AnotherWriterComponentMonitor() {
-            this(WRITER);
-        }
-        
-        public AnotherWriterComponentMonitor(Writer out) {
-            super(out);
-        }
-    }    
 
+    static public class StaticWriterComponentMonitor extends WriterComponentMonitor {        
+        static Writer WRITER = new StringWriter();
+        
+        public StaticWriterComponentMonitor() {
+            super(WRITER);
+        }
+        
+    }
 }
+ 
