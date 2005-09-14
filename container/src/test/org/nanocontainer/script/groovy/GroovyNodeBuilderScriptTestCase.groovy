@@ -19,7 +19,7 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         builder = new GroovyNodeBuilder()
         nano = builder.container() {
-            component(Xxx$A)
+            component(Xxx.A)
         }
 
         startAndDispose(nano)
@@ -34,7 +34,7 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
         builder = new GroovyNodeBuilder()
         nano = builder.container {
             container() {
-                component(Xxx$A)
+                component(Xxx.A)
             }
         }
 
@@ -50,11 +50,11 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
         try {
             builder = new GroovyNodeBuilder()
             nano = builder.container {
-                component(Xxx$B)
+                component(Xxx.B)
                 container() {
-                    component(Xxx$A)
+                    component(Xxx.A)
                 }
-                component(Xxx$C)
+                component(Xxx.C)
             }
 
             startAndDispose(nano)
@@ -136,7 +136,7 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         builder = new GroovyNodeBuilder()
         nano = builder.container(class:TestContainer) {
-            component(Xxx$A)
+            component(Xxx.A)
         }
 
         startAndDispose(nano)
@@ -152,7 +152,7 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
         nano = builder.container {
             container() {
                 container() {
-                    component(Xxx$A)
+                    component(Xxx.A)
                 }
             }
             component(HashMap.class)
@@ -171,7 +171,7 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
         nano = builder.container {
             container(name:"huey") {
                 container(name:"duey") {
-                    component(key:"Luis", class:Xxx$A)
+                    component(key:"Luis", class:Xxx.A)
                 }
             }
             component(HashMap.class)
@@ -214,8 +214,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         builder = new GroovyNodeBuilder()
         nano = builder.container {
-            component(key:"a", class:Xxx$A)
-            component(key:"b", class:Xxx$B, parameters:[ new ComponentParameter("a") ])
+            component(key:"a", class:Xxx.A)
+            component(key:"b", class:Xxx.B, parameters:[ new ComponentParameter("a") ])
         }
 	
         a = nano.pico.getComponentInstance("a");

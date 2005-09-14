@@ -10,7 +10,13 @@
                 <include name="**/TestComp2.*"/>
             </fileset>
         </delete>
-        <attainGoal name="set-classpath"/>
+        <!-- TODO underand why compilation fails
+        <attainGoal name="groovy:compile"/>
+        -->
+    </postGoal>
+
+    <goal name="groovy:compile" prereqs="groovy:init">		        
+        <attainGoal name="groovyc:init"/>
         <copy todir="${basedir}/target/test-classes">
             <fileset dir="${basedir}/src/test">
                 <include name="**/*.groovy"/>
@@ -20,9 +26,9 @@
             srcdir="${basedir}/target/test-classes" listfiles="true">
             <classpath refid="test.classpath"/>
         </groovyc>
-    </postGoal>
+    </goal>
 
-    <goal name="set-classpath">
+    <goal name="groovy:init">
         <path id="test.classpath">
             <pathelement path="${maven.build.dest}"/>
             <pathelement path="target/clover/classes"/>
@@ -37,6 +43,7 @@
     <preGoal name="site">
         <attainGoal name="nano:site-directory" />
     </preGoal>
+    
     <postGoal name="site">
         <attainGoal name="nano:replace-index" />
     </postGoal>
@@ -80,6 +87,5 @@
             <j:set var="_dev_null" value="${pom.reports.remove('maven-javadoc-plugin')}" />
         </util:available>
     </goal>
-
     
 </project>
