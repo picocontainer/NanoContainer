@@ -52,7 +52,9 @@ import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.defaults.DelegatingComponentMonitor;
 
 /**
- * Builds trees of PicoContainers and Pico components using GroovyMarkup.
+ * <p>
+ * Builds node trees of PicoContainers and Pico components using GroovyMarkup.
+ * </p>
  * <p>Simple example usage in your groovy script:
  * <code><pre>
  * builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()
@@ -62,14 +64,36 @@ import org.picocontainer.defaults.DelegatingComponentMonitor;
  * }
  * </pre></code>
  * </p>
- * @author <a href="mailto:james@coredevelopers.net">James Strachan</a>
+ * @author James Strachan
  * @author Paul Hammant
  * @author Aslak Helles&oslash;y
  * @author Michael Rimov 
+ * @author Mauro Talevi
  * @version $Revision$
  */
 public class GroovyNodeBuilder extends BuilderSupport {
-
+    
+    private static final String NEW_BUILDER = "newBuilder";
+    private static final String CONTAINER = "container";
+    private static final String COMPONENT = "component";
+    private static final String INSTANCE = "instance";
+    private static final String KEY = "key";
+    private static final String PARAMETERS = "parameters";
+    private static final String BEAN = "bean";
+    private static final String BEAN_CLASS = "beanClass";
+    private static final String CLASS = "class";
+    private static final String CLASS_NAME_KEY = "classNameKey";
+    private static final String CLASSPATH_ELEMENT = "classPathElement";
+    private static final String CLASSLOADER = "classLoader";
+    private static final String PATH = "path";
+    private static final String GRANT = "grant";
+    private static final String HTTP = "http://";
+    private static final String PARENT = "parent";
+    private static final String COMPONENT_ADAPTER_FACTORY = "componentAdapterFactory";
+    private static final String COMPONENT_MONITOR = "componentMonitor";
+    private static final String EMPTY = "";
+    private static final String DO_CALL = "doCall";
+    
     private final NodeBuilderDecorationDelegate decorationDelegate;
 
     public GroovyNodeBuilder(NodeBuilderDecorationDelegate decorationDelegate) {
@@ -84,7 +108,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     }
 
     protected Object doInvokeMethod(String s, Object name, Object args) {
-        //TODO use setDelegate() from Groovy Jsr
+        //TODO use setDelegate() from Groovy JSR
         Object answer = super.doInvokeMethod(s, name, args);
         List list = InvokerHelper.asList(args);
         if (!list.isEmpty()) {
@@ -103,7 +127,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
     protected Object createNode(Object name, Object value) {
         Map attributes = new HashMap();
-        attributes.put("class", value);
+        attributes.put(CLASS, value);
         return createNode(name, attributes);
     }
 
@@ -122,7 +146,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
             return createChildBuilder(current, name, attributes);
         } else if (current == null || current instanceof NanoContainer) {
             NanoContainer parent = (NanoContainer) current;
-            Object parentAttribute = attributes.get("parent");
+            Object parentAttribute = attributes.get(PARENT);
             if (parent != null && parentAttribute != null) {
                 throw new NanoContainerMarkupException("You can't explicitly specify a parent in a child element.");
             }
@@ -130,7 +154,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
                 // we're not in an enclosing scope - look at parent attribute instead
                 parent = (NanoContainer) parentAttribute;
             }
-            if (name.equals("container")) {
+            if (name.equals(CONTAINER)) {
                 return createChildContainer(attributes, parent);
             } else {
                 try {
@@ -140,10 +164,10 @@ public class GroovyNodeBuilder extends BuilderSupport {
                 }
             }
         } else if (current instanceof ClassPathElement) {
-            if (name.equals("grant")) {
+            if (name.equals(GRANT)) {
                 return createGrantPermission(attributes, (ClassPathElement) current);
             }
-            return "";
+            return EMPTY;
         } else {
             // we don't know how to handle it - delegate to the decorator.
             return decorationDelegate.createNode(name, attributes, current);
@@ -156,26 +180,25 @@ public class GroovyNodeBuilder extends BuilderSupport {
     }
 
     private Object createGrantPermission(Map attributes, ClassPathElement cpe) {
-        Permission perm = (Permission) attributes.remove("class");
+        Permission perm = (Permission) attributes.remove(CLASS);
         return cpe.grantPermission(perm);
 
     }
 
     private Object createChildOfContainerNode(NanoContainer parentContainer, Object name, Map attributes, Object current) throws ClassNotFoundException {
-        if (name.equals("component")) {
+        if (name.equals(COMPONENT)) {
             decorationDelegate.rememberComponentKey(attributes);
             return createComponentNode(attributes, parentContainer, name);
-        } else if (name.equals("bean")) {
+        } else if (name.equals(BEAN)) {
             return createBeanNode(attributes, parentContainer.getPico());
-        } else if (name.equals("classPathElement")) {
+        } else if (name.equals(CLASSPATH_ELEMENT)) {
             return createClassPathElementNode(attributes, parentContainer);
-        } else if (name.equals("doCall")) {
-            // TODO ????
-            //BuilderSupport builder = (BuilderSupport) attributes.remove("class");
+        } else if (name.equals(DO_CALL)) {
+            // TODO does this node need to be handled?
             return null;
-        } else if (name.equals("newBuilder")) {
+        } else if (name.equals(NEW_BUILDER)) {
             return createNewBuilderNode(attributes, parentContainer);
-        } else if (name.equals("classLoader")) {
+        } else if (name.equals(CLASSLOADER)) {
             return createComponentClassLoader(parentContainer);
         } else {
             // we don't know how to handle it - delegate to the decorator.
@@ -185,7 +208,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     }
 
     private Object createNewBuilderNode(Map attributes, NanoContainer parentContainer) {
-        String builderClass = (String) attributes.remove("class");
+        String builderClass = (String) attributes.remove(CLASS);
         NanoContainer factory = new DefaultNanoContainer();
         MutablePicoContainer parentPico = parentContainer.getPico();
         factory.getPico().registerComponentInstance(MutablePicoContainer.class, parentPico);
@@ -200,10 +223,10 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
     private ClassPathElement createClassPathElementNode(Map attributes, NanoContainer nanoContainer) {
 
-        final String path = (String) attributes.remove("path");
+        final String path = (String) attributes.remove(PATH);
         URL pathURL = null;
         try {
-            if (path.toLowerCase().startsWith("http://")) {
+            if (path.toLowerCase().startsWith(HTTP)) {
                 pathURL = new URL(path);
             } else {
                 Object rVal = AccessController.doPrivileged(new PrivilegedAction() {
@@ -241,11 +264,11 @@ public class GroovyNodeBuilder extends BuilderSupport {
     }
 
     private Object createComponentNode(Map attributes, NanoContainer nano, Object name) throws ClassNotFoundException {
-        Object key = attributes.remove("key");
-        Object cnkey = attributes.remove("classNameKey");
-        Object classValue = attributes.remove("class");
-        Object instance = attributes.remove("instance");
-        List parameters = (List) attributes.remove("parameters");
+        Object key = attributes.remove(KEY);
+        Object cnkey = attributes.remove(CLASS_NAME_KEY);
+        Object classValue = attributes.remove(CLASS);
+        Object instance = attributes.remove(INSTANCE);
+        List parameters = (List) attributes.remove(PARAMETERS);
 
         MutablePicoContainer pico = nano.getPico();
 
@@ -293,15 +316,15 @@ public class GroovyNodeBuilder extends BuilderSupport {
         MutablePicoContainer childContainer = null;
         if (parent != null) {
             parentClassLoader = parent.getComponentClassLoader();            
-            if ( isAttribute(attributes, "componentAdapterFactory") ) {
+            if ( isAttribute(attributes, COMPONENT_ADAPTER_FACTORY) ) {
                 ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(attributes);
                 childContainer = new DefaultPicoContainer(
                         decorationDelegate.decorate(componentAdapterFactory, attributes), parent.getPico());
-                if ( isAttribute(attributes, "componentMonitor") ) {
+                if ( isAttribute(attributes, COMPONENT_MONITOR) ) {
                     changeComponentMonitor(childContainer, createComponentMonitor(attributes));
                 }
                 parent.getPico().addChildContainer(childContainer);
-            } else if ( isAttribute(attributes, "componentMonitor") ) {
+            } else if ( isAttribute(attributes, COMPONENT_MONITOR) ) {
                 ComponentAdapterFactory componentAdapterFactory = new DefaultComponentAdapterFactory( 
                                                     createComponentMonitor(attributes));
                 childContainer = new DefaultPicoContainer(
@@ -318,14 +341,14 @@ public class GroovyNodeBuilder extends BuilderSupport {
             ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(attributes);
             childContainer = new DefaultPicoContainer(
                     decorationDelegate.decorate(componentAdapterFactory, attributes));
-            if ( isAttribute(attributes, "componentMonitor") ) {
+            if ( isAttribute(attributes, COMPONENT_MONITOR) ) {
                 changeComponentMonitor(childContainer, createComponentMonitor(attributes));
             }
         }
 
         MutablePicoContainer decoratedPico = decorationDelegate.decorate(childContainer);
-        if ( isAttribute(attributes, "class") )  {
-            Class clazz = (Class) attributes.get("class");
+        if ( isAttribute(attributes, CLASS) )  {
+            Class clazz = (Class) attributes.get(CLASS);
             return createNanoContainer(clazz, decoratedPico, parentClassLoader);
         } else {
             return new DefaultNanoContainer(parentClassLoader, decoratedPico);
@@ -352,7 +375,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     }
 
     private ComponentAdapterFactory createComponentAdapterFactory(Map attributes) {
-        final ComponentAdapterFactory factory = (ComponentAdapterFactory) attributes.remove("componentAdapterFactory");
+        final ComponentAdapterFactory factory = (ComponentAdapterFactory) attributes.remove(COMPONENT_ADAPTER_FACTORY);
         if ( factory == null ){
             return new DefaultComponentAdapterFactory();
         }
@@ -360,7 +383,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     }
     
     private ComponentMonitor createComponentMonitor(Map attributes) {
-        final ComponentMonitor monitor = (ComponentMonitor) attributes.remove("componentMonitor");
+        final ComponentMonitor monitor = (ComponentMonitor) attributes.remove(COMPONENT_MONITOR);
         if ( monitor == null ){
             return new DelegatingComponentMonitor();
         }
@@ -373,7 +396,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
 
     protected Object createBean(Map attributes) {
-        Class type = (Class) attributes.remove("beanClass");
+        Class type = (Class) attributes.remove(BEAN_CLASS);
         if (type == null) {
             throw new NanoContainerMarkupException("Bean must have a beanClass attribute");
         }
