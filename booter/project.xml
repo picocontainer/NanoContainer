@@ -24,9 +24,15 @@
             <version>1.0</version>
         </dependency>
 
+		<!-- test dependencies -->
         <dependency>
             <id>groovy</id>
             <version>1.0-jsr-02</version>
+        </dependency>
+
+        <dependency>
+            <id>antlr</id>
+            <version>2.7.5</version>
         </dependency>
 
         <dependency>
@@ -40,11 +46,6 @@
             <version>2.0</version>
         </dependency>
         
-        <dependency>
-            <id>antlr</id>
-            <version>2.7.5</version>
-        </dependency>
-
         <dependency>
             <groupId>maven-plugins</groupId>
             <artifactId>maven-javaapp-plugin</artifactId>
