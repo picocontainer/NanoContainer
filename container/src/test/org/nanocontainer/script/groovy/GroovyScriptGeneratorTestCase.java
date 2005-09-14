@@ -21,7 +21,6 @@ public class GroovyScriptGeneratorTestCase extends TestCase {
         GroovyScriptGenerator groovyScriptGenerator = new GroovyScriptGenerator();
         String script = groovyScriptGenerator.generateScript(pico);
 
-        System.out.println("script = " + script);
         GroovyContainerBuilder groovyContainerBuilder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
         PicoContainer newPico = groovyContainerBuilder.createContainerFromScript(null, null);
 
