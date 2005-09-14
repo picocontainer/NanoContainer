@@ -20,13 +20,11 @@ import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
 
 /**
- * Test with groovy jsr parser
- *
  * @author Paul Hammant
  * @author Mauro Talevi
  * @version $Revision: 1775 $
  */
-public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuilderTestCase {
+public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
     private static final String ASSEMBLY_SCOPE = "SOME_SCOPE";
     
     public void testInstantiateBasicScriptable() throws PicoCompositionException {
@@ -165,7 +163,6 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
     }
 
     public void testShouldBeAbleToHandOffToNestedBuilder() {
-
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
@@ -185,7 +182,6 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
     }
 
     public void testInstantiateBasicComponentInDeeperTree() {
-
         X.reset();
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
@@ -318,9 +314,7 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
     }
 
     public void testInstantiateWithChildContainerAndStartStopAndDisposeOrderIsCorrect() {
-
         X.reset();
-
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
@@ -357,9 +351,7 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
     }
 
     public void testBuildContainerWithParentAttributesPropagatesComponentAdapterFactory() {
-
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
-
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "nano = new GroovyNodeBuilder().container(parent:parent) {\n" +
@@ -375,7 +367,6 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
 
     public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
-
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "nano = new GroovyNodeBuilder().container() {\n" +
@@ -395,7 +386,6 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
 
     public void testWithDynamicClassPathThatDoesNotExist() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-
         try {
             Reader script = new StringReader("" +
                     "        child = null\n" +
@@ -416,7 +406,6 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
 
     public void testWithDynamicClassPath() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-
         Reader script = new StringReader(
                 ""
                         + "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n"
@@ -436,7 +425,6 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
 
     public void testWithDynamicClassPathWithPermissions() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-
         Reader script = new StringReader(
                 ""
                         + "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n"
@@ -452,14 +440,12 @@ public class GroovyNodeBuilderJsrTestCase extends AbstractScriptedContainerBuild
         MutablePicoContainer pico = (MutablePicoContainer)buildContainer(script, parent, ASSEMBLY_SCOPE);
 
         assertTrue(pico.getComponentInstances().size() == 1);
-
         // can't actually test the permission under JUNIT control. We're just
         // testing the syntax here.
     }
 
     public void testGrantPermissionInWrongPlace() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-
         try {
             Reader script = new StringReader("" +
                     "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +

@@ -14,7 +14,7 @@ import org.nanocontainer.aop.dynaop.*
 import org.nanocontainer.script.groovy.*
 import org.nanocontainer.script.NanoContainerMarkupException
 
-public class GroovyNodeBuilderAopScriptTestCase extends GroovyTestCase {
+public class GroovyNodeBuilderAopTestCase extends GroovyTestCase {
 
     builder = new DynaopGroovyNodeBuilder()
     cuts = new DynaopPointcutsFactory()

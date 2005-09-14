@@ -9,16 +9,18 @@
  *****************************************************************************/
 package org.nanocontainer.script.groovy;
 
+import java.io.StringReader;
+
 import org.nanocontainer.aop.Dao;
 import org.nanocontainer.aop.Identifiable;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.picocontainer.PicoContainer;
 
-import java.io.StringReader;
-
 /**
  * @author Stephen Molitor
- * @author Paul n Aslak (pairing)
+ * @author Paul Hammant
+ * @author Aslak Helles&oslash;y
+ * @author Mauro Talevi
  */
 public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuilderTestCase {
 
@@ -39,12 +41,8 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
                 "    component(key:StringBuffer, instance:log)\n" +
                 "}\n";
 
-        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
-
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
-
+        PicoContainer pico = buildContainer(script);
         Dao dao = (Dao) pico.getComponentInstance(Dao.class);
-
         StringBuffer log = (StringBuffer) pico.getComponentInstance(StringBuffer.class);
         verifyIntercepted(dao, log);
     }
@@ -68,18 +66,13 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
                 "    component(key:StringBuffer, instance:log)\n" +
                 "}\n";
 
-        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
-
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
-
+        PicoContainer pico = buildContainer(script);
         Dao dao = (Dao) pico.getComponentInstance(Dao.class);
-
         StringBuffer log = (StringBuffer) pico.getComponentInstance(StringBuffer.class);
         verifyIntercepted(dao, log);
     }
 
     public void testContainerScopedContainerSuppliedInterceptor() {
-
         String script = "" +
                 "package org.nanocontainer.script.groovy\n" +
                 "import org.nanocontainer.aop.*\n" +
@@ -91,19 +84,15 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
                 "    component(key:'log', class:StringBuffer)\n" +
                 "    component(LoggingInterceptor)\n" +
                 "    component(key:Dao, class:DaoImpl)\n" +
-                "}";
+                "}\n";
 
-        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
-
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
-
+        PicoContainer pico = buildContainer(script);
         Dao dao = (Dao) pico.getComponentInstance(Dao.class);
         StringBuffer log = (StringBuffer) pico.getComponentInstance("log");
         verifyIntercepted(dao, log);
     }
 
     public void testComponentScopedInterceptor() {
-
         String script = "" +
                 "package org.nanocontainer.script.groovy\n" +
                 "import org.nanocontainer.aop.*\n" +
@@ -121,11 +110,7 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
                 "    component(key:'notIntercepted', class:DaoImpl)\n" +
                 "}\n";
 
-        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
-
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
-
-
+        PicoContainer pico = buildContainer(script);
         Dao intercepted = (Dao) pico.getComponentInstance("intercepted");
         Dao notIntercepted = (Dao) pico.getComponentInstance("notIntercepted");
         StringBuffer log = (StringBuffer) pico.getComponentInstance("log");
@@ -135,7 +120,6 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
     }
 
     public void testContainerScopedMixin() {
-
         String script = "" +
                 "package org.nanocontainer.script.groovy\n" +
                 "import org.nanocontainer.aop.*\n" +
@@ -147,16 +131,12 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
                 "    aspect(classCut:cuts.instancesOf(Dao), mixinClass:IdentifiableMixin)\n" +
                 "}";
 
-        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
-
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
-
+        PicoContainer pico = buildContainer(script);
         Dao dao = (Dao) pico.getComponentInstance(Dao.class);
         verifyMixin(dao);
     }
 
     public void testExplicitAspectsManagerAndDecorationDelegate() {
-
         String script = "" +
                 "package org.nanocontainer.script.groovy\n" +
                 "import org.nanocontainer.aop.*\n" +
@@ -170,43 +150,40 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
                 "    aspect(classCut:cuts.instancesOf(Dao), mixinClass:IdentifiableMixin)\n" +
                 "}";
 
-        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
-
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
-
+        PicoContainer pico = buildContainer(script);
         Dao dao = (Dao) pico.getComponentInstance(Dao.class);
         verifyMixin(dao);
     }
 
-    public void testScriptSuppliedCaf() {
-
+    public void testCustomComponentAdapterFactory() {
         String script = "" +
                 "package org.nanocontainer.script.groovy\n" +
                 "import org.nanocontainer.aop.*\n" +
                 "import org.nanocontainer.aop.dynaop.*\n" +
-                "log = new StringBuffer()\n" +
-                "logger = new LoggingInterceptor(log)\n" +
-                "caf = new org.picocontainer.defaults.DefaultComponentAdapterFactory()\n" +
-                "\n" +
+                "intLog = new StringBuffer()\n" +
+                "logger = new LoggingInterceptor(intLog)\n" +
+                "cafLog = new StringBuffer()\n" +
+                "caf = new TestComponentAdapterFactory(cafLog)\n" +
                 "cuts = new DynaopPointcutsFactory()\n" +
                 "builder = new DynaopGroovyNodeBuilder()\n" +                
-                "nano = builder.container(adapterFactory:caf) {\n" +
+                "nano = builder.container(componentAdapterFactory:caf) {\n" +
                 "    aspect(classCut:cuts.instancesOf(Dao.class), methodCut:cuts.allMethods(), interceptor:logger)\n" +
                 "    component(key:Dao, class:DaoImpl)\n" +
-                "    component(key:'log', instance:log)\n" +
+                "    component(key:'intLog', instance:intLog)\n" +
+                "    component(key:'cafLog', instance:cafLog)\n" +
                 "}";
 
-        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
-
-        PicoContainer pico = buildContainer(builder, null, "SOME_SCOPE");
-
+        PicoContainer pico = buildContainer(script);
         Dao dao = (Dao) pico.getComponentInstance(Dao.class);
-        StringBuffer log = (StringBuffer) pico.getComponentInstance("log");
-
-        verifyIntercepted(dao, log);
-
-        //TODO - check that caf is the one actually used.
-
+        StringBuffer intLog = (StringBuffer) pico.getComponentInstance("intLog");
+        verifyIntercepted(dao, intLog);
+        StringBuffer cafLog = (StringBuffer) pico.getComponentInstance("cafLog");
+        assertEquals("called", cafLog.toString());
+    }
+    
+    private PicoContainer buildContainer(String script) {
+        GroovyContainerBuilder builder = new GroovyContainerBuilder(new StringReader(script), getClass().getClassLoader());
+        return buildContainer(builder, null, "SOME_SCOPE");
     }
 
     private void verifyIntercepted(Dao dao, StringBuffer log) {
