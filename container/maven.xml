@@ -10,18 +10,16 @@
                 <include name="**/TestComp2.*"/>
             </fileset>
         </delete>
-        <j:if test="jvm.version == '1.4'">
-            <attainGoal name="set-classpath"/>
-            <copy todir="${basedir}/target/test-classes">
-                <fileset dir="${basedir}/src/test">
-                    <include name="**/*.groovy"/>
-                </fileset>
-            </copy>
-            <groovyc destdir="${basedir}/target/test-classes"
-                srcdir="${basedir}/target/test-classes" listfiles="true">
-                <classpath refid="test.classpath"/>
-            </groovyc>
-        </j:if>
+        <attainGoal name="set-classpath"/>
+        <copy todir="${basedir}/target/test-classes">
+            <fileset dir="${basedir}/src/test">
+                <include name="**/*.groovy"/>
+            </fileset>
+        </copy>
+        <groovyc destdir="${basedir}/target/test-classes"
+            srcdir="${basedir}/target/test-classes" listfiles="true">
+            <classpath refid="test.classpath"/>
+        </groovyc>
     </postGoal>
 
     <goal name="set-classpath">
