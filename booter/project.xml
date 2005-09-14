@@ -14,8 +14,19 @@
         </dependency>
 
         <dependency>
+            <groupId>nanocontainer</groupId>
+            <artifactId>nanocontainer</artifactId>
+            <version>${pom.currentVersion}</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-cli</id>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
             <id>groovy</id>
-            <version>1.0-jsr-03-SNAPSHOT</version>
+            <version>1.0-jsr-02</version>
         </dependency>
 
         <dependency>
@@ -30,11 +41,6 @@
         </dependency>
         
         <dependency>
-            <id>commons-cli</id>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
             <id>antlr</id>
             <version>2.7.5</version>
         </dependency>
@@ -45,13 +51,6 @@
             <type>plugin</type>
             <version>1.3</version>
         </dependency>
-
-        <dependency>
-            <groupId>nanocontainer</groupId>
-            <artifactId>nanocontainer</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
 </project>

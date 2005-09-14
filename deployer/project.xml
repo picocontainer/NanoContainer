@@ -15,30 +15,13 @@
         <dependency>
             <groupId>nanocontainer</groupId>
             <artifactId>nanocontainer</artifactId>
-            <version>${nanocontainer.version}</version>
+            <version>${pom.currentVersion}</version>
         </dependency>
 
         <dependency>
             <id>commons-vfs</id>
             <version>20050307052300</version>
             <url>http://jakarta.apache.org/commons/vfs/</url>         
-        </dependency>
-
-        <dependency>
-            <id>commons-logging</id>
-            <version>1.0.4</version>
-            <url>http://jakarta.apache.org/commons/logging.html</url>
-        </dependency>
-
-        <dependency>
-            <id>log4j</id>
-            <version>1.2.8</version>
-             <url>http://logging.apache.org/log4j</url>   
-        </dependency>
-
-        <dependency>
-            <id>antlr</id>
-            <version>2.7.5</version>
         </dependency>
 
         <dependency>
@@ -59,8 +42,8 @@
         </dependency>
 
         <dependency>
-            <id>jmock</id>
-            <version>1.0.1</version>
+            <id>antlr</id>
+            <version>2.7.5</version>
         </dependency>
 
     </dependencies>

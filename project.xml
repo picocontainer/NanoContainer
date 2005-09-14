@@ -22,7 +22,7 @@
     <issueTrackingUrl>http://jira.codehaus.org/browse/NANO</issueTrackingUrl>
 
     <siteAddress>beaver.codehaus.org</siteAddress>
-    <siteDirectory>/home/projects/nanocontainer/public_html/versions/${pom.currentVersion}/${maven.multiproject.aggregateDir}${pom.artifactId}</siteDirectory>
+    <siteDirectory>/home/projects/nanocontainer/public_html/versions/${pom.currentVersion}/${pom.artifactId}</siteDirectory>
 
     <distributionSite>beaver.codehaus.org</distributionSite>
     <distributionDirectory>/dist</distributionDirectory>
@@ -32,13 +32,38 @@
         <developerConnection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk</developerConnection>
         <url>https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk</url>
     </repository>
-  <repository>
-        <connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/picocontainer/trunk</connection>
-        <developerConnection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/picocontainer/trunk</developerConnection>
-        <url>https://svn.picocontainer.codehaus.org/picocontainer/java/picocontainer/trunk</url>
-    </repository>
 
-    <dependencies>
+
+    <!-- See http://www.nanocontainer.org/Team.html -->
+    <developers />
+    <contributors />
+
+	<dependencies>
+
+        <!-- Build/Test dependencies -->
+        <dependency>
+            <id>junit</id>
+            <version>3.8.1</version>
+            <url>http://junit.org</url>
+        </dependency>
+
+        <dependency>
+            <id>jmock</id>
+            <version>1.0.1</version>
+        </dependency>
+    
+         <dependency>
+            <id>commons-logging</id>
+            <version>1.0.4</version>
+            <url>http://jakarta.apache.org/commons/logging.html</url>
+        </dependency>
+
+        <dependency>
+            <id>log4j</id>
+            <version>1.2.8</version>
+             <url>http://logging.apache.org/log4j</url>   
+        </dependency>
+
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-scm-plugin</artifactId>
@@ -54,19 +79,12 @@
             <type>plugin</type>
         </dependency>		
 
-        <!-- Build/Test time only -->
-        <dependency>
-            <id>junit</id>
-            <version>3.8.1</version>
-            <url>http://junit.org</url>
-        </dependency>
-
     </dependencies>
 
     <build>
         <sourceDirectory>${basedir}/src/java</sourceDirectory>
         
-        <!-- Resources tat are packaged up inside the JAR file -->
+        <!-- Resources that are packaged up inside the JAR file -->
         <resources>
             <resource>
                 <directory>${basedir}/src/java</directory>
