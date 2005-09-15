@@ -309,15 +309,15 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance key='date' factory='org.nanocontainer.script.xml.BeanComponentInstanceFactory'>" +
-                "   <java.util.Date>" +
+                "    <java.util.Date>" +
                 "       <time>0</time>" +
-                "   </java.util.Date>" +
+                "    </java.util.Date>" +
                 "  </component-instance>" +
                 "  <component-instance factory='org.nanocontainer.script.xml.BeanComponentInstanceFactory'>" +
-                "   <java.text.SimpleDateFormat>" +
+                "    <java.text.SimpleDateFormat>" +
                 "       <lenient>false</lenient>" +
                 "       <date name='2DigitYearStart'>date</date>" +
-                "   </java.text.SimpleDateFormat>" +
+                "    </java.text.SimpleDateFormat>" +
                 "  </component-instance>" +
                 "</container>");
 

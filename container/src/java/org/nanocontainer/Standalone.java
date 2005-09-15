@@ -42,6 +42,8 @@ public class Standalone {
     private static final char QUIET_OPT = 'q';
     private static final char NOWAIT_OPT = 'n';
 
+    private static final String DFT_COMP_FILE = "composition.groovy";
+
     static final Options createOptions() {
         Options options = new Options();
         options.addOption(String.valueOf(HELP_OPT), "help", false,
@@ -64,8 +66,13 @@ public class Standalone {
     }
 
     public Standalone(String[] args) throws IOException, ClassNotFoundException {
+        File dftCompFile = new File(DFT_COMP_FILE);
         CommandLine cl = null;
         Options options = createOptions();
+        if (args.length == 0 && !dftCompFile.exists()) {
+            printUsage(options);
+            System.exit(-1);
+         }
         try {
             cl = getCommandLine(args, options);
         } catch (ParseException e) {
@@ -93,11 +100,13 @@ public class Standalone {
                 buildAndStartContainer(new File(compositionFile), quiet, nowait);
             } else if (compositionResource != null) {
                 buildAndStartContainer(Standalone.class.getResource(compositionResource), quiet, nowait);
-            } else if (new File("composition.groovy").exists()) {
-                buildAndStartContainer(new File("composition.groovy"), quiet, nowait);
             } else {
-                printUsage(options);
-                System.exit(10);
+                if (dftCompFile.exists()) {
+                    buildAndStartContainer(dftCompFile, quiet, nowait);
+                } else {
+                    printUsage(options);
+                    System.exit(10);
+                }
             }
         } catch (RuntimeException e) {
             System.err.println("NanoContainer-Standalone: Failed to start application. Cause : " + e.getMessage());

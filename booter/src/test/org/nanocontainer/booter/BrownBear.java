@@ -15,12 +15,13 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class BrownBear implements Startable {
 
     private MutablePicoContainer subContainer;
 
-    public BrownBear(Honey honey, Class klass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public BrownBear(Honey honey) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
         try {
             new Socket("google.com", 80);
@@ -41,12 +42,12 @@ public class BrownBear implements Startable {
             e.printStackTrace();
         }
 
-        try {
-            klass.getClassLoader();
-            System.out.println("BrownBear: Can access classloader of class *not* in BrownBear's tree (wrong)");
-        } catch (AccessControlException e) {
-            System.out.println("BrownBear: Can't access classloader of class *not* in BrownBear's tree (correct)");
-        }
+        //try {
+        //    param2.getClass().getClassLoader();
+        //    System.out.println("BrownBear: Can access classloader of class *not* in BrownBear's tree (wrong)");
+        //} catch (AccessControlException e) {
+        //    System.out.println("BrownBear: Can't access classloader of class *not* in BrownBear's tree (correct)");
+        //}
 
         this.getClass().getClassLoader();
         System.out.println("BrownBear: Can access classloader of this class (correct)");

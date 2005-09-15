@@ -1,7 +1,6 @@
 import org.nanocontainer.reflection.ImplementationHidingNanoPicoContainer
 
 pico = builder.container(parent:parent, class:ImplementationHidingNanoPicoContainer) {
-    component(instance:org.nanocontainer.DefaultNanoContainer) // a class defn
     classPathElement(path:"comps/api.jar")
     classLoader {
         classPathElement(path:"comps/honeyimpl.jar")

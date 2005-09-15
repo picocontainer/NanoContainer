@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <container>
-    <component class="org.nanocontainer.DefaultNanoContainer"/> <!-- a simple class defn -->
     <classpath>
         <element file="comps/api.jar"/>
     </classpath>

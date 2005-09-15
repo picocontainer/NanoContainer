@@ -26,6 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
+import org.nanocontainer.ClassNameKey;
 import org.nanocontainer.integrationkit.ContainerPopulator;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.NanoContainerMarkupException;
@@ -65,6 +66,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     private final static String CONTAINER = "container";
     private final static String CLASSPATH = "classpath";
     private final static String CLASSLOADER = "classloader";
+    private static final String CLASS_NAME_KEY = "class-name-key";
     private final static String COMPONENT = "component";
     private final static String COMPONENT_IMPLEMENTATION = "component-implementation";
     private final static String COMPONENT_INSTANCE = "component-instance";
@@ -248,29 +250,28 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
     }
 
-    private PicoContainer registerComponentImplementation(NanoContainer container, Element element) throws ClassNotFoundException, MalformedURLException {
+    private void registerComponentImplementation(NanoContainer container, Element element) throws ClassNotFoundException, MalformedURLException {
         String className = element.getAttribute(CLASS);
         if (notSet(className)) {
             throw new NanoContainerMarkupException("'" + CLASS + "' attribute not specified for " + element.getNodeName());
         }
 
         Parameter[] parameters = createChildParameters(container, element);
-        String key = element.getAttribute(KEY);
         Class clazz = container.getComponentClassLoader().loadClass(className);
+        Object key = element.getAttribute(KEY);
+        String classKey = element.getAttribute(CLASS_NAME_KEY);
         if (notSet(key)) {
-            if (parameters == null) {
-                container.getPico().registerComponentImplementation(clazz);
+            if (!notSet(classKey)) {
+                key = new ClassNameKey(classKey);
             } else {
-                container.getPico().registerComponentImplementation(clazz, clazz, parameters);
-            }
-        } else {
-            if (parameters == null) {
-                container.getPico().registerComponentImplementation(key, clazz);
-            } else {
-                container.getPico().registerComponentImplementation(key, clazz, parameters);
+                key = clazz;
             }
         }
-        return null;
+        if (parameters == null) {
+            container.getPico().registerComponentImplementation(key, clazz);
+        } else {
+            container.getPico().registerComponentImplementation(key, clazz, parameters);
+        }
     }
 
     private Parameter[] createChildParameters(NanoContainer container, Element element) throws ClassNotFoundException, MalformedURLException {
@@ -311,8 +312,13 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         Object instance = factory.makeInstance(container.getPico(), componentElement, getClassLoader());
 
         String key = element.getAttribute(KEY);
+        String classKey = element.getAttribute(CLASS_NAME_KEY);
         if (notSet(key)) {
-            container.getPico().registerComponentInstance(instance);
+            if (!notSet(classKey)) {
+                container.getPico().registerComponentInstance(new ClassNameKey(key), instance);
+            } else {
+                container.getPico().registerComponentInstance(instance);
+            }
         } else {
             container.getPico().registerComponentInstance(key, instance);
         }
@@ -394,7 +400,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
             throw new NanoContainerMarkupException(e);
         }
     }    
-    private boolean notSet(String string) {
+    private boolean notSet(Object string) {
         return string == null || string.equals(EMPTY);
     }
 
