@@ -160,7 +160,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
                 try {
                     return createChildOfContainerNode(parent, name, attributes, current);
                 } catch (ClassNotFoundException e) {
-                    throw new NanoContainerMarkupException("ClassNotFoundException:" + e.getMessage(), e);
+                    throw new NanoContainerMarkupException("ClassNotFoundException: " + e.getMessage(), e);
                 }
             }
         } else if (current instanceof ClassPathElement) {

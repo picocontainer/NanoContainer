@@ -191,7 +191,7 @@ public class DefaultNanoContainer implements NanoContainer {
             try {
                 return super.loadClass(name);
             } catch (ClassNotFoundException e) {
-                throw new ClassNotFoundException(name + ":" + getPrettyHierarchy(), e);
+                throw decorateCNFE(name, e);
             }
         }
 
@@ -199,13 +199,13 @@ public class DefaultNanoContainer implements NanoContainer {
             try {
                 return super.findClass(name);
             } catch (ClassNotFoundException e) {
-                throw new ClassNotFoundException(name + ":" + getPrettyHierarchy(), e);
+                throw decorateCNFE(name, e);
             }
         }
 
-        private String getPrettyHierarchy() {
+        private ClassNotFoundException decorateCNFE(String name, ClassNotFoundException e) {
             ClassLoader classLoader = this;
-            StringBuffer sb = new StringBuffer();
+            StringBuffer sb = new StringBuffer("'").append(name).append("' classloader stack [");
             while(classLoader != null) {
                 sb.append(classLoader.toString()).append("\n");
                 final ClassLoader cl = classLoader;
@@ -216,7 +216,7 @@ public class DefaultNanoContainer implements NanoContainer {
                 });
 
             }
-            return sb.toString();
+            return new ClassNotFoundException(sb.append("]").toString() , e);
         }
 
         public String toString() {
