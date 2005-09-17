@@ -38,13 +38,16 @@
 	<goal name="booter:dist" prereqs="jar:jar">
         <mkdir dir="${maven.build.dir}/dist"/>
 
-        <copy todir="${maven.build.dir}/dist">
+        <copy todir="${maven.build.dir}/dist" filtering="true">
 			<fileset dir="src">
 				<include name="nanocontainer.sh"/>
 			</fileset>        
 			<fileset dir="src/test">
 				<include name="composition.*"/>
-			</fileset>        
+			</fileset>
+            <filterset>
+                <filter token="VER" value="${nanocontainer.version}"/>
+            </filterset>
 		</copy>
 
         <mkdir dir="${maven.build.dir}/dist/lib"/>
@@ -54,7 +57,7 @@
 			</fileset>        
 		</copy>
 
-        <copy tofile="${maven.build.dir}/dist/lib/${pom.artifactId}.jar"
+        <copy tofile="${maven.build.dir}/dist/lib/${maven.final.name}.jar"
             file="${maven.build.dir}/${maven.final.name}.jar"/>
 		
         <mkdir dir="${maven.build.dir}/dist/lib/common"/>
