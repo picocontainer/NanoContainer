@@ -1,93 +1,77 @@
 <project default="jar:install"
     xmlns:j="jelly:core">
 
-    <goal name="setup:demo" prereqs="java:compile, test:compile, jar:jar, jar:testComps">
-        <mkdir dir="${maven.build.dir}/dist/lib/common"/>
-        <mkdir dir="${maven.build.dir}/dist/lib/hidden"/>
-        <mkdir dir="${maven.build.dir}/dist/comps/"/>
-
-        <copy
-            todir="${maven.build.dir}/dist/lib"
-            file="${maven.build.dir}/${maven.final.name}.jar"/>
-
-        <copy
-            todir="${maven.build.dir}/dist/comps"
-            file="${maven.build.dir}/api.jar"/>
-        <copy
-            todir="${maven.build.dir}/dist/comps"
-            file="${maven.build.dir}/bearimpl.jar"/>
-        <copy
-            todir="${maven.build.dir}/dist/comps"
-            file="${maven.build.dir}/honeyimpl.jar"/>
-        <copy
-            todir="${maven.build.dir}/dist"
-            file="src/test/composition.groovy"/>
-        <copy
-            todir="${maven.build.dir}/dist"
-            file="src/test/composition.xml"/>
-        <copy
-            todir="${maven.build.dir}/dist"
-            file="src/nanocontainer.sh"/>
-        <copy
-            todir="${maven.build.dir}/dist/lib"
-            file="src/boot.policy"/>
-
-        <j:forEach var="lib" items="${pom.artifacts}">
-            <copy
-                todir="${maven.build.dir}/dist/lib/common"
-                file="${lib.path}"/>
-        </j:forEach>
-
-        <delete>
-            <fileset dir="${maven.build.dir}/dist/lib/common">
-                <exclude name="**/picocontainer-1*.jar"/>
-            </fileset>
-        </delete>
-
-        <j:forEach var="lib" items="${pom.artifacts}">
-            <copy
-                todir="${maven.build.dir}/dist/lib/hidden"
-                file="${lib.path}"/>
-        </j:forEach>
-
-        <delete>
-            <fileset dir="${maven.build.dir}/dist/lib/hidden">
-                <include name="**/jmock*.jar"/>
-                <include name="**/*tck*.jar"/>
-                <include name="**/js*.jar"/>
-                <include name="**/junit*.jar"/>
-                <include name="**/nanocontainer-testmodel*.jar"/>
-                <include name="**/picocontainer*.jar"/>
-                <include name="**/maven-javaapp-plugin-*.jar"/>
-
-            </fileset>
-        </delete>
-
+    <goal name="booter:demo" prereqs="booter:test-comps">
+    		<attainGoal name="booter:dist"/>
     </goal>
 
-    <goal name="jar:testComps">
-    
-        <jar jarfile="${maven.build.dir}/api.jar">
+    <goal name="booter:test-comps" prereqs="test:compile">    
+        <mkdir dir="${maven.build.dir}/test-comps/"/>    
+        <jar jarfile="${maven.build.dir}/test-comps/api.jar">
             <fileset dir="${maven.build.dir}/test-classes/">
                 <include name="**/Bear.class"/>
                 <include name="**/Honey.class"/>
             </fileset>
         </jar>
 
-        <jar jarfile="${maven.build.dir}/bearimpl.jar">
+        <jar jarfile="${maven.build.dir}/test-comps/bearimpl.jar">
             <fileset dir="${maven.build.dir}/test-classes/">
                 <include name="**/BrownBear.class"/>
             </fileset>
         </jar>
 
-        <jar jarfile="${maven.build.dir}/honeyimpl.jar">
+        <jar jarfile="${maven.build.dir}/test-comps/honeyimpl.jar">
             <fileset dir="${maven.build.dir}/test-classes/">
                 <include name="**/BeeHiveHoney.class"/>
             </fileset>
         </jar>
 
+        <mkdir dir="${maven.build.dir}/dist/comps/"/>
+        <copy todir="${maven.build.dir}/dist/comps">
+			<fileset dir="${maven.build.dir}/test-comps">
+				<include name="*.jar"/>
+			</fileset>        
+		</copy>            
     </goal>
 
 
+	<goal name="booter:dist" prereqs="jar:jar">
+        <mkdir dir="${maven.build.dir}/dist"/>
+
+        <copy todir="${maven.build.dir}/dist">
+			<fileset dir="src">
+				<include name="nanocontainer.sh"/>
+			</fileset>        
+			<fileset dir="src/test">
+				<include name="composition.*"/>
+			</fileset>        
+		</copy>
+
+        <mkdir dir="${maven.build.dir}/dist/lib"/>
+        <copy todir="${maven.build.dir}/dist/lib">
+			<fileset dir="src">
+				<include name="booter.policy"/>
+			</fileset>        
+		</copy>
+
+        <copy tofile="${maven.build.dir}/dist/lib/${pom.artifactId}.jar"
+            file="${maven.build.dir}/${maven.final.name}.jar"/>
+		
+        <mkdir dir="${maven.build.dir}/dist/lib/common"/>
+        <mkdir dir="${maven.build.dir}/dist/lib/hidden"/>
+        <j:forEach var="lib" items="${pom.artifacts}">
+   		    <j:set var="dep" value="${lib.dependency}"/>     
+   		    <j:if test="${dep.getProperty('booter.common')=='true'}">
+		    	    <echo>copying ${lib.path}</echo>
+             	<copy todir="${maven.build.dir}/dist/lib/common"
+                		file="${lib.path}"/>
+            </j:if>
+   		    <j:if test="${dep.getProperty('booter.hidden')=='true'}">
+		    	    <echo>copying ${lib.path}</echo>
+             	<copy todir="${maven.build.dir}/dist/lib/hidden"
+                		file="${lib.path}"/>
+            </j:if>
+        </j:forEach>	
+	</goal>
 
 </project>

@@ -1,0 +1,16 @@
+// For PicoContainer and others in lib/common
+grant codeBase "file:lib${/}common${/}*" {
+	permission java.security.AllPermission;
+};
+
+// For NanoContainer, Groovy, AST and others in lib/hidden
+grant codeBase "file:lib${/}hidden${/}*" {
+	permission java.security.AllPermission;
+};
+
+grant codeBase "file:lib${/}nanocontainer-booter.jar" {
+	permission java.security.AllPermission;
+};
+
+
+
