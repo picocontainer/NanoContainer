@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<project xmlns:j="jelly:core" xmlns:ant="jelly:ant" xmlns:artifact="artifact" xmlns:license="license" xmlns:util="jelly:util">
+
+
+    <!--==================================================================-->
+    <!-- Default goal: Builds booter filesystem                           -->
+    <!--==================================================================-->
+    <goal name="booter" prereqs="booter:build-dist"/>
+
+    <!--==================================================================-->
+    <!-- Prepares Booter dist											  -->
+    <!--==================================================================-->
+	<goal name="booter:prepare-dist" prereqs="jar:jar">
+        <mkdir dir="${maven.booter.dist.dir}"/>
+        <mkdir dir="${maven.booter.dist.dir}/lib"/>
+        <mkdir dir="${maven.booter.dist.dir}/lib/common"/>
+        <mkdir dir="${maven.booter.dist.dir}/lib/hidden"/>
+    </goal>
+
+    <!--==================================================================-->
+    <!-- Builds Booter dist 											  -->
+    <!--==================================================================-->
+	<goal name="booter:build-dist" prereqs="booter:prepare-dist">
+
+        <copy todir="${maven.booter.dist.dir}" 
+        		file="${maven.booter.script}"
+        		filtering="true">
+  			<filterset>
+                <filter token="booter-version" value="${maven.booter.version}"/>
+		    </filterset>
+    		</copy>
+		<chmod dir="${maven.booter.dist.dir}" perm="ugo+rx"/>
+        
+        <copy todir="${maven.booter.dist.dir}/lib" 
+        		file="${maven.booter.policy}"
+        		filtering="true">
+  			<filterset>
+                <filter token="booter-version" value="${maven.booter.version}"/>
+		    </filterset>
+    		</copy>
+
+        <copy tofile="${maven.booter.dist.dir}/lib/${maven.final.name}.jar"
+            file="${maven.build.dir}/${maven.final.name}.jar"/>
+		
+        <j:forEach var="lib" items="${pom.artifacts}">
+   		    <j:set var="dep" value="${lib.dependency}"/>     
+   		    <j:if test="${dep.getProperty('booter.common')=='true'}">
+		    	    <echo>copying ${lib.path}</echo>
+             	<copy todir="${maven.booter.dist.dir}/lib/common"
+                		file="${lib.path}"/>
+            </j:if>
+   		    <j:if test="${dep.getProperty('booter.hidden')=='true'}">
+		    	    <echo>copying ${lib.path}</echo>
+             	<copy todir="${maven.booter.dist.dir}/lib/hidden"
+                		file="${lib.path}"/>
+            </j:if>
+        </j:forEach>	
+
+        <copy todir="${maven.booter.dist.dir}/lib">
+        		<fileset dir="${maven.booter.lib.dir}">
+        			<include name="${maven.booter.lib.include}"/>
+        			<exclude name="${maven.booter.lib.exclude}"/>
+        		</fileset>
+    		</copy>
+	</goal>
+
+		
+</project>

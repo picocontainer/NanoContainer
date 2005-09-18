@@ -1,0 +1,11 @@
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <id>booter-maven-plugin</id>
+    <name>Booter Maven Plugin</name>
+    <description>Booter Maven Plugin</description>
+    <shortDescription>Booter Maven Plugin</shortDescription>
+    <currentVersion>1.0</currentVersion>
+
+    <siteDirectory>/home/projects/nanocontainer/public_html/plugins/booter-maven-plugin</siteDirectory>
+</project>
+

@@ -1,0 +1,18 @@
+// booter
+grant codeBase "file:lib${/}nanocontainer-booter-@booter-version@.jar" {
+	permission java.security.AllPermission;
+};
+
+// lib/common
+grant codeBase "file:lib${/}common${/}*" {
+	permission java.security.AllPermission;
+};
+
+// lib/hidden
+grant codeBase "file:lib${/}hidden${/}*" {
+	permission java.security.AllPermission;
+};
+
+
+
+
