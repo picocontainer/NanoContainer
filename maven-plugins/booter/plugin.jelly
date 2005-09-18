@@ -40,8 +40,8 @@
 		    </filterset>
     		</copy>
 
-        <copy tofile="${maven.booter.dist.dir}/lib/${maven.final.name}.jar"
-            file="${maven.build.dir}/${maven.final.name}.jar"/>
+        <copy todir="${maven.booter.dist.dir}/lib/"
+            file="${pom.getDependencyPath('nanocontainer:nanocontainer-booter')}"/>
 		
         <j:forEach var="lib" items="${pom.artifacts}">
    		    <j:set var="dep" value="${lib.dependency}"/>     
@@ -56,14 +56,6 @@
                 		file="${lib.path}"/>
             </j:if>
         </j:forEach>	
-
-        <copy todir="${maven.booter.dist.dir}/lib">
-        		<fileset dir="${maven.booter.lib.dir}">
-        			<include name="${maven.booter.lib.include}"/>
-        			<exclude name="${maven.booter.lib.exclude}"/>
-        		</fileset>
-    		</copy>
 	</goal>
-
 		
 </project>
