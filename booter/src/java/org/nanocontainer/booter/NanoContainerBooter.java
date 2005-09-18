@@ -13,47 +13,43 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * NanoContainerBooter instantiated the NanoContainer {@link org.nanocontainer.Standalone Standalone} 
+ * startup class using a tree of common and hidden classloaders.
+ * 
+ * @author Paul Hammant
+ * @author Mauro Talevi
+ * @see org.nanocontainer.Standalone
+ */
 public class NanoContainerBooter {
-
-    private List commonClassLoaderURLs = new ArrayList();
-    private List hiddenClassLoaderURLs = new ArrayList();
 
     public static void main(String[] args) throws Exception {
         new NanoContainerBooter(args);
     }
 
+    /**
+     * Instantiates the NanoContainer Standalone class
+     * @param args the arguments passed on to Standalone
+     * 
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     * @throws IOException
+     */
     public NanoContainerBooter(String[] args) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, InstantiationException, IOException {
 
-        File[] libs = new File("lib/common").listFiles();
-        for (int i = 0; i < libs.length; i++) {
-            File file = libs[i];
-            URL fileURL = file.toURL();
-            commonClassLoaderURLs.add(fileURL);
-        }
-
-        libs = new File("lib/hidden").listFiles();
-        for (int i = 0; i < libs.length; i++) {
-            File file = libs[i];
-            URL fileURL = file.toURL();
-            hiddenClassLoaderURLs.add(fileURL);
-        }
-
-        URL[] common = new URL[commonClassLoaderURLs.size()];
-        commonClassLoaderURLs.toArray(common);
-
-        URLClassLoader baseClassLoader = new URLClassLoader(common,
+        URLClassLoader commonClassLoader = new URLClassLoader(buildClassLoaderURLs("lib/common"),
                         NanoContainerBooter.class.getClassLoader().getParent() );
 
-        URL[] hidden = new URL[hiddenClassLoaderURLs.size()];
-        hiddenClassLoaderURLs.toArray(hidden);
-
-        URLClassLoader hiddenClassLoader = new URLClassLoader(
-                        hidden, baseClassLoader );
+        URLClassLoader hiddenClassLoader = new URLClassLoader(buildClassLoaderURLs("lib/hidden"), 
+                        commonClassLoader );
 
         Class nanoStandalone = hiddenClassLoader.loadClass("org.nanocontainer.Standalone");
         Constructor ctor = nanoStandalone.getConstructors()[0];
@@ -63,4 +59,14 @@ public class NanoContainerBooter {
 
     }
 
+    private URL[] buildClassLoaderURLs(String path) throws MalformedURLException{
+        List urls = new ArrayList();
+        File[] libs = new File(path).listFiles();
+        for (int i = 0; i < libs.length; i++) {
+            File file = libs[i];
+            URL fileURL = file.toURL();
+            urls.add(fileURL);
+        }
+        return (URL[])urls.toArray(new URL[urls.size()]);
+    }
 }
