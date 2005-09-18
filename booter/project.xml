@@ -35,6 +35,13 @@
 
 		<!-- test dependencies -->
         <dependency>
+            <groupId>nanocontainer</groupId>
+            <artifactId>booter-maven-plugin</artifactId>
+		   <type>plugin</type>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
             <id>groovy</id>
             <version>1.0-jsr-03</version>
  	        <properties>

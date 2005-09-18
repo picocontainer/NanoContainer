@@ -2,7 +2,16 @@
     xmlns:j="jelly:core">
 
     <goal name="booter:demo" prereqs="booter:test-comps">
-    		<attainGoal name="booter:dist"/>
+    		<attainGoal name="booter:build-dist"/>
+        <copy todir="${maven.build.dir}/booter">
+        		<fileset dir="src/test">
+				<include name="composition.*"/>
+			</fileset>
+         </copy>    		
+        <mkdir dir="${maven.build.dir}/booter/comps"/>
+        <copy todir="${maven.build.dir}/booter/comps">
+        		<fileset dir="${maven.build.dir}/test-comps/"/>
+         </copy>    		
     </goal>
 
     <goal name="booter:test-comps" prereqs="test:compile">    
@@ -34,47 +43,5 @@
 		</copy>            
     </goal>
 
-
-	<goal name="booter:dist" prereqs="jar:jar">
-        <mkdir dir="${maven.build.dir}/dist"/>
-
-        <copy todir="${maven.build.dir}/dist" filtering="true">
-			<fileset dir="src">
-				<include name="nanocontainer.sh"/>
-			</fileset>        
-			<fileset dir="src/test">
-				<include name="composition.*"/>
-			</fileset>
-            <filterset>
-                <filter token="VER" value="${nanocontainer.version}"/>
-            </filterset>
-		</copy>
-
-        <mkdir dir="${maven.build.dir}/dist/lib"/>
-        <copy todir="${maven.build.dir}/dist/lib">
-			<fileset dir="src">
-				<include name="booter.policy"/>
-			</fileset>        
-		</copy>
-
-        <copy tofile="${maven.build.dir}/dist/lib/${maven.final.name}.jar"
-            file="${maven.build.dir}/${maven.final.name}.jar"/>
-		
-        <mkdir dir="${maven.build.dir}/dist/lib/common"/>
-        <mkdir dir="${maven.build.dir}/dist/lib/hidden"/>
-        <j:forEach var="lib" items="${pom.artifacts}">
-   		    <j:set var="dep" value="${lib.dependency}"/>     
-   		    <j:if test="${dep.getProperty('booter.common')=='true'}">
-		    	    <echo>copying ${lib.path}</echo>
-             	<copy todir="${maven.build.dir}/dist/lib/common"
-                		file="${lib.path}"/>
-            </j:if>
-   		    <j:if test="${dep.getProperty('booter.hidden')=='true'}">
-		    	    <echo>copying ${lib.path}</echo>
-             	<copy todir="${maven.build.dir}/dist/lib/hidden"
-                		file="${lib.path}"/>
-            </j:if>
-        </j:forEach>	
-	</goal>
 
 </project>
