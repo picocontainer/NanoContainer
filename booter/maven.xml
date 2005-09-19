@@ -1,13 +1,15 @@
 <project default="jar:install"
     xmlns:j="jelly:core">
 
-    <goal name="booter:demo" prereqs="booter:test-comps">
+    <goal name="booter:demo" prereqs="jar:jar, booter:test-comps">
     		<attainGoal name="booter:build-dist"/>
         <copy todir="${maven.build.dir}/booter">
         		<fileset dir="src/test">
 				<include name="composition.*"/>
 			</fileset>
          </copy>    		
+        <copy todir="${maven.build.dir}/booter/lib" 
+        			file="${maven.build.dir}/${maven.final.name}.jar"/>        
         <mkdir dir="${maven.build.dir}/booter/comps"/>
         <copy todir="${maven.build.dir}/booter/comps">
         		<fileset dir="${maven.build.dir}/test-comps/"/>
