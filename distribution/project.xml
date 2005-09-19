@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <id>nanocontainer-distribution</id>
+    <name>Nanocontainer Distribution</name>
+
+    <dependencies>
+
+        <dependency>
+            <id>picocontainer</id>
+            <version>${picocontainer.version}</version>
+            <url>http://www.picocontainer.org/</url>
+ 	        <properties>
+                <booter.common>true</booter.common>
+            </properties>
+        </dependency>
+
+        <dependency>
+            <groupId>nanocontainer</groupId>
+            <artifactId>nanocontainer</artifactId>
+            <version>${pom.currentVersion}</version>
+ 	        <properties>
+                <booter.hidden>true</booter.hidden>
+            </properties>
+        </dependency>
+
+        <dependency>
+            <groupId>nanocontainer</groupId>
+            <artifactId>nanocontainer-booter</artifactId>
+            <version>${pom.currentVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>nanocontainer</groupId>
+            <artifactId>booter-maven-plugin</artifactId>
+		   <type>plugin</type>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-cli</id>
+            <version>1.0</version>
+ 	        <properties>
+                <booter.common>true</booter.common>
+            </properties>
+        </dependency>
+
+		<!-- groovy dependencies -->
+        <dependency>
+            <id>groovy</id>
+            <version>1.0-jsr-03</version>
+ 	        <properties>
+                <booter.hidden>true</booter.hidden>
+            </properties>
+        </dependency>
+
+        <dependency>
+            <id>antlr</id>
+            <version>2.7.5</version>
+ 	        <properties>
+                <booter.hidden>true</booter.hidden>
+            </properties>
+        </dependency>
+
+        <dependency>
+            <id>asm</id>
+            <version>2.0</version>
+ 	        <properties>
+                <booter.hidden>true</booter.hidden>
+            </properties>
+        </dependency>
+
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-util</artifactId>
+            <version>2.0</version>
+ 	        <properties>
+                <booter.hidden>true</booter.hidden>
+            </properties>
+        </dependency>
+        
+    </dependencies>
+
+  	<reports>
+    </reports>
+
+</project>

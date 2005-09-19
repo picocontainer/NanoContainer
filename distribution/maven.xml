@@ -1,0 +1,19 @@
+<project>
+
+	<postGoal name="dist:prepare-bin-filesystem">
+		<attainGoal name="booter:build-dist"/>
+        <copy todir="${maven.dist.bin.assembly.dir}">
+			<fileset dir="${maven.booter.dist.dir}"/>
+		</copy>
+        <copy todir="${maven.dist.bin.assembly.dir}">
+			<fileset dir="${maven.src.dir}/conf">
+				<include name="README.txt"/>
+				<include name="composition.*"/>
+			</fileset>
+		</copy>
+		<!-- delete portions of dist not required -->
+        <delete dir="${maven.dist.bin.assembly.dir}/docs"/>
+        <delete file="${maven.dist.bin.assembly.dir}/${maven.final.name}.jar"/>
+  	</postGoal>
+
+</project>
