@@ -3,7 +3,7 @@
 <project>
     <extend>${basedir}/../project.xml</extend>
     <id>nanocontainer-distribution</id>
-    <name>Nanocontainer Distribution</name>
+    <name>NanoContainer Distribution</name>
 
     <dependencies>
 
