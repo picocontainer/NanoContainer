@@ -1,5 +1,5 @@
-<project default="nano:install">
-
+<project>
+	
     <goal name="nano:install">
         <attainGoal name="multiproject:install"/>
     </goal>

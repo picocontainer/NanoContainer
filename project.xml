@@ -83,7 +83,7 @@
 
     <build>
         <sourceDirectory>${basedir}/src/java</sourceDirectory>
-        
+        <defaultGoal>multiproject:install</defaultGoal>
         <!-- Resources that are packaged up inside the JAR file -->
         <resources>
             <resource>

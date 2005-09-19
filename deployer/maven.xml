@@ -1,4 +1,4 @@
-<project default="jar:install"
+<project
     xmlns:j="jelly:core">
 
     <postGoal name="jar:install">

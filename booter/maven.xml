@@ -1,4 +1,4 @@
-<project default="jar:install"
+<project
     xmlns:j="jelly:core">
 
     <goal name="booter:demo" prereqs="jar:jar, booter:test-comps">
