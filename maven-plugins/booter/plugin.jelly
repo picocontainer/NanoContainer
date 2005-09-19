@@ -11,7 +11,7 @@
     <!--==================================================================-->
     <!-- Prepares Booter dist											  -->
     <!--==================================================================-->
-	<goal name="booter:prepare-dist" prereqs="jar:jar">
+	<goal name="booter:prepare-dist">
         <mkdir dir="${maven.booter.dist.dir}"/>
         <mkdir dir="${maven.booter.dist.dir}/lib"/>
         <mkdir dir="${maven.booter.dist.dir}/lib/common"/>
