@@ -2,6 +2,7 @@
 
 <project>
     <extend>${basedir}/../project.xml</extend>
+    <pomVersion>3</pomVersion>
     <id>nanocontainer-distribution</id>
     <name>NanoContainer Distribution</name>
 
@@ -29,13 +30,17 @@
             <groupId>nanocontainer</groupId>
             <artifactId>nanocontainer-booter</artifactId>
             <version>${pom.currentVersion}</version>
+            <!--
+            <jar>nanocontainer-booter-${pom.currentVersion}.jar</jar>
+            <type>app</type>
+            -->
         </dependency>
 
         <dependency>
             <groupId>nanocontainer</groupId>
             <artifactId>booter-maven-plugin</artifactId>
-		   <type>plugin</type>
             <version>1.0</version>
+	    <type>plugin</type>
         </dependency>
 
         <dependency>

@@ -2,6 +2,7 @@
 
 <project xmlns:j="jelly:core" xmlns:ant="jelly:ant">
     <extend>${basedir}/../project.xml</extend>
+    <pomVersion>3</pomVersion>
     <id>nanocontainer</id>
     <name>NanoContainer Core</name>
 

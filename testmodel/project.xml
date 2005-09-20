@@ -2,6 +2,7 @@
 
 <project>
     <extend>${basedir}/../project.xml</extend>
+    <pomVersion>3</pomVersion>
     <id>nanocontainer-testmodel</id>
     <name>NanoContainer TestModel</name>
 

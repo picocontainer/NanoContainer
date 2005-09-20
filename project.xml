@@ -2,11 +2,10 @@
 <project xmlns:j="jelly:core">
 
     <pomVersion>3</pomVersion>
-    <currentVersion>${nanocontainer.version}</currentVersion>
+    <id>nanocontainer-root</id>
     <name>NanoContainer</name>
     <groupId>nanocontainer</groupId>
-    <id>nanocontainer</id>
-    <url>http://www.nanocontainer.org</url>
+    <currentVersion>${nanocontainer.version}</currentVersion>
     <organization>
         <name>Codehaus</name>
         <url>http://codehaus.org/</url>
@@ -18,6 +17,7 @@
         Please refer to the &lt;a href="http://nanocontainer.org/"&gt;main website&lt;/a&gt; for documentation.    
     </description>
     <shortDescription>NanoContainer</shortDescription>
+    <url>http://www.nanocontainer.org</url>
 
     <issueTrackingUrl>http://jira.codehaus.org/browse/NANO</issueTrackingUrl>
 
@@ -67,12 +67,19 @@
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-scm-plugin</artifactId>
-            <type>plugin</type>
             <version>1.5</version>
+            <type>plugin</type>
+        </dependency>		
+
+        <dependency>
+            <groupId>maven</groupId>
+            <artifactId>maven-multiproject-plugin</artifactId>
+            <version>1.4.1</version>
+            <type>plugin</type>
         </dependency>		
 
         <!-- required for JDK 1.5 -->
-		<dependency>
+	<dependency>
             <groupId>maven</groupId>
             <artifactId>maven-clover-plugin</artifactId>
             <version>1.10</version>
@@ -83,23 +90,6 @@
 
     <build>
         <sourceDirectory>${basedir}/src/java</sourceDirectory>
-        <defaultGoal>multiproject:install</defaultGoal>
-        <!-- Resources that are packaged up inside the JAR file -->
-        <resources>
-            <resource>
-                <directory>${basedir}/src/java</directory>
-                <includes>
-                    <include>**/*.dtd</include>
-                    <include>**/*.xsd</include>
-                    <include>**/*.xhtml</include>
-                    <include>**/*.xml</include>
-                    <include>**/*.png</include>
-                    <include>**/*.jpg</include>
-                    <include>**/*.gif</include>
-                </includes>
-            </resource>
-        </resources>
-
         <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
         <unitTest>
             <includes>
@@ -118,6 +108,22 @@
                 </resource>
             </resources>
         </unitTest>
+        <defaultGoal>multiproject:install</defaultGoal>
+        <!-- Resources that are packaged up inside the JAR file -->
+        <resources>
+            <resource>
+                <directory>${basedir}/src/java</directory>
+                <includes>
+                    <include>**/*.dtd</include>
+                    <include>**/*.xsd</include>
+                    <include>**/*.xhtml</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.png</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.gif</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
     <reports>
@@ -125,7 +131,7 @@
         <report>maven-simian-plugin</report>
         <report>maven-javadoc-plugin</report>
         <report>maven-clover-plugin</report>
-        <report>maven-junit-report-plugin</report>        
+        <report>maven-junit-report-plugin</report>
     </reports>
 
 </project>

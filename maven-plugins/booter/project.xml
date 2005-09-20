@@ -1,5 +1,6 @@
 <project>
     <extend>${basedir}/../project.xml</extend>
+    <pomVersion>3</pomVersion>
     <id>booter-maven-plugin</id>
     <name>Booter Maven Plugin</name>
     <description>Booter Maven Plugin</description>

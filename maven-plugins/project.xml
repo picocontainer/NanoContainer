@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project>
     <extend>${basedir}/../project.xml</extend>
+    <pomVersion>3</pomVersion>
     <name>NanoContainer Plugins</name>
-    <groupId>nanocontainer</groupId>
     <currentVersion>${nanocontainer.version}</currentVersion>
 
     <build>
