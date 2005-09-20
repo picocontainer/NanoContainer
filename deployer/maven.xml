@@ -1,34 +1,45 @@
-<project
-    xmlns:j="jelly:core">
+<project xmlns:j="jelly:core">
 
-    <postGoal name="jar:install">
-        <mkdir dir="${maven.build.dir}/dist/lib"/>
-
-        <copy
-            todir="${maven.build.dir}/dist/lib"
-            file="${maven.build.dir}/${maven.final.name}.jar"/>
-
-        <j:forEach var="lib" items="${pom.artifacts}">
-            <copy
-                todir="${maven.build.dir}/dist/lib"
-                file="${lib.path}"/>
-        </j:forEach>
-
-        <delete>
-            <fileset dir="${maven.build.dir}/dist/lib">
-                <include name="jmock*.jar"/>
-                <include name="js*.jar"/>
-                <include name="junit*.jar"/>
-                <include name="nanocontainer-testmodel*.jar"/>
+  	<goal name="deployer:test-jars" prereqs="test:compile">    
+        <mkdir dir="${maven.build.dir}/test-jars/"/>    
+        <jar jarfile="${maven.build.dir}/test-jars/successful-deploy.jar">
+            <fileset dir="${maven.build.dir}/test-classes/">
+                <include name="foo/**"/>
             </fileset>
-        </delete>
+            <fileset dir="${maven.build.dir}/test-classes/successful-deploy"/>
+        </jar>
+        
+        <jar jarfile="${maven.build.dir}/test-jars/badscript-deploy.jar">
+            <fileset dir="${maven.build.dir}/test-classes/">
+                <include name="foo/**"/>
+            </fileset>
+            <fileset dir="${maven.build.dir}/test-classes/badscript-deploy"/>
+        </jar>
 
-        <mkdir dir="${maven.build.dir}/dist/bin"/>
-        <copy todir="${maven.build.dir}/dist/bin">
-            <fileset dir="${basedir}/src/bin"/>
-        </copy>
+        <jar jarfile="${maven.build.dir}/test-jars/malformed-deploy.jar">
+            <fileset dir="${maven.build.dir}/test-classes/">
+                <include name="foo/**"/>
+            </fileset>
+            <fileset dir="${maven.build.dir}/test-classes/malformed-deploy"/>
+        </jar>
 
-        <mkdir dir="${maven.build.dir}/dist/apps"/>
-    </postGoal>
-
+    </goal>
+	
+  	<goal name="deployer:test-dist" prereqs="deployer:test-jars">
+    		<attainGoal name="booter:build-dist"/>
+        <copy todir="${maven.build.dir}/booter">
+        		<fileset dir="src/test">
+				<include name="nanocontainer.*"/>
+			</fileset>
+         </copy>    		
+        <mkdir dir="${maven.build.dir}/booter/apps"/>
+        <copy todir="${maven.build.dir}/booter/apps">
+        		<fileset dir="${maven.build.dir}/test-jars/"/>
+         </copy>    		
+    </goal>	
+    
+    <preGoal name="test:test">
+		<attainGoal name="deployer:test-dist"/>
+    </preGoal>
+    
 </project>

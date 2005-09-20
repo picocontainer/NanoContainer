@@ -10,7 +10,7 @@ manager.addProvider("zip", zipProvider)
 manager.init()
 
 // Set the root folder
-rootPath = new java.io.File("../apps").getAbsolutePath()
+rootPath = new java.io.File("apps").getAbsolutePath()
 root = manager.resolveFile(rootPath)
 
 pico.registerComponentInstance(manager)
