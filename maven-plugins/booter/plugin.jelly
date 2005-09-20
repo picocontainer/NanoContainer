@@ -40,20 +40,22 @@
 		    </filterset>
     		</copy>
 
-        <copy todir="${maven.booter.dist.dir}/lib/"
-            file="${pom.getDependencyPath('nanocontainer:nanocontainer-booter')}"/>
-		
         <j:forEach var="lib" items="${pom.artifacts}">
    		    <j:set var="dep" value="${lib.dependency}"/>     
+		    <j:if test="${dep.artifactId=='nanocontainer-booter'}">
+		        <copy todir="${maven.booter.dist.dir}/lib/"
+		            file="${lib.path}"/>
+		    	    <echo>copied ${lib.path} to lib</echo>
+		    </j:if>
    		    <j:if test="${dep.getProperty('booter.common')=='true'}">
-		    	    <echo>copying ${lib.path}</echo>
              	<copy todir="${maven.booter.dist.dir}/lib/common"
                 		file="${lib.path}"/>
+		    	    <echo>copied ${lib.path} to lib/common</echo>
             </j:if>
    		    <j:if test="${dep.getProperty('booter.hidden')=='true'}">
-		    	    <echo>copying ${lib.path}</echo>
              	<copy todir="${maven.booter.dist.dir}/lib/hidden"
                 		file="${lib.path}"/>
+		    	    <echo>copied ${lib.path} to lib/hidden</echo>
             </j:if>
         </j:forEach>	
 	</goal>
