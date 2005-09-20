@@ -39,7 +39,7 @@
             <groupId>nanocontainer</groupId>
             <artifactId>booter-maven-plugin</artifactId>
 		   <type>plugin</type>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
