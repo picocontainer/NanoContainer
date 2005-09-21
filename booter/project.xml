@@ -13,7 +13,7 @@
             <version>${picocontainer.version}</version>
             <url>http://www.picocontainer.org/</url>
  	        <properties>
-                <booter.common>true</booter.common>
+                <nanodist.booter.common>true</nanodist.booter.common>
             </properties>
         </dependency>
 
@@ -22,7 +22,7 @@
             <artifactId>nanocontainer</artifactId>
             <version>${pom.currentVersion}</version>
  	        <properties>
-                <booter.hidden>true</booter.hidden>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
 
@@ -30,23 +30,23 @@
             <id>commons-cli</id>
             <version>1.0</version>
  	        <properties>
-                <booter.common>true</booter.common>
+                <nanodist.booter.common>true</nanodist.booter.common>
             </properties>
         </dependency>
 
 		<!-- test dependencies -->
         <dependency>
             <groupId>nanocontainer</groupId>
-            <artifactId>booter-maven-plugin</artifactId>
+            <artifactId>nanodist-maven-plugin</artifactId>
 		   <type>plugin</type>
-            <version>1.0.1</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
             <id>groovy</id>
             <version>1.0-jsr-03</version>
  	        <properties>
-                <booter.hidden>true</booter.hidden>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
 
@@ -54,7 +54,7 @@
             <id>antlr</id>
             <version>2.7.5</version>
  	        <properties>
-                <booter.hidden>true</booter.hidden>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
 
@@ -62,7 +62,7 @@
             <id>asm</id>
             <version>2.0</version>
  	        <properties>
-                <booter.hidden>true</booter.hidden>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
 
@@ -71,17 +71,10 @@
             <artifactId>asm-util</artifactId>
             <version>2.0</version>
  	        <properties>
-                <booter.hidden>true</booter.hidden>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
         
-        <dependency>
-            <groupId>maven-plugins</groupId>
-            <artifactId>maven-javaapp-plugin</artifactId>
-            <type>plugin</type>
-            <version>1.3.1</version>
-        </dependency>
-
     </dependencies>
 
 </project>
