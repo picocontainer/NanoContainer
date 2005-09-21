@@ -1,9 +1,9 @@
 <project>
 
 	<postGoal name="dist:prepare-bin-filesystem">
-		<attainGoal name="booter:build-dist"/>
+		<attainGoal name="nanodist:build"/>
         <copy todir="${maven.dist.bin.assembly.dir}">
-			<fileset dir="${maven.booter.dist.dir}"/>
+			<fileset dir="${maven.nanodist.dir}"/>
 		</copy>
         <copy todir="${maven.dist.bin.assembly.dir}">
 			<fileset dir="${maven.src.dir}/conf">

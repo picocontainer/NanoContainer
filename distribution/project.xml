@@ -38,8 +38,8 @@
 
         <dependency>
             <groupId>nanocontainer</groupId>
-            <artifactId>booter-maven-plugin</artifactId>
-            <version>1.0.1</version>
+            <artifactId>nanodist-maven-plugin</artifactId>
+            <version>1.0</version>
 	    	    <type>plugin</type>
         </dependency>
 
