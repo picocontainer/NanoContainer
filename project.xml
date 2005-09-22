@@ -89,6 +89,7 @@
     </dependencies>
 
     <build>
+    		<defaultGoal>multiproject:install</defaultGoal>
         <sourceDirectory>${basedir}/src/java</sourceDirectory>
         <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
         <unitTest>
