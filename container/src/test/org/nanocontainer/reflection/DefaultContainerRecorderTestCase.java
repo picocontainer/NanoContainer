@@ -1,19 +1,26 @@
 package org.nanocontainer.reflection;
 
-import junit.framework.TestCase;
-import org.nanocontainer.integrationkit.ContainerRecorder;
-import org.nanocontainer.testmodel.ThingThatTakesParamsInConstructor;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.Parameter;
-import org.picocontainer.defaults.ComponentParameter;
-import org.picocontainer.defaults.DefaultPicoContainer;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
+
+import junit.framework.TestCase;
+
+import org.nanocontainer.integrationkit.ContainerPopulator;
+import org.nanocontainer.integrationkit.ContainerRecorder;
+import org.nanocontainer.script.xml.XMLContainerBuilder;
+import org.nanocontainer.testmodel.FredImpl;
+import org.nanocontainer.testmodel.ThingThatTakesParamsInConstructor;
+import org.nanocontainer.testmodel.WilmaImpl;
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.Parameter;
+import org.picocontainer.defaults.ComponentParameter;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
 /**
  * @author Konstantin Pribluda ( konstantin.pribluda(at)infodesire.com )
@@ -65,4 +72,34 @@ public class DefaultContainerRecorderTestCase extends TestCase {
 
         return ois.readObject();
     }
+    
+    
+    // Fails to find class classloader
+    public void FIXME_testXMLRecorderHierarchy() throws ClassNotFoundException {
+        MutablePicoContainer parentPrototype = new DefaultPicoContainer();
+        DefaultContainerRecorder parentRecorder = new DefaultContainerRecorder(parentPrototype);
+        StringReader parentResource = new StringReader("" 
+                + "<container>" 
+                + "  <component-implementation key='wilma' class='"+WilmaImpl.class+"'/>"  
+                + "</container>" 
+                );
+        populateXMLContainer(parentRecorder, parentResource);
+
+        MutablePicoContainer childPrototype = new DefaultPicoContainer(parentPrototype);
+        DefaultContainerRecorder childRecorder = new DefaultContainerRecorder(childPrototype);
+        StringReader childResource = new StringReader("" 
+                + "<container>" 
+                + "  <component-implementation key='fred' class='"+FredImpl.class+"'>"  
+                + "     <parameter key='wilma'/>"  
+               + "  </component-implementation>"  
+                + "</container>" 
+                );
+        populateXMLContainer(childRecorder, childResource);
+        
+    }
+    
+    private void populateXMLContainer(ContainerRecorder recorder, Reader resource) {
+        ContainerPopulator populator = new XMLContainerBuilder(resource, Thread.currentThread().getContextClassLoader());
+        populator.populateContainer(recorder.getContainerProxy());
+    }       
 }
