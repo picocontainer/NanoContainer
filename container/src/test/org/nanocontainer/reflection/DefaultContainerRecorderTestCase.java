@@ -72,10 +72,32 @@ public class DefaultContainerRecorderTestCase extends TestCase {
 
         return ois.readObject();
     }
-    
-    
+
+    // Fails to find class classloader (simpler than one below)
+    public void DONOT_testXMLRecorderHierarchyWorksWithoutRecorder() throws ClassNotFoundException {
+
+        //System.out.println("--> 1 " + Thread.currentThread().getContextClassLoader());
+        //System.out.println("--> 2 " + WilmaImpl.class.getClassLoader());
+
+        MutablePicoContainer parentPrototype = new DefaultPicoContainer();
+        StringReader parentResource = new StringReader(""
+                + "<container>"
+                + "  <component-implementation key='wilma' class='"+WilmaImpl.class+"'/>"
+                + "</container>"
+                );
+
+        XMLContainerBuilder builder = new XMLContainerBuilder(parentResource, WilmaImpl.class.getClassLoader());
+        builder.populateContainer(parentPrototype);
+        assertNotNull(parentPrototype.getComponentInstances().get(0));
+    }
+
+
     // Fails to find class classloader
-    public void FIXME_testXMLRecorderHierarchy() throws ClassNotFoundException {
+    public void DONOT_testXMLRecorderHierarchy() throws ClassNotFoundException {
+
+        //System.out.println("--> 1 " + Thread.currentThread().getContextClassLoader());
+        //System.out.println("--> 2 " + WilmaImpl.class.getClassLoader());
+
         MutablePicoContainer parentPrototype = new DefaultPicoContainer();
         DefaultContainerRecorder parentRecorder = new DefaultContainerRecorder(parentPrototype);
         StringReader parentResource = new StringReader("" 
@@ -83,6 +105,7 @@ public class DefaultContainerRecorderTestCase extends TestCase {
                 + "  <component-implementation key='wilma' class='"+WilmaImpl.class+"'/>"  
                 + "</container>" 
                 );
+
         populateXMLContainer(parentRecorder, parentResource);
 
         MutablePicoContainer childPrototype = new DefaultPicoContainer(parentPrototype);
