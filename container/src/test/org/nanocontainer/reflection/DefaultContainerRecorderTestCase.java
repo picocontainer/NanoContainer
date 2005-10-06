@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -73,36 +74,15 @@ public class DefaultContainerRecorderTestCase extends TestCase {
         return ois.readObject();
     }
 
-    // Fails to find class classloader (simpler than one below)
-    public void DONOT_testXMLRecorderHierarchyWorksWithoutRecorder() throws ClassNotFoundException {
 
-        //System.out.println("--> 1 " + Thread.currentThread().getContextClassLoader());
-        //System.out.println("--> 2 " + WilmaImpl.class.getClassLoader());
+    public void testXMLRecorderHierarchy() throws ClassNotFoundException {
 
-        MutablePicoContainer parentPrototype = new DefaultPicoContainer();
-        StringReader parentResource = new StringReader(""
-                + "<container>"
-                + "  <component-implementation key='wilma' class='"+WilmaImpl.class+"'/>"
-                + "</container>"
-                );
-
-        XMLContainerBuilder builder = new XMLContainerBuilder(parentResource, WilmaImpl.class.getClassLoader());
-        builder.populateContainer(parentPrototype);
-        assertNotNull(parentPrototype.getComponentInstances().get(0));
-    }
-
-
-    // Fails to find class classloader
-    public void DONOT_testXMLRecorderHierarchy() throws ClassNotFoundException {
-
-        //System.out.println("--> 1 " + Thread.currentThread().getContextClassLoader());
-        //System.out.println("--> 2 " + WilmaImpl.class.getClassLoader());
 
         MutablePicoContainer parentPrototype = new DefaultPicoContainer();
         DefaultContainerRecorder parentRecorder = new DefaultContainerRecorder(parentPrototype);
         StringReader parentResource = new StringReader("" 
                 + "<container>" 
-                + "  <component-implementation key='wilma' class='"+WilmaImpl.class+"'/>"  
+                + "  <component-implementation key='wilma' class='"+WilmaImpl.class.getName()+"'/>"
                 + "</container>" 
                 );
 
@@ -112,7 +92,7 @@ public class DefaultContainerRecorderTestCase extends TestCase {
         DefaultContainerRecorder childRecorder = new DefaultContainerRecorder(childPrototype);
         StringReader childResource = new StringReader("" 
                 + "<container>" 
-                + "  <component-implementation key='fred' class='"+FredImpl.class+"'>"  
+                + "  <component-implementation key='fred' class='"+FredImpl.class.getName()+"'>"
                 + "     <parameter key='wilma'/>"  
                + "  </component-implementation>"  
                 + "</container>" 

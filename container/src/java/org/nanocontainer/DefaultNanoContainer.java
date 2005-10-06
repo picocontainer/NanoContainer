@@ -204,6 +204,9 @@ public class DefaultNanoContainer implements NanoContainer {
         }
 
         private ClassNotFoundException decorateCNFE(String name, ClassNotFoundException e) {
+            if (name.startsWith("class ")) {
+                return new ClassNotFoundException("You numpty, class '" + name + "' is not a classInstance.getName() its a classInstance.toString(). The clue is it starts with 'class ', no classname contains a space.");
+            }
             ClassLoader classLoader = this;
             StringBuffer sb = new StringBuffer("'").append(name).append("' classloader stack [");
             while(classLoader != null) {

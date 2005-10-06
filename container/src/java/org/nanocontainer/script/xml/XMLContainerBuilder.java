@@ -157,7 +157,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
             NanoContainer nanoContainer = new DefaultNanoContainer(getClassLoader(), container);
             registerComponentsAndChildContainers(nanoContainer, rootElement);
         } catch (ClassNotFoundException e) {
-            throw new NanoContainerMarkupException("Class not found:" + e.getMessage(), e);
+            throw new NanoContainerMarkupException("Class not found: " + e.getMessage(), e);
         } catch (IOException e) {
             throw new NanoContainerMarkupException(e);
         } catch (SAXException e) {
