@@ -65,10 +65,11 @@
         </dependency>
 
         <!-- Maven plugins -->
+        <!--  1.5.2. is latest stable release compatible with maven 1.0.2 -->
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-artifact-plugin</artifactId>
-            <version>1.6</version>
+            <version>1.5.2</version>
             <type>plugin</type>
         </dependency>	
 
