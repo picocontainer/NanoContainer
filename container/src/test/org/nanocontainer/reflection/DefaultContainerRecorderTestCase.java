@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -17,6 +16,7 @@ import org.nanocontainer.integrationkit.ContainerRecorder;
 import org.nanocontainer.script.xml.XMLContainerBuilder;
 import org.nanocontainer.testmodel.FredImpl;
 import org.nanocontainer.testmodel.ThingThatTakesParamsInConstructor;
+import org.nanocontainer.testmodel.Wilma;
 import org.nanocontainer.testmodel.WilmaImpl;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
@@ -76,8 +76,6 @@ public class DefaultContainerRecorderTestCase extends TestCase {
 
 
     public void testXMLRecorderHierarchy() throws ClassNotFoundException {
-
-
         MutablePicoContainer parentPrototype = new DefaultPicoContainer();
         DefaultContainerRecorder parentRecorder = new DefaultContainerRecorder(parentPrototype);
         StringReader parentResource = new StringReader("" 
@@ -87,6 +85,9 @@ public class DefaultContainerRecorderTestCase extends TestCase {
                 );
 
         populateXMLContainer(parentRecorder, parentResource);
+        MutablePicoContainer parentContainer = parentRecorder.getContainerProxy();
+        assertNull(parentContainer.getComponentInstance("fred"));
+        assertNotNull(parentContainer.getComponentInstance("wilma"));
 
         MutablePicoContainer childPrototype = new DefaultPicoContainer(parentPrototype);
         DefaultContainerRecorder childRecorder = new DefaultContainerRecorder(childPrototype);
@@ -98,7 +99,12 @@ public class DefaultContainerRecorderTestCase extends TestCase {
                 + "</container>" 
                 );
         populateXMLContainer(childRecorder, childResource);
-        
+        MutablePicoContainer childContainer = childRecorder.getContainerProxy();
+        assertNotNull(childContainer.getComponentInstance("fred"));
+        assertNotNull(childContainer.getComponentInstance("wilma"));
+        FredImpl fred = (FredImpl)childContainer.getComponentInstance("fred");
+        Wilma wilma = (Wilma)childContainer.getComponentInstance("wilma");
+        assertSame(wilma, fred.wilma());
     }
     
     private void populateXMLContainer(ContainerRecorder recorder, Reader resource) {
