@@ -45,23 +45,35 @@
             <id>junit</id>
             <version>3.8.1</version>
             <url>http://junit.org</url>
+        		<properties>
+        			<scope>test</scope>
+        		</properties>
         </dependency>
 
         <dependency>
             <id>jmock</id>
             <version>1.0.1</version>
+        		<properties>
+        			<scope>test</scope>
+        		</properties>
         </dependency>
     
          <dependency>
             <id>commons-logging</id>
             <version>1.0.4</version>
             <url>http://jakarta.apache.org/commons/logging.html</url>
+        		<properties>
+        			<scope>test</scope>
+        		</properties>
         </dependency>
 
         <dependency>
             <id>log4j</id>
             <version>1.2.8</version>
              <url>http://logging.apache.org/log4j</url>   
+        		<properties>
+        			<scope>test</scope>
+        		</properties>
         </dependency>
 
         <!-- Maven plugins -->

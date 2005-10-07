@@ -40,6 +40,9 @@
             <artifactId>nanodist-maven-plugin</artifactId>
 		   <type>plugin</type>
             <version>1.0</version>
+        		<properties>
+        			<scope>test</scope>
+        		</properties>
         </dependency>
 
         <dependency>
@@ -47,6 +50,7 @@
             <version>1.0-jsr-03</version>
  	        <properties>
                 <nanodist.booter.hidden>true</nanodist.booter.hidden>
+        			<scope>test</scope>
             </properties>
         </dependency>
 
@@ -55,6 +59,7 @@
             <version>2.7.5</version>
  	        <properties>
                 <nanodist.booter.hidden>true</nanodist.booter.hidden>
+        			<scope>test</scope>
             </properties>
         </dependency>
 
@@ -63,6 +68,7 @@
             <version>2.0</version>
  	        <properties>
                 <nanodist.booter.hidden>true</nanodist.booter.hidden>
+        			<scope>test</scope>
             </properties>
         </dependency>
 
@@ -72,6 +78,7 @@
             <version>2.0</version>
  	        <properties>
                 <nanodist.booter.hidden>true</nanodist.booter.hidden>
+        			<scope>test</scope>
             </properties>
         </dependency>
         
