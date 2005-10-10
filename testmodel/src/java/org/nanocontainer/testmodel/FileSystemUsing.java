@@ -1,7 +1,5 @@
 package org.nanocontainer.testmodel;
 
-import junit.framework.Assert;
-
 import java.io.File;
 
 /**

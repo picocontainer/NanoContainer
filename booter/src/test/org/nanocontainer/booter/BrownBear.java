@@ -1,21 +1,17 @@
 package org.nanocontainer.booter;
 
-import org.picocontainer.Startable;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.defaults.DefaultPicoContainer;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
-import java.net.URL;
 import java.security.AccessControlException;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
+
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoContainer;
+import org.picocontainer.Startable;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
 public class BrownBear implements Startable {
 
