@@ -16,7 +16,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.ParseException;
 
 
 /**
