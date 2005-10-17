@@ -341,7 +341,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
 
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "nano = new GroovyNodeBuilder().container(parent:parent) {\n" +
+                "nano = builder.container(parent:parent) {\n" +
                 "    component(A)\n" +
                 "}\n");
 
@@ -349,12 +349,27 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         // Should be able to get instance that was registered in the parent container
         assertEquals("world", pico.getComponentInstance("hello"));
     }
+    
 
+    public void testBuildContainerWithParentDependency() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+        parent.registerComponentImplementation(A.class);
+
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "nano = builder.container(parent:parent) {\n" +
+                "    component(B)\n" +
+                "}\n");
+
+        PicoContainer pico = buildContainer(script, parent, ASSEMBLY_SCOPE);
+        assertNotNull(pico.getComponentInstanceOfType(B.class));
+    }
+    
     public void testBuildContainerWithParentAttributesPropagatesComponentAdapterFactory() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "nano = new GroovyNodeBuilder().container(parent:parent) {\n" +
+                "nano = builder.container(parent:parent) {\n" +
                 "}\n");
 
         MutablePicoContainer pico = (MutablePicoContainer)buildContainer(script, parent, ASSEMBLY_SCOPE);
