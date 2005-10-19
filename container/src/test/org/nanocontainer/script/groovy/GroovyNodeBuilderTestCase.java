@@ -26,7 +26,7 @@ import org.picocontainer.defaults.UnsatisfiableDependenciesException;
  */
 public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
     private static final String ASSEMBLY_SCOPE = "SOME_SCOPE";
-    
+       
     public void testInstantiateBasicScriptable() throws PicoCompositionException {
         Reader script = new StringReader("" +
                 "import org.nanocontainer.script.groovy.X\n" +
@@ -351,18 +351,39 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     }
     
 
-    public void testBuildContainerWithParentDependency() {
+    public void testBuildContainerWithParentDependencyAndAssemblyScope() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
-        parent.registerComponentImplementation(A.class);
+        parent.registerComponentImplementation("a", A.class);
 
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "nano = builder.container(parent:parent) {\n" +
+                "nano = builder.container(parent:parent, scope:assemblyScope) {\n" +
+                "  if ( assemblyScope instanceof SomeAssemblyScope ){\n "+
                 "    component(B)\n" +
+                "  }\n "+
                 "}\n");
 
-        PicoContainer pico = buildContainer(script, parent, ASSEMBLY_SCOPE);
+        PicoContainer pico = buildContainer(script, parent, new SomeAssemblyScope());
         assertNotNull(pico.getComponentInstanceOfType(B.class));
+    }
+
+    public void testBuildContainerWhenExpectedParentDependencyIsNotFound() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "nano = builder.container(parent:parent, scope:assemblyScope) {\n" +
+                "  if ( assemblyScope instanceof SomeAssemblyScope ){\n "+
+                "    component(B)\n" +
+                "  }\n "+
+                "}\n");
+
+        try {
+            buildContainer(script, parent, new SomeAssemblyScope());
+            fail("UnsatisfiableDependenciesException expected");
+        } catch (UnsatisfiableDependenciesException e) {
+            // expected
+        }
     }
     
     public void testBuildContainerWithParentAttributesPropagatesComponentAdapterFactory() {
