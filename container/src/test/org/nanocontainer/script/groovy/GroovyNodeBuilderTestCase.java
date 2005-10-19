@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.jmock.Mock;
+import org.nanocontainer.NanoPicoContainer;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
@@ -367,6 +368,33 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         assertNotNull(pico.getComponentInstanceOfType(B.class));
     }
 
+    public void testBuildContainerWithParentAndChildAssemblyScopes() {
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "nano = builder.container(parent:parent, scope:assemblyScope) {\n" +
+                "  System.out.println('assemblyScope:'+assemblyScope)\n " +
+                "  if ( assemblyScope instanceof ParentAssemblyScope ){\n "+
+                "    System.out.println('parent scope')\n " +
+                "    component(A)\n" +
+                "  } else if ( assemblyScope instanceof SomeAssemblyScope ){\n "+
+                "    System.out.println('child scope')\n " +
+                "    component(B)\n" +
+                "  } else { \n" +
+                "    System.out.println('Invalid scope')\n " +
+                "  } \n "+
+                "}\n");
+        //FIXME: attempting to build the parent container from the script 
+        // at the same time as the child yields compilation error!
+        //This does not occur if parent and child are build separately!
+//        NanoPicoContainer parent = new DefaultNanoPicoContainer(buildContainer(
+//                script, null, new ParentAssemblyScope()));
+        NanoPicoContainer parent = new DefaultNanoPicoContainer();
+        parent.registerComponentImplementation(A.class);
+        assertNotNull(parent.getComponentInstanceOfType(A.class));            
+        PicoContainer pico = buildContainer(script, parent,  new SomeAssemblyScope());
+        assertNotNull(pico.getComponentInstanceOfType(B.class));
+    }
+    
     public void testBuildContainerWhenExpectedParentDependencyIsNotFound() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
 
