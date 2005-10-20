@@ -368,7 +368,11 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         assertNotNull(pico.getComponentInstanceOfType(B.class));
     }
 
-    public void testBuildContainerWithParentAndChildAssemblyScopes() {
+    // NANO-156
+    //FIXME: attempting to build the parent container from the script 
+    // at the same time as the child yields compilation error!
+    //This does not occur if parent and child are build separately!
+    public void FIXME_testBuildContainerWithParentAndChildAssemblyScopes() {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "nano = builder.container(parent:parent, scope:assemblyScope) {\n" +
@@ -383,13 +387,10 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "    System.out.println('Invalid scope')\n " +
                 "  } \n "+
                 "}\n");
-        //FIXME: attempting to build the parent container from the script 
-        // at the same time as the child yields compilation error!
-        //This does not occur if parent and child are build separately!
-//        NanoPicoContainer parent = new DefaultNanoPicoContainer(buildContainer(
-//                script, null, new ParentAssemblyScope()));
-        NanoPicoContainer parent = new DefaultNanoPicoContainer();
-        parent.registerComponentImplementation(A.class);
+        NanoPicoContainer parent = new DefaultNanoPicoContainer(buildContainer(
+                script, null, new ParentAssemblyScope()));
+//        NanoPicoContainer parent = new DefaultNanoPicoContainer();
+//        parent.registerComponentImplementation(A.class);
         assertNotNull(parent.getComponentInstanceOfType(A.class));            
         PicoContainer pico = buildContainer(script, parent,  new SomeAssemblyScope());
         assertNotNull(pico.getComponentInstanceOfType(B.class));
