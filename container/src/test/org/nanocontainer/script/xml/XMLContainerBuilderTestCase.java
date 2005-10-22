@@ -153,8 +153,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         StringBuffer sb = (StringBuffer) pico.getComponentInstance(StringBuffer.class);
         assertTrue("Container should have instantiated a 'TestComp2' component because it is Startable", sb.toString().indexOf("-TestComp2") != -1);
         // We are using the DefaultLifecycleManager, which only instantiates Startable components, and not non-Startable components.
-        assertTrue("Container should have instantiated 'NotStartable' component irrespective of whether it is Startable", sb.toString().indexOf("-NotStartable") > -1);
-        assertTrue("Container should NOT have started 'NotStartable' component because it is NOT Startable", sb.toString().indexOf("*NotStartable(started)") == -1);
+        assertTrue("Container should NOT have instantiated a 'NotStartable' component because it is NOT Startable", sb.toString().indexOf("-NotStartable") == -1);
     }
 
     public void testUnknownclassThrowsNanoContainerMarkupException() throws SAXException, ParserConfigurationException, IOException {
