@@ -86,7 +86,7 @@ public class ScriptedContainerBuilderFactory {
     private void createContainerBuilder(Object composition, ClassLoader classLoader, String builderClass) throws ClassNotFoundException {
         DefaultNanoContainer defaultNanoContainer;
         {
-            // disposable.
+            // transient.
             DefaultPicoContainer factory = new DefaultPicoContainer();
             if(composition == null) {
                 throw new NullPointerException("composition can't be null");
