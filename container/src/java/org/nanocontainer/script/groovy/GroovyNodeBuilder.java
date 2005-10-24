@@ -140,7 +140,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
      * @param attributes Map  attributes of the current invocation.
      * @return Object the created object.
      */
-    protected Object createNode(Object name, Map attributes) {
+    protected Object createNode(Object name, Map attributes, Object value) {
         Object current = getCurrent();
         if (current != null && current instanceof GroovyObject) {
             return createChildBuilder(current, name, attributes);
@@ -295,8 +295,8 @@ public class GroovyNodeBuilder extends BuilderSupport {
         return name;
     }
 
-    protected Object createNode(Object name, Map attributes, Object value) {
-        return createNode(name, attributes);
+    protected Object createNode(Object name, Map attributes) {
+        return createNode(name, attributes, null);
     }
 
     /**
