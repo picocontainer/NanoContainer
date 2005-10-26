@@ -22,7 +22,7 @@
     <issueTrackingUrl>http://jira.codehaus.org/browse/NANO</issueTrackingUrl>
 
     <siteAddress>beaver.codehaus.org</siteAddress>
-    <siteDirectory>/home/projects/nanocontainer/public_html/versions/${pom.currentVersion}/${pom.artifactId}</siteDirectory>
+    <siteDirectory>/home/projects/nanocontainer/public_html/${pom.groupId}/${pom.currentVersion}/${pom.artifactId}</siteDirectory>
 
     <distributionSite>beaver.codehaus.org</distributionSite>
     <distributionDirectory>/dist</distributionDirectory>
