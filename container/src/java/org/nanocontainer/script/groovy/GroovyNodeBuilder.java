@@ -150,6 +150,10 @@ public class GroovyNodeBuilder extends BuilderSupport {
             if (parent != null && parentAttribute != null) {
                 throw new NanoContainerMarkupException("You can't explicitly specify a parent in a child element.");
             }
+            if (parent == null && (parentAttribute instanceof MutablePicoContainer)) {
+                // we're not in an enclosing scope - look at parent attribute instead
+                parent = new DefaultNanoContainer((MutablePicoContainer) parentAttribute);
+            }
             if (parent == null && (parentAttribute instanceof NanoContainer)) {
                 // we're not in an enclosing scope - look at parent attribute instead
                 parent = (NanoContainer) parentAttribute;
