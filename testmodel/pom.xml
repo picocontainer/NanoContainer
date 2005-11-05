@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.nanocontainer</groupId>
+		<artifactId>nanocontainer-all</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>nanocontainer-testmodel</artifactId>
+	<name>NanoContainer Test Model</name>
+	<scm>
+		<connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/testmodel</connection>
+		<developerConnection>svn+ssh://svn.picocontainer.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/testmodel</developerConnection>
+		<url>https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/testmodel</url>
+	</scm>
+	<dependencies>
+		<dependency>
+			<groupId>org.picocontainer</groupId>
+			<artifactId>picocontainer</artifactId>
+			<version>1.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.picocontainer</groupId>
+			<artifactId>picocontainer-tck</artifactId>
+			<version>1.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+	</dependencies>
+</project>

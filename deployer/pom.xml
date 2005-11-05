@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.nanocontainer</groupId>
+		<artifactId>nanocontainer-all</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>nanocontainer-deployer</artifactId>
+	<name>NanoContainer Deployer</name>
+	<scm>
+		<connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</connection>
+		<developerConnection>svn+ssh://svn.picocontainer.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/deployer</developerConnection>
+		<url>https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</url>
+	</scm>
+	<dependencies>
+		<dependency>
+			<groupId>org.picocontainer</groupId>
+			<artifactId>picocontainer</artifactId>
+			<version>1.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>nanocontainer</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-vfs</groupId>
+			<artifactId>commons-vfs</artifactId>
+			<version>20050307052300</version>
+		</dependency>
+		<!-- Test scoped depedencies -->
+		<dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>nanocontainer-booter</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
