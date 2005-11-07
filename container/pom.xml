@@ -133,6 +133,10 @@
 						<exclude>**/Abstract*Test.java</exclude>
 						<exclude>**/Abstract*TestCase.java</exclude>
 					</excludes>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*TestCase.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 			<!--plugin>
