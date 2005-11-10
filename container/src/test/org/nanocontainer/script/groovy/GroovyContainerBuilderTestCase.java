@@ -70,7 +70,23 @@ public class GroovyContainerBuilderTestCase extends AbstractScriptedContainerBui
         assertEquals("foo", pico.getComponentInstance(String.class));
     }
 
-	/**
+
+    public void testBuildingWithPicoSyntax() {
+        Reader script = new StringReader("" +
+                "parent.registerComponentImplementation('foo', java.lang.String)\n"  +
+                "pico = new org.picocontainer.defaults.DefaultPicoContainer(parent)\n" +
+                "pico.registerComponentImplementation(org.nanocontainer.script.groovy.A)\n" +
+                "");
+
+        PicoContainer parent = new DefaultPicoContainer();
+        PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, getClass().getClassLoader()), parent, "SOME_SCOPE");
+
+        assertNotSame(parent, pico.getParent());
+        assertNotNull(pico.getComponentInstance(A.class));
+        assertNotNull(pico.getComponentInstance("foo"));
+    }
+
+    /**
 	 * Child SubclassGroovyContainerBuilder which adds additional bindings
 	 */
 	private class SubclassGroovyContainerBuilder extends GroovyContainerBuilder {
