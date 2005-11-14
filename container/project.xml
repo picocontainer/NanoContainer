@@ -33,7 +33,13 @@
 
 		<!-- groovy dependencies -->
         <dependency>
-            <id>groovy</id>
+            <groupId>groovy</groupId>
+            <!--
+				This appears to be required for the Groovy-based test cases to operate.  
+				Perhaps we're missing some dependencies that should be available for
+				at least test scope?  -MR.
+			-->
+            <artifactId>groovy-all</artifactId>
             <version>1.0-jsr-03</version>
         </dependency>
 

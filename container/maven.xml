@@ -10,17 +10,10 @@
                 <include name="**/TestComp2.*"/>
             </fileset>
         </delete>
-        <!-- Groovy compilation fails:  UNCAUGHT EXCEPTION: antlr.CommonAST  
         <attainGoal name="groovy:compile"/>
-        -->
     </postGoal>
 
-    <goal name="groovy:compile" prereqs="groovy:init">		        
-        <copy todir="${basedir}/target/test-classes">
-            <fileset dir="${basedir}/src/test">
-                <include name="**/*.groovy"/>
-            </fileset>
-        </copy>
+    <goal name="groovy:compile" prereqs="groovy:init">		
         <groovyc destdir="${basedir}/target/test-classes"
             srcdir="${basedir}/target/test-classes" listfiles="true">
             <classpath refid="test.classpath"/>
@@ -28,6 +21,7 @@
     </goal>
 
     <goal name="groovy:init">
+		<echo message="Executing Groovy Compile."/>
         <path id="test.classpath">
             <pathelement path="${maven.build.dest}"/>
             <pathelement path="target/clover/classes"/>
