@@ -27,7 +27,7 @@ import org.picocontainer.defaults.UnsatisfiableDependenciesException;
  */
 public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
     private static final String ASSEMBLY_SCOPE = "SOME_SCOPE";
-       
+
     public void testInstantiateBasicScriptable() throws PicoCompositionException {
         Reader script = new StringReader("" +
                 "import org.nanocontainer.script.groovy.X\n" +
@@ -231,7 +231,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         pico.getComponentInstanceOfType(WebServerConfig.class);
         StringWriter writer = (StringWriter)pico.getComponentInstanceOfType(StringWriter.class);
         assertTrue(writer.toString().length() > 0);
-    }    
+    }
 
     public void testCustomComponentMonitorCanBeSpecifiedWhenCAFIsSpecified() {
         Reader script = new StringReader("" +
@@ -251,7 +251,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         pico.getComponentInstanceOfType(WebServerConfig.class);
         StringWriter writer = (StringWriter)pico.getComponentInstanceOfType(StringWriter.class);
         assertTrue(writer.toString().length() > 0);
-    }    
+    }
 
     public void testCustomComponentMonitorCanBeSpecifiedWhenParentIsSpecified() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
@@ -271,7 +271,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         pico.getComponentInstanceOfType(WebServerConfig.class);
         StringWriter writer = (StringWriter)pico.getComponentInstanceOfType(StringWriter.class);
         assertTrue(writer.toString().length() > 0);
-    }    
+    }
 
     public void testCustomComponentMonitorCanBeSpecifiedWhenParentAndCAFAreSpecified() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
@@ -292,8 +292,8 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         pico.getComponentInstanceOfType(WebServerConfig.class);
         StringWriter writer = (StringWriter)pico.getComponentInstanceOfType(StringWriter.class);
         assertTrue(writer.toString().length() > 0);
-    }    
-    
+    }
+
     public void testInstantiateWithImpossibleComponentDependenciesConsideringTheHierarchy() {
         X.reset();
         Reader script = new StringReader("" +
@@ -350,7 +350,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         // Should be able to get instance that was registered in the parent container
         assertEquals("world", pico.getComponentInstance("hello"));
     }
-    
+
 
     public void testBuildContainerWithParentDependencyAndAssemblyScope() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
@@ -369,7 +369,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     }
 
     // NANO-156
-    //FIXME: attempting to build the parent container from the script 
+    //FIXME: attempting to build the parent container from the script
     // at the same time as the child yields compilation error!
     //This does not occur if parent and child are build separately!
     public void FIXME_testBuildContainerWithParentAndChildAssemblyScopes() {
@@ -391,11 +391,11 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 script, null, new ParentAssemblyScope()));
 //        NanoPicoContainer parent = new DefaultNanoPicoContainer();
 //        parent.registerComponentImplementation(A.class);
-        assertNotNull(parent.getComponentInstanceOfType(A.class));            
+        assertNotNull(parent.getComponentInstanceOfType(A.class));
         PicoContainer pico = buildContainer(script, parent,  new SomeAssemblyScope());
         assertNotNull(pico.getComponentInstanceOfType(B.class));
     }
-    
+
     public void testBuildContainerWhenExpectedParentDependencyIsNotFound() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
 
@@ -414,7 +414,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
             // expected
         }
     }
-    
+
     public void testBuildContainerWithParentAttributesPropagatesComponentAdapterFactory() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
         Reader script = new StringReader("" +
@@ -532,5 +532,5 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     private PicoContainer buildContainer(Reader script, PicoContainer parent, Object scope) {
         return buildContainer(new GroovyContainerBuilder(script, getClass().getClassLoader()), parent, scope);
     }
-    
+
 }
