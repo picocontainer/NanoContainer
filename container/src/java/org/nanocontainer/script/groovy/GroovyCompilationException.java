@@ -17,7 +17,7 @@ public class GroovyCompilationException extends NanoContainerMarkupException {
     private CompilationFailedException compilationFailedException;
 
     public GroovyCompilationException(String message, CompilationFailedException e) {
-        super(message);
+        super(message,e);
         this.compilationFailedException = e;
     }
 
@@ -41,7 +41,7 @@ public class GroovyCompilationException extends NanoContainerMarkupException {
      * @param e the CompilationFailedException
      * @return A List of errors
      */
-    private List getErrors(CompilationFailedException e) {        
+    private List getErrors(CompilationFailedException e) {
         ProcessingUnit unit = e.getUnit();
         if ( unit != null ){
             ErrorCollector collector = unit.getErrorCollector();
