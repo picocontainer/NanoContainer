@@ -10,13 +10,12 @@
                 <include name="**/TestComp2.*"/>
             </fileset>
         </delete>
-        <!-- TODO underand why compilation fails
+        <!-- Groovy compilation fails:  UNCAUGHT EXCEPTION: antlr.CommonAST  
         <attainGoal name="groovy:compile"/>
         -->
     </postGoal>
 
     <goal name="groovy:compile" prereqs="groovy:init">		        
-        <attainGoal name="groovyc:init"/>
         <copy todir="${basedir}/target/test-classes">
             <fileset dir="${basedir}/src/test">
                 <include name="**/*.groovy"/>
