@@ -17,8 +17,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         Xxx.reset()
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container() {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container() {
             component(Xxx.A)
         }
 
@@ -31,8 +31,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         Xxx.reset()
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container {
             container() {
                 component(Xxx.A)
             }
@@ -48,8 +48,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
         // A and C have no no dependencies. B Depends on A.
 
         try {
-            builder = new GroovyNodeBuilder()
-            nano = builder.container {
+            def builder = new GroovyNodeBuilder()
+            def nano = builder.container {
                 component(Xxx.B)
                 container() {
                     component(Xxx.A)
@@ -67,11 +67,11 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
     void testInstantiateWithBespokeComponentAdapter() {
 
-        sb = new StringBuffer();
+        def sb = new StringBuffer();
 
-        builder = new GroovyNodeBuilder()
-        caf = new TestComponentAdapterFactory(sb)
-        nano = builder.container(componentAdapterFactory:caf) {
+        def builder = new GroovyNodeBuilder()
+        def caf = new TestComponentAdapterFactory(sb)
+        def nano = builder.container(componentAdapterFactory:caf) {
             component(key:WebServerConfig, class:DefaultWebServerConfig)
             component(key:WebServer, class:WebServerImpl)
         }
@@ -83,8 +83,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
     void testInstantiateWithInlineConfiguration() {
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container {
             bean(beanClass:WebServerConfigBean, host:'foobar.com', port:4321)
             component(key:WebServer, class:WebServerImpl)
         }
@@ -93,7 +93,7 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         assertTrue("WebServerConfigBean and WebServerImpl expected", nano.pico.getComponentInstances().size() == 2)
 
-        wsc = nano.pico.getComponentInstanceOfType(WebServerConfig)
+        def wsc = nano.pico.getComponentInstanceOfType(WebServerConfig)
         assertEquals("foobar.com", wsc.getHost())
         assertTrue(wsc.getPort() == 4321)
     }
@@ -101,13 +101,13 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
     void testSoftInstantiateWithChildContainerWithDynamicClassPath() {
 
         File testCompJar = new File(System.getProperty("testcomp.jar"))
-        testCompJar2 = new File(testCompJar.getParent(),"TestComp2.jar")
-        compJarPath = testCompJar.getCanonicalPath()
-        compJarPath2 = testCompJar2.getCanonicalPath()
+        def testCompJar2 = new File(testCompJar.getParent(),"TestComp2.jar")
+        def compJarPath = testCompJar.getCanonicalPath()
+        def compJarPath2 = testCompJar2.getCanonicalPath()
 
-        builder = new NanoContainerBuilder()
-        child = null
-        parent = builder.container {
+        def builder = new GroovyNodeBuilder()
+        def child = null
+        def parent = builder.container {
             classPathElement(path:compJarPath)
             component(class:StringBuffer)
             component(class:"TestComp")
@@ -134,8 +134,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         Xxx.reset()
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container(class:TestContainer) {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container(class:TestContainer) {
             component(Xxx.A)
         }
 
@@ -148,8 +148,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
        Xxx.reset()
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container {
             container() {
                 container() {
                     component(Xxx.A)
@@ -167,8 +167,8 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
 
         Xxx.reset()
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container {
             container(name:"huey") {
                 container(name:"duey") {
                     component(key:"Luis", class:Xxx.A)
@@ -183,43 +183,43 @@ class GroovyNodeBuilderTestCase extends GroovyTestCase {
         Object o = nano.pico.getComponentInstance("huey/duey/Luis")
         assertNotNull(o)
     }
-    
+
     public void testComponentInstances() {
-    
-        builder = new GroovyNodeBuilder()
-        nano = builder.container {
+
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container {
             component(key:"Louis", instance:"Armstrong")
             component(key:"Duke", instance: "Ellington")
         }
-	
+
         assertEquals("Armstrong", nano.pico.getComponentInstance("Louis"))
         assertEquals("Ellington", nano.pico.getComponentInstance("Duke"))
     }
-	
+
     public void testConstantParameters() {
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container {
             component(key:"cat", class:HasParams, parameters:[ "c", "a", "t" ])
             component(key:"dog", class:HasParams, parameters:[ "d", "o", "g" ])
         }
-	
-        cat = nano.pico.getComponentInstance("cat");
-        dog = nano.pico.getComponentInstance("dog");
+
+        def cat = nano.pico.getComponentInstance("cat");
+        def dog = nano.pico.getComponentInstance("dog");
         assertEquals("cat", cat.getParams());
         assertEquals("dog", dog.getParams());
     }
 
     public void testComponentParameters() {
 
-        builder = new GroovyNodeBuilder()
-        nano = builder.container {
+        def builder = new GroovyNodeBuilder()
+        def nano = builder.container {
             component(key:"a", class:Xxx.A)
             component(key:"b", class:Xxx.B, parameters:[ new ComponentParameter("a") ])
         }
-	
-        a = nano.pico.getComponentInstance("a");
-        b = nano.pico.getComponentInstance("b");
+
+        def a = nano.pico.getComponentInstance("a");
+        def b = nano.pico.getComponentInstance("b");
         assertSame(a, b.getA())
     }
 

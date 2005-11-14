@@ -16,57 +16,57 @@ import org.nanocontainer.script.NanoContainerMarkupException
 
 public class GroovyNodeBuilderAopTestCase extends GroovyTestCase {
 
-    builder = new DynaopGroovyNodeBuilder()
-    cuts = new DynaopPointcutsFactory()
+    def builder = new DynaopGroovyNodeBuilder()
+    def cuts = new DynaopPointcutsFactory()
 
     public void testComponentScopedMixin() {
-        nano = builder.container() {
+        def nano = builder.container() {
             component(key:Dao, class:DaoImpl) {
                 aspect(mixinClass:IdentifiableMixin)
             }
         }
-        dao = nano.pico.getComponentInstance(Dao)
+        def dao = nano.pico.getComponentInstance(Dao)
         verifyMixin(dao)
     }
-    
+
     public void testContainerSuppliedMixin() {
-        nano = builder.container() {
+        def nano = builder.container() {
             component(key:'order1', class:OrderEntityImpl)
             component(key:'order2', class:OrderEntityImpl)
             component(key:IdGenerator, class:IdGeneratorImpl)
             aspect(classCut:cuts.instancesOf(OrderEntity), mixinClass:IdentifiableMixin)
         }
-        
-        order1 = nano.pico.getComponentInstance('order1')
-        order2 = nano.pico.getComponentInstance('order2')
-        
+
+        def order1 = nano.pico.getComponentInstance('order1')
+        def order2 = nano.pico.getComponentInstance('order2')
+
         assertTrue(order1 instanceof Identifiable)
         assertTrue(order2 instanceof Identifiable)
         assertEquals(new Integer(1), order1.id)
         assertEquals(new Integer(2), order2.id)
-        
+
         order1.id = new Integer(42)
         assertEquals(new Integer(42), order1.id)
         assertEquals(new Integer(2), order2.id)
     }
-  
+
     public void testContainerScopedMixinExplicitInterfaces() {
-        nano = builder.container() {
-            component(key:Dao, class:DaoImpl) 
+        def nano = builder.container() {
+            component(key:Dao, class:DaoImpl)
             aspect(classCut:cuts.instancesOf(Dao), mixinInterfaces:[ Identifiable ], mixinClass:IdentifiableMixin)
         }
-        dao = nano.pico.getComponentInstance(Dao)
+        def dao = nano.pico.getComponentInstance(Dao)
         verifyMixin(dao)
         assertFalse(dao instanceof AnotherInterface)
     }
 
     public void testComponentScopedMixinExplicitInterfaces() {
-        nano = builder.container() {
+        def nano = builder.container() {
             component(key:Dao, class:DaoImpl) {
                 aspect(mixinClass:IdentifiableMixin, mixinInterfaces:[ Identifiable ])
             }
         }
-        dao = nano.pico.getComponentInstance(Dao)
+        def dao = nano.pico.getComponentInstance(Dao)
         verifyMixin(dao)
         assertFalse(dao instanceof AnotherInterface)
     }
@@ -102,7 +102,7 @@ public class GroovyNodeBuilderAopTestCase extends GroovyTestCase {
             }
         })
     }
-    
+
     public void testNoAdviceSpecifiedInAspect() {
         shouldFail(NanoContainerMarkupException, {
             builder.container() {
@@ -110,34 +110,34 @@ public class GroovyNodeBuilderAopTestCase extends GroovyTestCase {
             }
         })
     }
-    
+
     public void testComponentInstance() {
         // Note:  aspecting of instances is not supported, but we just want to make sure we didn't mess anything up.
-        nano = builder.container() {
+        def nano = builder.container() {
             component(key:'foo', instance:'bar')
         }
         assertEquals('bar', nano.pico.getComponentInstance('foo'))
     }
-    
+
     public void testBean() {
         // Note:  aspecting of beanClass instantiated beans isn't supported either, but again we just want to make sure we didn't mess anything up.
-        nano = builder.container() {
+        def nano = builder.container() {
             bean(beanClass:StringBean, firstName:'tom', lastName:'jones')
         }
-        stringBean = nano.pico.getComponentInstance(StringBean)
+        def stringBean = nano.pico.getComponentInstance(StringBean)
         assertNotNull(stringBean)
         assertEquals('tom', stringBean.firstName)
         assertEquals('jones', stringBean.lastName)
-    }    
-    
+    }
+
     public void testExample() {
         // START SNIPPET: example
-        log = new StringBuffer()
-        logger = new LoggingInterceptor(log)
-        builder = new DynaopNanoContainerBuilder()
-        cuts = new DynaopPointcutsFactory()
+        def log = new StringBuffer()
+        def logger = new LoggingInterceptor(log)
+        def builder = new DynaopGroovyNodeBuilder()
+        def cuts = new DynaopPointcutsFactory()
 
-        nano = builder.container() {
+        def nano = builder.container() {
             component(key:Dao, class:DaoImpl) {
                 aspect(methodCut:cuts.allMethods(), interceptor:logger)
             }
@@ -147,35 +147,35 @@ public class GroovyNodeBuilderAopTestCase extends GroovyTestCase {
             aspect(classCut:cuts.instancesOf(Entity), mixinClass:IdentifiableMixin)
             aspect(classCut:cuts.packageName('org.nanocontainer.aop'), methodCut:cuts.signature('save*'), interceptor:logger)
         }
-        
-        dao = nano.pico.getComponentInstance(Dao)
-        customer = nano.pico.getComponentInstance(CustomerEntity)
-        order = nano.pico.getComponentInstance(OrderEntity)
-        // END SNIPPET: example        
+
+        def dao = nano.pico.getComponentInstance(Dao)
+        def customer = nano.pico.getComponentInstance(CustomerEntity)
+        def order = nano.pico.getComponentInstance(OrderEntity)
+        // END SNIPPET: example
 
         verifyIntercepted(dao, log)
         verifyMixin(customer)
         verifyMixin(order)
-        
-        before = log.toString()
+
+        def before = log.toString()
         customer.saveMe()
         assertEquals(before + 'startend', log.toString())
-        
+
         before = log.toString()
         order.saveMeToo()
         assertEquals(before + 'startend', log.toString())
     }
-    
+
     void verifyIntercepted(dao, log) {
-        before = log.toString()
-        data = dao.loadData()
+        def before = log.toString()
+        def data = dao.loadData()
         assertEquals('data', data)
         assertEquals(before + 'startend', log.toString())
     }
 
     void verifyNotIntercepted(dao, log) {
-        before = log.toString()
-        data = dao.loadData()
+        def before = log.toString()
+        def data = dao.loadData()
         assertEquals('data', data)
         assertEquals(before, log.toString())
     }
