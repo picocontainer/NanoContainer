@@ -116,13 +116,13 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
         this.performAttributeValidation = performAttributeValidation;
 
         //Build and register node handlers.
-        this.putNodeHandler(new ComponentNode(decorationDelegate))
-            .putNodeHandler(new ChildContainerNode(decorationDelegate))
-            .putNodeHandler(new BeanNode())
-            .putNodeHandler(new ClasspathElementNode())
-            .putNodeHandler(new DoCallNode())
-            .putNodeHandler(new NewBuilderNode())
-            .putNodeHandler(new ClasspathElementNode());
+        this.setNode(new ComponentNode(decorationDelegate))
+            .setNode(new ChildContainerNode(decorationDelegate))
+            .setNode(new BeanNode())
+            .setNode(new ClasspathElementNode())
+            .setNode(new DoCallNode())
+            .setNode(new NewBuilderNode())
+            .setNode(new ClasspathElementNode());
 
     }
 
@@ -189,7 +189,7 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
                 //the logic here.  -MR
                 //
 
-                CustomChildOfContainerNode nodeHandler = this.getNodeBuilder(name.toString());
+                BuilderNode nodeHandler = this.getNode(name.toString());
 
                 if (nodeHandler == null) {
                     // we don't know how to handle it - delegate to the decorator.
@@ -274,18 +274,18 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
      * tag name, or null if no handler exists. (In which case, the Delegate
      * receives the createChildContainer() call)
      */
-    public synchronized CustomChildOfContainerNode getNodeBuilder(final String tagName) {
-        return (CustomChildOfContainerNode)nodeBuilderHandlers.get(tagName);
+    public synchronized BuilderNode getNode(final String tagName) {
+        return (BuilderNode)nodeBuilderHandlers.get(tagName);
     }
 
     /**
      * Add's a groovy node handler to the table of possible handlers. If a node
      * handler with the same node name already exists in the map of handlers, then
-     * the <tt>CustomGroovyNode</tt> replaces the existing node handler.
+     * the <tt>GroovyNode</tt> replaces the existing node handler.
      * @param newGroovyNode CustomGroovyNode
      * @return CustomGroovyNodeBuilder to allow for method chaining.
      */
-    public synchronized CustomGroovyNodeBuilder putNodeHandler(final CustomChildOfContainerNode newGroovyNode) {
+    public synchronized CustomGroovyNodeBuilder setNode(final BuilderNode newGroovyNode) {
         nodeBuilderHandlers.put(newGroovyNode.getNodeName(), newGroovyNode);
         return this;
     }

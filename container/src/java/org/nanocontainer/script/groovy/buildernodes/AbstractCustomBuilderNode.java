@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.nanocontainer.script.groovy.CustomChildOfContainerNode;
+import org.nanocontainer.script.groovy.BuilderNode;
 import java.util.Map;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import java.util.Iterator;
@@ -30,7 +30,7 @@ import java.util.Iterator;
  * @author Mauro Talevi
  * @version $Revision: 2443 $
  */
-abstract public class AbstractCustomBuilderNode implements CustomChildOfContainerNode, Serializable {
+abstract public class AbstractCustomBuilderNode implements BuilderNode, Serializable {
 
     /**
      * The name of the node we're working with.

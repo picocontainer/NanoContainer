@@ -13,7 +13,7 @@ import org.nanocontainer.script.NanoContainerMarkupException;
  * @author Michael Rimov
  * @version 1.0
  */
-public interface CustomChildOfContainerNode {
+public interface BuilderNode {
 
     /**
      * Retrieve the name of the node.  Examples could be 'container' or 'component'.
