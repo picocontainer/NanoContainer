@@ -10,7 +10,6 @@ import org.picocontainer.PicoContainer;
 /**
  *
  * @author Michael Rimov
- * @version 1.0
  */
 public class GroovyCompilationExceptionTestCase extends AbstractScriptedContainerBuilderTestCase {
 
@@ -22,18 +21,18 @@ public class GroovyCompilationExceptionTestCase extends AbstractScriptedContaine
             "");
 
         try {
-            PicoContainer pico = buildContainer(script, null, "Some Assembly Scope");
+            buildContainer(script, null, "Some Assembly Scope");
         } catch (GroovyCompilationException ex) {
             CharArrayWriter outputArray = new CharArrayWriter();
             PrintWriter output = new PrintWriter(outputArray);
             ex.printStackTrace(output);
             String resultingString = outputArray.toString();
-//            System.out.println(resultingString);
+            //System.out.println(resultingString);
 
             assertTrue(resultingString.indexOf("Caused by") > -1);
 
             //This may change from version to version.  Is there a better way for verification?  -MR
-            assertTrue(resultingString.indexOf("No such class") > -1);
+            assertTrue(resultingString.indexOf("unable to resolve class TestBean") > -1);
         }
     }
 
