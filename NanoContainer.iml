@@ -124,7 +124,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY_LOCAL$/asm/jars/asm-2.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY_LOCAL$/asm/jars/asm-2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -133,7 +133,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY_LOCAL$/asm/jars/asm-util-2.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY_LOCAL$/asm/jars/asm-util-2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -47,7 +47,7 @@
 
         <dependency>
             <id>groovy</id>
-            <version>1.0-jsr-03</version>
+            <version>1.0-jsr-04</version>
  	        <properties>
                 <nanodist.booter.hidden>true</nanodist.booter.hidden>
         			<scope>test</scope>
@@ -65,7 +65,7 @@
 
         <dependency>
             <id>asm</id>
-            <version>2.0</version>
+            <version>2.1</version>
  	        <properties>
                 <nanodist.booter.hidden>true</nanodist.booter.hidden>
         			<scope>test</scope>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm-util</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
  	        <properties>
                 <nanodist.booter.hidden>true</nanodist.booter.hidden>
         			<scope>test</scope>
