@@ -15,32 +15,32 @@ class CustomGroovyNodeBuilderScriptedTestCase extends GroovyTestCase {
 
     void testInstantiateBasicComponent() {
 
-        Xxx.reset()
+        A.reset()
 
         def builder = new CustomGroovyNodeBuilder()
         def nano = builder.container() {
-            component(Xxx.A)
+            component(A)
         }
 
         startAndDispose(nano)
 
-        assertEquals("Should match the expression", "<A!A", Xxx.componentRecorder)
+        assertEquals("Should match the expression", "<A!A", A.componentRecorder)
     }
 
     void testInstantiateBasicComponentInDeeperTree() {
 
-        Xxx.reset()
+        A.reset()
 
         def builder = new CustomGroovyNodeBuilder()
         def nano = builder.container {
             container() {
-                component(Xxx.A)
+                component(A)
             }
         }
 
         startAndDispose(nano)
 
-        assertEquals("Should match the expression", "<A!A", Xxx.componentRecorder)
+        assertEquals("Should match the expression", "<A!A", A.componentRecorder)
     }
 
     void testInstantiateWithImpossibleComponentDependanciesConsideringTheHierarchy() {
@@ -50,11 +50,11 @@ class CustomGroovyNodeBuilderScriptedTestCase extends GroovyTestCase {
         try {
             def builder = new CustomGroovyNodeBuilder()
             def nano = builder.container {
-                component(Xxx.B)
+                component(B)
                 container() {
-                    component(Xxx.A)
+                    component(A)
                 }
-                component(Xxx.C)
+                component(C)
             }
 
             startAndDispose(nano)
@@ -132,27 +132,27 @@ class CustomGroovyNodeBuilderScriptedTestCase extends GroovyTestCase {
     */
     void FIXMEtestInstantiateBasicComponentInCustomContainer() {
 
-        Xxx.reset()
+        A.reset()
 
         def builder = new CustomGroovyNodeBuilder()
         def nano = builder.container(class:TestContainer) {
-            component(Xxx.A)
+            component(A)
         }
 
         startAndDispose(nano)
-        assertEquals("Should match the expression", "<A!A", Xxx.componentRecorder)
+        assertEquals("Should match the expression", "<A!A", A.componentRecorder)
         assertEquals("org.nanocontainer.script.groovy.TestContainer",nano.getClass().getName())
     }
 
     void testInstantiateBasicComponentWithDeepTree() {
 
-       Xxx.reset()
+       A.reset()
 
         def builder = new CustomGroovyNodeBuilder()
         def nano = builder.container {
             container() {
                 container() {
-                    component(Xxx.A)
+                    component(A)
                 }
             }
             component(HashMap.class)
@@ -160,18 +160,18 @@ class CustomGroovyNodeBuilderScriptedTestCase extends GroovyTestCase {
 
         startAndDispose(nano)
 
-        assertEquals("Should match the expression", "<A!A", Xxx.componentRecorder)
+        assertEquals("Should match the expression", "<A!A", A.componentRecorder)
     }
 
     void FIXMEtestInstantiateBasicComponentWithDeepNamedTree() {
 
-        Xxx.reset()
+        A.reset()
 
         def builder = new CustomGroovyNodeBuilder()
         def nano = builder.container {
             container(name:"huey") {
                 container(name:"duey") {
-                    component(key:"Luis", class:Xxx.A)
+                    component(key:"Luis", class:A)
                 }
             }
             component(HashMap.class)
@@ -179,7 +179,7 @@ class CustomGroovyNodeBuilderScriptedTestCase extends GroovyTestCase {
 
         startAndDispose(nano)
 
-        assertEquals("Should match the expression", "<A!A", Xxx.componentRecorder)
+        assertEquals("Should match the expression", "<A!A", A.componentRecorder)
         Object o = nano.pico.getComponentInstance("huey/duey/Luis")
         assertNotNull(o)
     }
@@ -214,8 +214,8 @@ class CustomGroovyNodeBuilderScriptedTestCase extends GroovyTestCase {
 
         def builder = new CustomGroovyNodeBuilder()
         def nano = builder.container {
-            component(key:"a", class:Xxx.A)
-            component(key:"b", class:Xxx.B, parameters:[ new ComponentParameter("a") ])
+            component(key:"a", class:A)
+            component(key:"b", class:B, parameters:[ new ComponentParameter("a") ])
         }
 
         def a = nano.pico.getComponentInstance("a");
