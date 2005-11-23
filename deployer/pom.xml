@@ -17,23 +17,20 @@
 		<dependency>
 			<groupId>org.picocontainer</groupId>
 			<artifactId>picocontainer</artifactId>
-			<version>1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>nanocontainer</artifactId>
-			<version>${pom.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-vfs</groupId>
 			<artifactId>commons-vfs</artifactId>
-			<version>20050307052300</version>
 		</dependency>
 		<!-- Test scoped depedencies -->
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>nanocontainer-booter</artifactId>
-			<version>${pom.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
