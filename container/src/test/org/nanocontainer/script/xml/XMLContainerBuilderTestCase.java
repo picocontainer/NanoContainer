@@ -622,7 +622,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
     }
 
-    static public class StaticWriterComponentMonitor extends WriterComponentMonitor {        
+    static public class StaticWriterComponentMonitor extends WriterComponentMonitor {
         static Writer WRITER = new StringWriter();
         
         public StaticWriterComponentMonitor() {
