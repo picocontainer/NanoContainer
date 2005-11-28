@@ -41,7 +41,7 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
     public GroovyContainerBuilder(final Reader script, ClassLoader classLoader) {
         super(script, classLoader);
     }
-    
+
     public GroovyContainerBuilder(final URL script, ClassLoader classLoader) {
         super(script, classLoader);
     }
@@ -53,9 +53,9 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
         }
         Binding binding = new Binding();
         binding.setVariable("parent", parentContainer);
-        binding.setVariable("builder", new GroovyNodeBuilder());
+        binding.setVariable("builder", createCustomGroovyNodeBuilder());
         binding.setVariable("assemblyScope", assemblyScope);
-		handleBinding(binding);
+                handleBinding(binding);
         groovyScript.setBinding(binding);
 
         // both returning something or defining the variable is ok.
@@ -75,19 +75,27 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
         }
     }
 
-	/**
-	 * This allows children of this class to add to the default binding.
-	 * Might want to add similar or a more generic implementation of this
-	 * method to support the other scripting languages.
-	 */
-	protected void handleBinding(Binding binding) {
-     	// does nothing but adds flexibility for children
-	}
+    /**
+     * Allows customization of the groovy node builder in descendants.
+     * @return CustomGroovyNodeBuilder
+     */
+    protected GroovyObject createCustomGroovyNodeBuilder() {
+        return new CustomGroovyNodeBuilder();
+    }
+
+    /**
+     * This allows children of this class to add to the default binding.
+     * Might want to add similar or a more generic implementation of this
+     * method to support the other scripting languages.
+     */
+    protected void handleBinding(Binding binding) {
+        // does nothing but adds flexibility for children
+    }
 
     private void createGroovyScript() {
         try {
             GroovyClassLoader loader = new GroovyClassLoader(getClassLoader());
-            InputStream scriptIs = getScriptInputStream();            
+            InputStream scriptIs = getScriptInputStream();
             GroovyCodeSource groovyCodeSource = new GroovyCodeSource(scriptIs,"nanocontainer.groovy","groovyGeneratedForNanoContainer");
             Class scriptClass = loader.parseClass(groovyCodeSource);
             groovyScript = InvokerHelper.createScript(scriptClass, null);

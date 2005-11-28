@@ -67,12 +67,13 @@ import org.picocontainer.defaults.DelegatingComponentMonitor;
  * @author James Strachan
  * @author Paul Hammant
  * @author Aslak Helles&oslash;y
- * @author Michael Rimov 
+ * @author Michael Rimov
  * @author Mauro Talevi
  * @version $Revision$
+ * @deprecated Since Version 1.0 RC-2. (11/28/2005)  Use CustomGroovyNodeBuilder instead.
  */
 public class GroovyNodeBuilder extends BuilderSupport {
-    
+
     private static final String NEW_BUILDER = "newBuilder";
     private static final String CONTAINER = "container";
     private static final String COMPONENT = "component";
@@ -93,7 +94,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     private static final String COMPONENT_MONITOR = "componentMonitor";
     private static final String EMPTY = "";
     private static final String DO_CALL = "doCall";
-    
+
     private final NodeBuilderDecorationDelegate decorationDelegate;
 
     public GroovyNodeBuilder(NodeBuilderDecorationDelegate decorationDelegate) {
@@ -318,12 +319,12 @@ public class GroovyNodeBuilder extends BuilderSupport {
      * @param parent The parent container
      * @return The NanoContainer
      */
-    protected NanoContainer createChildContainer(Map attributes, NanoContainer parent) {        
-                
+    protected NanoContainer createChildContainer(Map attributes, NanoContainer parent) {
+
         ClassLoader parentClassLoader = null;
         MutablePicoContainer childContainer = null;
         if (parent != null) {
-            parentClassLoader = parent.getComponentClassLoader();            
+            parentClassLoader = parent.getComponentClassLoader();
             if ( isAttribute(attributes, COMPONENT_ADAPTER_FACTORY) ) {
                 ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(attributes);
                 childContainer = new DefaultPicoContainer(
@@ -333,7 +334,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
                 }
                 parent.getPico().addChildContainer(childContainer);
             } else if ( isAttribute(attributes, COMPONENT_MONITOR) ) {
-                ComponentAdapterFactory componentAdapterFactory = new DefaultComponentAdapterFactory( 
+                ComponentAdapterFactory componentAdapterFactory = new DefaultComponentAdapterFactory(
                                                     createComponentMonitor(attributes));
                 childContainer = new DefaultPicoContainer(
                         decorationDelegate.decorate(componentAdapterFactory, attributes), parent.getPico());
@@ -366,7 +367,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     private void changeComponentMonitor(MutablePicoContainer childContainer, ComponentMonitor monitor) {
         if ( childContainer instanceof ComponentMonitorStrategy ){
             ((ComponentMonitorStrategy)childContainer).changeMonitor(monitor);
-        }        
+        }
     }
 
     private NanoContainer createNanoContainer(Class clazz, MutablePicoContainer decoratedPico, ClassLoader parentClassLoader) {
@@ -378,7 +379,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
         return (NanoContainer) componentInstance;
     }
 
-    private boolean isAttribute(Map attributes, String key) {        
+    private boolean isAttribute(Map attributes, String key) {
         return attributes.containsKey(key) && attributes.get(key) != null;
     }
 
@@ -389,7 +390,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
         }
         return factory;
     }
-    
+
     private ComponentMonitor createComponentMonitor(Map attributes) {
         final ComponentMonitor monitor = (ComponentMonitor) attributes.remove(COMPONENT_MONITOR);
         if ( monitor == null ){

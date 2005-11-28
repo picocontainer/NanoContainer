@@ -361,7 +361,7 @@ public class CustomGroovyNodeBuilderTestCase extends AbstractScriptedContainerBu
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new CustomGroovyNodeBuilder()\n" +
-                "nano = builder.container(parent:parent, scope:assemblyScope) {\n" +
+                "nano = builder.container(parent:parent) {\n" +
                 "  if ( assemblyScope instanceof SomeAssemblyScope ){\n "+
                 "    component(B)\n" +
                 "  }\n "+
