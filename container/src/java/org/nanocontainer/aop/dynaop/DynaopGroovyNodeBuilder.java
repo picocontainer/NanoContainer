@@ -10,7 +10,7 @@
 package org.nanocontainer.aop.dynaop;
 
 import org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate;
-import org.nanocontainer.script.groovy.GroovyNodeBuilder;
+import org.nanocontainer.script.groovy.CustomGroovyNodeBuilder;
 
 /**
  * A {@link org.nanocontainer.script.groovy.GroovyNodeBuilder} that supports
@@ -19,14 +19,14 @@ import org.nanocontainer.script.groovy.GroovyNodeBuilder;
  * @author Stephen Molitor
  * @version $Revision$
  */
-public class DynaopGroovyNodeBuilder extends GroovyNodeBuilder {
+public class DynaopGroovyNodeBuilder extends CustomGroovyNodeBuilder {
 
     /**
      * Creates a new <code>DynaopGroovyNodeBuilder</code> that will use
      * the default @{link DynaopAspectsManager} to apply aspects.
      */
     public DynaopGroovyNodeBuilder() {
-        super(new AopNodeBuilderDecorationDelegate(new DynaopAspectsManager()));
+        super(new AopNodeBuilderDecorationDelegate(new DynaopAspectsManager()), CustomGroovyNodeBuilder.SKIP_ATTRIBUTE_VALIDATION);
     }
 
 
