@@ -3,6 +3,7 @@ package org.nanocontainer.script.groovy;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.BufferedReader;
 
 import org.jmock.Mock;
 import org.nanocontainer.NanoPicoContainer;
@@ -372,27 +373,28 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     //FIXME: attempting to build the parent container from the script
     // at the same time as the child yields compilation error!
     //This does not occur if parent and child are build separately!
-    public void FIXME_testBuildContainerWithParentAndChildAssemblyScopes() {
-        Reader script = new StringReader("" +
-                "package org.nanocontainer.script.groovy\n" +
-                "nano = builder.container(parent:parent, scope:assemblyScope) {\n" +
-                "  System.out.println('assemblyScope:'+assemblyScope)\n " +
-                "  if ( assemblyScope instanceof ParentAssemblyScope ){\n "+
-                "    System.out.println('parent scope')\n " +
-                "    component(A)\n" +
-                "  } else if ( assemblyScope instanceof SomeAssemblyScope ){\n "+
-                "    System.out.println('child scope')\n " +
-                "    component(B)\n" +
-                "  } else { \n" +
-                "    System.out.println('Invalid scope')\n " +
-                "  } \n "+
-                "}\n");
+    // Not true, if different Readers can be used.
+    public void testBuildContainerWithParentAndChildAssemblyScopes() {
+        String script = "" +
+                        "package org.nanocontainer.script.groovy\n" +
+                        "nano = builder.container(parent:parent, scope:assemblyScope) {\n" +
+                        "  System.out.println('assemblyScope:'+assemblyScope)\n " +
+                        "  if ( assemblyScope instanceof ParentAssemblyScope ) {\n "+
+                        "    System.out.println('parent scope')\n " +
+                        "    component(A)\n" +
+                        "  } else if ( assemblyScope instanceof SomeAssemblyScope ) {\n "+
+                        "    System.out.println('child scope')\n " +
+                        "    component(B)\n" +
+                        "  } else { \n" +
+                        "    System.out.println('Invalid scope')\n " +
+                        "  } \n "+
+                        "}\n";
         NanoPicoContainer parent = new DefaultNanoPicoContainer(buildContainer(
-                script, null, new ParentAssemblyScope()));
+                new StringReader(script), null, new ParentAssemblyScope()));
 //        NanoPicoContainer parent = new DefaultNanoPicoContainer();
 //        parent.registerComponentImplementation(A.class);
         assertNotNull(parent.getComponentInstanceOfType(A.class));
-        PicoContainer pico = buildContainer(script, parent,  new SomeAssemblyScope());
+        PicoContainer pico = buildContainer(new StringReader(script), parent,  new SomeAssemblyScope());
         assertNotNull(pico.getComponentInstanceOfType(B.class));
     }
 

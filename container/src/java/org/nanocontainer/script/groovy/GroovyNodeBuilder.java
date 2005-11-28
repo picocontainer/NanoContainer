@@ -108,7 +108,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     }
 
     protected Object doInvokeMethod(String s, Object name, Object args) {
-        //TODO use setDelegate() from Groovy JSR
+        //TODO use setClosureDelegate() from Groovy JSR
         Object answer = super.doInvokeMethod(s, name, args);
         List list = InvokerHelper.asList(args);
         if (!list.isEmpty()) {
@@ -119,6 +119,10 @@ public class GroovyNodeBuilder extends BuilderSupport {
             }
         }
         return answer;
+    }
+
+    protected void setClosureDelegate(Closure closure, Object o) {
+        super.setClosureDelegate(closure, o);
     }
 
     protected Object createNode(Object name) {
