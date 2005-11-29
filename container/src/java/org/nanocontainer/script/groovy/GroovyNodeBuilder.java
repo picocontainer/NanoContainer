@@ -44,6 +44,7 @@ import org.picocontainer.ComponentMonitor;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
+import org.picocontainer.ComponentAdapter;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.ComponentMonitorStrategy;
 import org.picocontainer.defaults.ConstantParameter;
@@ -177,6 +178,14 @@ public class GroovyNodeBuilder extends BuilderSupport {
                 return createGrantPermission(attributes, (ClassPathElement) current);
             }
             return EMPTY;
+        } else if (current instanceof ComponentAdapter && name.equals("instance")) {
+
+            // TODO - Michael.
+            // Michael, we could implement key() implementation() and possibly (with many limits on use) instance() here.
+            // Not what you outline in NANO-138 as is though.
+
+            return decorationDelegate.createNode(name, attributes, current);
+
         } else {
             // we don't know how to handle it - delegate to the decorator.
             return decorationDelegate.createNode(name, attributes, current);
@@ -277,6 +286,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
         Object cnkey = attributes.remove(CLASS_NAME_KEY);
         Object classValue = attributes.remove(CLASS);
         Object instance = attributes.remove(INSTANCE);
+        Object retval = null;
         List parameters = (List) attributes.remove(PARAMETERS);
 
         MutablePicoContainer pico = nano.getPico();
@@ -289,19 +299,19 @@ public class GroovyNodeBuilder extends BuilderSupport {
         if (classValue instanceof Class) {
             Class clazz = (Class) classValue;
             key = key == null ? clazz : key;
-            pico.registerComponentImplementation(key, clazz, parameterArray);
+            retval = pico.registerComponentImplementation(key, clazz, parameterArray);
         } else if (classValue instanceof String) {
             String className = (String) classValue;
             key = key == null ? className : key;
-            nano.registerComponentImplementation(key, className, parameterArray);
+            retval = nano.registerComponentImplementation(key, className, parameterArray);
         } else if (instance != null) {
             key = key == null ? instance.getClass() : key;
-            pico.registerComponentInstance(key, instance);
+            retval = pico.registerComponentInstance(key, instance);
         } else {
             throw new NanoContainerMarkupException("Must specify a class attribute for a component as a class name (string) or Class. Attributes:" + attributes);
         }
 
-        return name;
+        return retval;
     }
 
     protected Object createNode(Object name, Map attributes) {
