@@ -19,6 +19,7 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.defaults.LifecycleStrategy;
 
 /**
  * This is a MutablePicoContainer that also supports soft composition. i.e. assembly by class name rather that class
@@ -60,7 +61,26 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
     public DefaultNanoPicoContainer() {
         super(new DefaultPicoContainer(), DefaultNanoPicoContainer.class.getClassLoader());
     }
-    
+
+
+    /**
+     * Constructor that provides the same control over the nanocontainer lifecycle strategies
+     * as {@link DefaultPicoContainer(ComponentAdapterFactory, LifecycleStrategy, PicoContainer)}.
+     * @param componentAdapterFactory ComponentAdapterFactory
+     * @param lifecycleStrategyForInstanceRegistrations LifecycleStrategy
+     * @param parent PicoContainer may be null if there is no parent.
+     * @param cl the Classloader to use.  May be null, in which case DefaultNanoPicoContainer.class.getClassLoader()
+     * will be called instead.
+     */
+    public DefaultNanoPicoContainer(ComponentAdapterFactory componentAdapterFactory,
+        LifecycleStrategy lifecycleStrategyForInstanceRegistrations, PicoContainer parent, ClassLoader cl) {
+
+        super(new DefaultPicoContainer(componentAdapterFactory,
+            lifecycleStrategyForInstanceRegistrations, parent),
+            //Use a default classloader if none is specified.
+            (cl != null) ? cl : DefaultNanoPicoContainer.class.getClassLoader());
+    }
+
     /**
      * Copy Constructor.  Makes a new DefaultNanoPicoContainer with the same
      * attributes - ClassLoader, child PicoContainer type, ComponentAdapterFactory - 
