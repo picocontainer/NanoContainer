@@ -71,7 +71,7 @@ import org.picocontainer.defaults.DelegatingComponentMonitor;
  * @author Michael Rimov
  * @author Mauro Talevi
  * @version $Revision$
- * @deprecated Since Version 1.0 RC-2. (11/28/2005)  Use CustomGroovyNodeBuilder instead.
+ * @deprecated Since version 1.0-RC-3, use CustomGroovyNodeBuilder instead.
  */
 public class GroovyNodeBuilder extends BuilderSupport {
 
