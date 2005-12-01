@@ -13,7 +13,7 @@ import org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate;
 import org.nanocontainer.script.groovy.CustomGroovyNodeBuilder;
 
 /**
- * A {@link org.nanocontainer.script.groovy.GroovyNodeBuilder} that supports
+ * A {@link org.nanocontainer.script.groovy.CustomGroovyNodeBuilder} that supports
  * scripting of aspects via dynaop.
  *
  * @author Stephen Molitor

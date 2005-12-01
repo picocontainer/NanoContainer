@@ -36,23 +36,23 @@ import groovy.util.BuilderSupport;
  * Builds node trees of PicoContainers and Pico components using GroovyMarkup.
  * <p>Simple example usage in your groovy script:
  * <code><pre>
- * builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()
+ * builder = new org.nanocontainer.script.groovy.CustomGroovyNodeBuilder()
  * pico = builder.container(parent:parent) {
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.DefaultWebServerConfig)
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.WebServerImpl)
  * }
  * </pre></code>
  * </p>
- * <h4>Extending/Enhancing GroovyNodeBuilder<h4>
+ * <h4>Extending/Enhancing CustomGroovyNodeBuilder</h4>
  * <p>Often-times people need there own assembly commands that are needed
  * for extending/enhancing the node builder tree.  The perfect example of this
  * is <tt>DynaopGroovyNodeBuilder</tt> which provides a new vocabulary for
  * the groovy node builder with terms such as 'aspect', 'pointcut', etc.</p>
  * <p>GroovyNodeBuilder provides two primary ways of enhancing the nodes supported
  * by the groovy builder: {@link org.nanocontainer.script.NodeBuilderDecorationDelegate}
- * and special node handlers {@link org.nanocontainer.script.groovy.CustomGroovyNode}.
+ * and special node handlers {@link org.nanocontainer.script.groovy.BuilderNode}.
  * Using NodeBuilderDecorationDelegate is often a preferred method because it is
- * ultimately script independent.  However, replacing an existing CustomGroovyNode's
+ * ultimately script independent.  However, replacing an existing CustomGroovyNodeBuilder's
  * behavior is currently the only way to replace the behavior of an existing
  * groovy node handler.
  * </p>
@@ -61,7 +61,6 @@ import groovy.util.BuilderSupport;
  * @author Aslak Helles&oslash;y
  * @author Michael Rimov
  * @author Mauro Talevi
- * @author Michael Rimov
  * @version $Revision: 2695 $
  */
 public class CustomGroovyNodeBuilder extends BuilderSupport {
