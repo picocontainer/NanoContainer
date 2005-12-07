@@ -605,6 +605,22 @@ public class CustomGroovyNodeBuilderTestCase extends AbstractScriptedContainerBu
     }
 
 
+    public void testComponentAdapterIsPotentiallyScriptable() throws PicoCompositionException {
+        Reader script = new StringReader("" +
+                "import org.nanocontainer.script.groovy.X\n" +
+                "import org.nanocontainer.script.groovy.A\n" +
+                "X.reset()\n" +
+                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "nano = builder.container {\n" +
+                "    ca = component(java.lang.Object) \n" +
+                "    component(instance:ca.getClass().getName())\n" +
+                "}");
+
+        PicoContainer pico = buildContainer(script, null, ASSEMBLY_SCOPE);
+        // LifecyleContainerBuilder starts the container
+        assertEquals("org.picocontainer.defaults.CachingComponentAdapter", pico.getComponentInstances().get(1).toString());
+    }
+
 
     private PicoContainer buildContainer(Reader script, PicoContainer parent, Object scope) {
         return buildContainer(new GroovyContainerBuilder(script, getClass().getClassLoader()), parent, scope);

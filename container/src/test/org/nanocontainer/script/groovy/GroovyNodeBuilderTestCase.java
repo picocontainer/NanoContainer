@@ -538,7 +538,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "X.reset()\n" +
                 "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
-                "    ca = component(java.lang.StringBuffer) \n" +
+                "    ca = component(java.lang.Object) \n" +
                 "    component(instance:ca.getClass().getName())\n" +
                 "}");
 
