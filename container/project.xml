@@ -42,23 +42,7 @@
             <artifactId>groovy-all</artifactId>
             <version>1.0-jsr-04</version>
         </dependency>
-
-        <dependency>
-            <id>antlr</id>
-            <version>2.7.5</version>
-        </dependency>
         
-        <dependency>
-            <id>asm</id>
-            <version>2.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm-util</artifactId>
-            <version>2.1</version>
-        </dependency>
-
 		<!-- xml dependencies -->
          <dependency>
             <id>xstream</id>
