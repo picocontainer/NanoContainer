@@ -53,7 +53,7 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
         }
         Binding binding = new Binding();
         binding.setVariable("parent", parentContainer);
-        binding.setVariable("builder", createCustomGroovyNodeBuilder());
+        binding.setVariable("builder", createGroovyNodeBuilder());
         binding.setVariable("assemblyScope", assemblyScope);
                 handleBinding(binding);
         groovyScript.setBinding(binding);
@@ -79,7 +79,7 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
      * Allows customization of the groovy node builder in descendants.
      * @return CustomGroovyNodeBuilder
      */
-    protected GroovyObject createCustomGroovyNodeBuilder() {
+    protected GroovyObject createGroovyNodeBuilder() {
         return new CustomGroovyNodeBuilder();
     }
 
