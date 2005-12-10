@@ -12,9 +12,7 @@ By default the libs required to use Groovy as the composition script are include
 Should one want to use XML or other NanoContainer scripting langauges, 
 one may remove from lib/hidden		   
 
-groovy-*.jar           
-antlr-*.jar
-asm-*.jar
+groovy-all*.jar           
 				
 and replace with libs required by the chosen script.
 

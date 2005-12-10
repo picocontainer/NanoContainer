@@ -13,7 +13,7 @@
             <version>${picocontainer.version}</version>
             <url>http://www.picocontainer.org/</url>
  	        <properties>
-                <booter.common>true</booter.common>
+                <nanodist.booter.common>true</nanodist.booter.common>
             </properties>
         </dependency>
 
@@ -22,7 +22,7 @@
             <artifactId>nanocontainer</artifactId>
             <version>${pom.currentVersion}</version>
  	        <properties>
-                <booter.hidden>true</booter.hidden>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
 
@@ -47,7 +47,7 @@
             <id>commons-cli</id>
             <version>1.0</version>
  	        <properties>
-                <booter.common>true</booter.common>
+                <nanodist.booter.common>true</nanodist.booter.common>
             </properties>
         </dependency>
 
@@ -57,7 +57,7 @@
             <artifactId>groovy-all</artifactId>
             <version>1.0-jsr-04</version>
  	        <properties>
-                <booter.hidden>true</booter.hidden>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
         
