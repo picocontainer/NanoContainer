@@ -1,62 +1,60 @@
 package org.nanocontainer.script;
 
-import java.util.Arrays;
-import java.util.List;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.URL;
+import org.nanocontainer.script.groovy.GroovyContainerBuilder;
 import junit.framework.TestCase;
 
 public class ScriptedContainerBuilderFactoryTestCase
     extends TestCase {
 
+    private static final String TEST_SCRIPT_PATH = "/org/nanocontainer/nanocontainer.groovy";
+
+
     protected void tearDown() throws Exception {
-        ScriptedContainerBuilderFactory.resetBuilders();
         super.tearDown();
     }
 
-    public void testGetAllSupportedExtensions() {
-        ScriptedContainerBuilderFactory.resetBuilders();
+    public void testScriptedContainerBuilderFactoryWithUrl() throws ClassNotFoundException {
+        URL resource = getClass().getResource(TEST_SCRIPT_PATH);
+        assertNotNull("Could not find script resource '+ TEST_SCRIPT_PATH + '.", resource);
 
-        List resultingList = Arrays.asList(ScriptedContainerBuilderFactory.getAllSupportedExtensions());
-
-        assertTrue(resultingList.contains(ScriptedContainerBuilderFactory.GROOVY));
-        assertTrue(resultingList.contains(ScriptedContainerBuilderFactory.BEANSHELL));
-        assertTrue(resultingList.contains(ScriptedContainerBuilderFactory.XML));
-        assertTrue(resultingList.contains(ScriptedContainerBuilderFactory.JAVASCRIPT));
-        assertTrue(resultingList.contains(ScriptedContainerBuilderFactory.JYTHON));
+        ScriptedContainerBuilderFactory result = new ScriptedContainerBuilderFactory(resource);
+        ScriptedContainerBuilder builder = result.getContainerBuilder();
+        assertNotNull(builder);
+        assertEquals(GroovyContainerBuilder.class.getName(), builder.getClass().getName());
     }
 
-    public void testGetBuilderClassName() {
-        assertNull(ScriptedContainerBuilderFactory.getBuilderClassName(".hi-diddle-diddle"));
-        assertEquals(ScriptedContainerBuilderFactory.DEFAULT_GROOVY_BUILDER,
-            ScriptedContainerBuilderFactory.getBuilderClassName(ScriptedContainerBuilderFactory.GROOVY));
+    public void testBuildWithReader() throws ClassNotFoundException {
+        Reader script = new StringReader("" +
+            "import org.nanocontainer.script.groovy.X\n" +
+            "import org.nanocontainer.script.groovy.A\n" +
+            "X.reset()\n" +
+            "builder = new org.nanocontainer.script.groovy.CustomGroovyNodeBuilder()\n" +
+            "nano = builder.container {\n" +
+            "    component(A)\n" +
+            "}");
+
+        ScriptedContainerBuilderFactory result = new ScriptedContainerBuilderFactory(script,
+            GroovyContainerBuilder.class.getName());
+        ScriptedContainerBuilder builder = result.getContainerBuilder();
+        assertNotNull(builder);
+        assertEquals(GroovyContainerBuilder.class.getName(), builder.getClass().getName());
     }
 
-    public void testRegisterBuilder() {
-        //Test a precondition
-        assertNull(ScriptedContainerBuilderFactory.getBuilderClassName(".foo"));
+    public void testBuildWithFile() throws ClassNotFoundException, IOException {
+        File resource = new File("src/test/org/nanocontainer/nanocontainer.groovy");
+        assertNotNull("Could not find script resource '+ TEST_SCRIPT_PATH + '.", resource);
 
-        //Now test the real thing.
-        ScriptedContainerBuilderFactory.registerBuilder(".foo", "org.example.FooBuilder");
-        assertEquals("org.example.FooBuilder", ScriptedContainerBuilderFactory.getBuilderClassName(".foo"));
-
-        //Test override
-        ScriptedContainerBuilderFactory.registerBuilder(ScriptedContainerBuilderFactory.GROOVY,
-            "org.example.MyGroovyBuilder");
-
-        assertEquals("org.example.MyGroovyBuilder",
-            ScriptedContainerBuilderFactory.getBuilderClassName(ScriptedContainerBuilderFactory.GROOVY));
+        ScriptedContainerBuilderFactory result = new ScriptedContainerBuilderFactory(resource);
+        ScriptedContainerBuilder builder = result.getContainerBuilder();
+        assertNotNull(builder);
+        assertEquals(GroovyContainerBuilder.class.getName(), builder.getClass().getName());
 
     }
 
-    public void testResetBuilders() {
-        ScriptedContainerBuilderFactory.registerBuilder(".foo", "org.example.FooBuilder");
-        int beforeResetSize = ScriptedContainerBuilderFactory.getAllSupportedExtensions().length;
-
-        ScriptedContainerBuilderFactory.resetBuilders();
-        int afterResetSize = ScriptedContainerBuilderFactory.getAllSupportedExtensions().length;
-
-        assertTrue(afterResetSize < beforeResetSize);
-        assertNull(ScriptedContainerBuilderFactory.getBuilderClassName(".foo"));
-    }
 
 }

@@ -35,7 +35,7 @@ public class StandaloneTestCase extends TestCase {
     public void testShouldBeAbleToInvokeMainMethodWithScriptFromClasspathWithXmlIncludes() throws IOException, ClassNotFoundException {
         Standalone.main(new String[] {
             "-r",
-            "/org/nanocontainer/standalone_test.xml",
+            "/org/nanocontainer/standalone_test.xml", //I don't see this in the code base?? -MR
             "-n"
         });
     }
