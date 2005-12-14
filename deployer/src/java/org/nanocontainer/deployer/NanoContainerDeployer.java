@@ -23,10 +23,13 @@ import org.apache.commons.vfs.FileSelector;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.impl.VFSClassLoader;
+import org.apache.commons.vfs.VFS;
 import org.nanocontainer.integrationkit.ContainerBuilder;
 import org.nanocontainer.script.ScriptedContainerBuilderFactory;
 import org.picocontainer.defaults.ObjectReference;
 import org.picocontainer.defaults.SimpleReference;
+import org.nanocontainer.script.UnsupportedScriptTypeException;
+import org.nanocontainer.script.ScriptBuilderResolver;
 
 /**
  * This class is capable of deploying an application from any kind of file system
@@ -94,6 +97,21 @@ public class NanoContainerDeployer implements Deployer {
      */
     private final String fileBasename;
 
+
+    /**
+     * File Name to builder class name resolver.
+     */
+    private ScriptBuilderResolver resolver;
+
+
+    /**
+     * Default constructor that makes sensible defaults.
+     * @throws FileSystemException
+     */
+    public NanoContainerDeployer() throws FileSystemException {
+        this(VFS.getManager(), new ScriptBuilderResolver());
+    }
+
     /**
      * Constructs a nanocontainer deployer with the specified file system manager.
      * @param fileSystemManager A VFS FileSystemManager.
@@ -102,14 +120,29 @@ public class NanoContainerDeployer implements Deployer {
         this(fileSystemManager,"nanocontainer");
     }
 
+
+    /**
+     * Constructs this object with both a VFS file system manager, and
+     * @param fileSystemManager FileSystemManager
+     * @param builderResolver ScriptBuilderResolver
+     */
+    public NanoContainerDeployer(final FileSystemManager fileSystemManager, ScriptBuilderResolver builderResolver) {
+        this(fileSystemManager);
+        resolver = builderResolver;
+    }
+
     /**
      * Constructs a nanocontainer deployer with the specified file system manager
      * and specifies a 'base name' for the configuration file that will be loaded.
      * @param fileSystemManager A VFS FileSystemManager.
+     * @todo Deprecate this and replace 'base file name' with the concept
+     * of a ArchiveLayout that defines where jars are stored, where the composition
+     * script is stored, etc.
      */
     public NanoContainerDeployer(final FileSystemManager fileSystemManager, String baseFileName) {
         this.fileSystemManager = fileSystemManager;
         fileBasename = baseFileName;
+        resolver = new ScriptBuilderResolver();
     }
 
 
@@ -132,12 +165,14 @@ public class NanoContainerDeployer implements Deployer {
 
         String extension = "." + deploymentScript.getName().getExtension();
         Reader scriptReader = new InputStreamReader(deploymentScript.getContent().getInputStream());
-        String builderClassName = ScriptedContainerBuilderFactory.getBuilderClassName(extension);
-
-        if (builderClassName == null) {
-          throw new FileSystemException("Could not find a suitable builder for: " + deploymentScript.getName()
-              + ".  Known extensions are: [groovy|bsh|js|py|xml]");
+        String builderClassName = null;
+        try {
+            builderClassName = resolver.getBuilderClassName(extension);
+        } catch (UnsupportedScriptTypeException ex) {
+            throw new FileSystemException("Could not find a suitable builder for: " + deploymentScript.getName()
+                + ".  Known extensions are: [groovy|bsh|js|py|xml]", ex);
         }
+
 
         ScriptedContainerBuilderFactory scriptedContainerBuilderFactory = new ScriptedContainerBuilderFactory(scriptReader, builderClassName, applicationClassLoader);
         ContainerBuilder builder = scriptedContainerBuilderFactory.getContainerBuilder();
@@ -146,6 +181,7 @@ public class NanoContainerDeployer implements Deployer {
         return result;
     }
 
+
     /**
      * Given the base application folder, return a file object that represents the
      * nanocontainer configuration script.
@@ -153,7 +189,7 @@ public class NanoContainerDeployer implements Deployer {
      * @return FileObject
      * @throws FileSystemException
      */
-    private FileObject getDeploymentScript(FileObject applicationFolder) throws FileSystemException {
+    protected FileObject getDeploymentScript(FileObject applicationFolder) throws FileSystemException {
         final FileObject metaInf = applicationFolder.getChild("META-INF");
         if(metaInf == null) {
             throw new FileSystemException("Missing META-INF folder in " + applicationFolder.getName().getPath());
