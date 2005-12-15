@@ -28,11 +28,11 @@ public abstract class LifecycleContainerBuilder implements ContainerBuilder {
         if (parentContainer != null && parentContainer instanceof MutablePicoContainer) {
             MutablePicoContainer mutableParentContainer = (MutablePicoContainer) parentContainer;
 
-            // this synchronization is necessary, because several servlet request may
-            // occur at the same time for given session, and this produce race condition
-            // especially in framed environments
-            synchronized (mutableParentContainer) {
-                if (addChildToParent) {
+            if (addChildToParent) {
+                // this synchronization is necessary, because several servlet requests may
+                // occur at the same time for given session, and this produce race condition
+                // especially in framed environments
+                synchronized (mutableParentContainer) {
                     // register the child in the parent so that lifecycle can be propagated down the hierarchy
                     mutableParentContainer.addChildContainer(container);
                 }
