@@ -28,6 +28,7 @@ import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.testmodel.DefaultWebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfigComp;
+import org.picocontainer.ComponentAdapter;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
@@ -555,17 +556,14 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("bean2", "hello2", composer.getBean2().getBar());
     }
 
-    public void testComponentAdapterWithNoKeyThrowsNanoContainerMarkupException() {
+    public void testComponentAdapterWithNoKeyUsesTypeAsKey() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-adapter class='org.nanocontainer.script.xml.TestBeanComposer'/>" +
                 "</container>");
-        try {
-             buildContainer(script);
-            fail();
-        } catch (NanoContainerMarkupException expected) {
-            assertEquals("'key' attribute not specified for component-adapter", expected.getMessage());
-        }
+        PicoContainer pico = buildContainer(script);
+        ComponentAdapter adapter = (ComponentAdapter)pico.getComponentAdapters().iterator().next();
+        assertSame(TestBeanComposer.class, adapter.getComponentImplementation());
     }
 
     public void testComponentAdapterWithNoClassThrowsNanoContainerMarkupException() {
@@ -594,7 +592,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
 
         assertNotSame(wsc1, wsc2);
     }
-    
+
     public void testComponentMonitorCanBeSpecified() throws IOException, ParserConfigurationException, SAXException {
         Reader script = new StringReader("" +
                 "<container component-monitor='" + StaticWriterComponentMonitor.class.getName() + "'>" +
@@ -605,10 +603,10 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         pico.getComponentInstanceOfType(WebServerConfig.class);
         assertTrue(StaticWriterComponentMonitor.WRITER.toString().length() > 0);
     }
-    
+
     public void testComponentMonitorCanBeSpecifiedIfCAFIsSpecified() throws IOException, ParserConfigurationException, SAXException {
         Reader script = new StringReader("" +
-                "<container component-adapter-factory='" +DefaultComponentAdapterFactory.class.getName() + 
+                "<container component-adapter-factory='" +DefaultComponentAdapterFactory.class.getName() +
                 "' component-monitor='" + StaticWriterComponentMonitor.class.getName() + "'>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
                 "</container>");
@@ -617,18 +615,18 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         pico.getComponentInstanceOfType(WebServerConfig.class);
         assertTrue(StaticWriterComponentMonitor.WRITER.toString().length() > 0);
     }
-    
+
     private PicoContainer buildContainer(Reader script) {
         return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
     }
 
     static public class StaticWriterComponentMonitor extends WriterComponentMonitor {
         static Writer WRITER = new StringWriter();
-        
+
         public StaticWriterComponentMonitor() {
             super(WRITER);
         }
-        
+
     }
 }
- 
+
