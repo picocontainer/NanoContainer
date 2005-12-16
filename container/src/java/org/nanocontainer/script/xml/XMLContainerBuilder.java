@@ -134,7 +134,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         try {
             // create ComponentInstanceFactory for the container
             componentInstanceFactory = createComponentInstanceFactory(rootElement.getAttribute(COMPONENT_INSTANCE_FACTORY));
-            MutablePicoContainer childContainer = createMutablePicoContainer(rootElement.getAttribute(COMPONENT_ADAPTER_FACTORY), 
+            MutablePicoContainer childContainer = createMutablePicoContainer(rootElement.getAttribute(COMPONENT_ADAPTER_FACTORY),
                     rootElement.getAttribute(COMPONENT_MONITOR), parentContainer);
             populateContainer(childContainer);
             return childContainer;
@@ -349,7 +349,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
             factoryClass = DEFAULT_COMPONENT_INSTANCE_FACTORY;
         }
 
-        NanoContainer adapter = new DefaultNanoContainer();
+        NanoContainer adapter = new DefaultNanoContainer(getClassLoader());
         adapter.registerComponentImplementation(XMLComponentInstanceFactory.class.getName(), factoryClass);
         return (XMLComponentInstanceFactory) adapter.getPico().getComponentInstances().get(0);
     }
@@ -359,20 +359,20 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         if (notSet(factoryName)) {
             factoryName = DEFAULT_COMPONENT_ADAPTER_FACTORY;
         }
-        String key = element.getAttribute(KEY);
-        if (notSet(key)) {
-            throw new NanoContainerMarkupException("'" + KEY + "' attribute not specified for " + element.getNodeName());
-        }
         String className = element.getAttribute(CLASS);
         if (notSet(className)) {
             throw new NanoContainerMarkupException("'" + CLASS + "' attribute not specified for " + element.getNodeName());
         }
         Class implementationClass = getClassLoader().loadClass(className);
+        Object key = element.getAttribute(KEY);
+        if (notSet(key)) {
+            key = implementationClass;
+        }
         Parameter[] parameters = createChildParameters(container, element);
         ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(factoryName);
         container.getPico().registerComponent(componentAdapterFactory.createComponentAdapter(key, implementationClass, parameters));
     }
-    
+
     private ComponentAdapterFactory createComponentAdapterFactory(String factoryName) throws ClassNotFoundException, PicoCompositionException {
         if (notSet(factoryName)) {
             factoryName = DEFAULT_COMPONENT_ADAPTER_FACTORY;
@@ -399,7 +399,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         } catch (IllegalAccessException e) {
             throw new NanoContainerMarkupException(e);
         }
-    }    
+    }
     private boolean notSet(Object string) {
         return string == null || string.equals(EMPTY);
     }
