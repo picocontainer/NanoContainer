@@ -30,6 +30,7 @@ import org.nanocontainer.testmodel.WebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfigComp;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.PicoContainer;
+import org.picocontainer.PicoException;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.monitors.WriterComponentMonitor;
@@ -71,6 +72,24 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
                 "  <component-implementation key='org.nanocontainer.testmodel.WebServer' class='org.nanocontainer.testmodel.WebServerImpl'>" +
                 " 		<parameter key='org.nanocontainer.testmodel.WebServerConfig'/>" +
                 " 		<parameter key='aBuffer'/>" +
+                "  </component-implementation>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(script);
+        assertEquals(3, pico.getComponentInstances().size());
+        assertNotNull(pico.getComponentInstance("aBuffer"));
+        assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServerConfig"));
+        assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServer"));
+    }
+
+    public void testCreateSimpleContainerWithExplicitKeysAndImplicitParameter() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+        Reader script = new StringReader("" +
+                "<container>" +
+                "  <component-implementation key='aBuffer' class='java.lang.StringBuffer'/>" +
+                "  <component-implementation key='org.nanocontainer.testmodel.WebServerConfig' class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
+                "  <component-implementation key='org.nanocontainer.testmodel.WebServer' class='org.nanocontainer.testmodel.WebServerImpl'>" +
+                "       <parameter/>" +
+                "       <parameter key='aBuffer'/>" +
                 "  </component-implementation>" +
                 "</container>");
 
@@ -233,7 +252,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
             buildContainer(script);
             fail();
         } catch (NanoContainerMarkupException expected) {
-            assertEquals("Class not found:org.nanocontainer.SomeInexistantFactory", expected.getMessage());
+            assertTrue("Message of exception does not contain missing class", expected.getMessage().indexOf("org.nanocontainer.SomeInexistantFactory") > 0);
         }
     }
 
@@ -616,6 +635,53 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertTrue(StaticWriterComponentMonitor.WRITER.toString().length() > 0);
     }
 
+    public void testComponentCanUsePredefinedCAF() {
+        Reader script = new StringReader("" +
+                "<container>" +
+                "  <component-adapter-factory class='org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory' key='factory'/>" +
+                "  <component-adapter class='org.nanocontainer.testmodel.DefaultWebServerConfig' factory='factory'/>" +
+                "</container>");
+        PicoContainer pico = buildContainer(script);
+        WebServerConfig cfg1 = (WebServerConfig)pico.getComponentInstanceOfType(WebServerConfig.class);
+        WebServerConfig cfg2 = (WebServerConfig)pico.getComponentInstanceOfType(WebServerConfig.class);
+        assertNotSame("Instances for components registered with a CICA must not be the same", cfg1, cfg2);
+    }
+
+    public void testComponentCanUsePredefinedNestedCAF() {
+        Reader script = new StringReader("" +
+                "<container>" +
+                "  <component-adapter-factory class='org.picocontainer.defaults.ImplementationHidingComponentAdapterFactory' key='factory'>" +
+                "    <component-adapter-factory class='org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory'/>" +
+                "  </component-adapter-factory>" +
+                "  <component-adapter class-name-key='org.nanocontainer.testmodel.WebServerConfig' class='org.nanocontainer.testmodel.DefaultWebServerConfig' factory='factory'/>" +
+                "</container>");
+        PicoContainer pico = buildContainer(script);
+        WebServerConfig cfg1 = (WebServerConfig)pico.getComponentInstanceOfType(WebServerConfig.class);
+        WebServerConfig cfg2 = (WebServerConfig)pico.getComponentInstanceOfType(WebServerConfig.class);
+        assertNotSame("Instances for components registered with a CICA must not be the same", cfg1, cfg2);
+        assertFalse("Instance exposes only interface", cfg1 instanceof DefaultWebServerConfig);
+    }
+
+    public void testComponentCanUsePredefinedCAFWithParameters() {
+        Reader script = new StringReader("" +
+                "<container>" +
+                "  <component-adapter-factory class='org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory' key='factory'>" +
+                "    <parameter><boolean>true</boolean></parameter>" +
+                "  </component-adapter-factory>" +
+                "  <component-adapter key='pc1' class='org.nanocontainer.script.xml.XMLContainerBuilderTestCase$PrivateComponent' factory='org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory'/>" +
+                "  <component-adapter key='pc2' class='org.nanocontainer.script.xml.XMLContainerBuilderTestCase$PrivateComponent' factory='factory'/>" +
+                "</container>");
+        PicoContainer pico = buildContainer(script);
+        PrivateComponent pc2 = (PrivateComponent)pico.getComponentInstance("pc2");
+        assertNotNull(pc2);
+        try {
+            pico.getComponentInstance("pc1");
+            fail("Thrown " + PicoException.class.getName() + " expected");
+        } catch (final PicoException e) {
+            assertTrue(e.getMessage().indexOf(PrivateComponent.class.getName())>0);
+        }
+    }
+
     private PicoContainer buildContainer(Reader script) {
         return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
     }
@@ -627,6 +693,9 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
             super(WRITER);
         }
 
+    }
+
+    static private class PrivateComponent {
     }
 }
 
