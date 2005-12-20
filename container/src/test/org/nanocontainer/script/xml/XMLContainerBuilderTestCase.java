@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,7 +50,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
     //TODO some tests for XMLContainerBuilder that use a classloader that is retrieved at testtime.
     // i.e. not a programatic consequence of this.getClass().getClassLoader()
 
-    public void testCreateSimpleContainer() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testCreateSimpleContainer() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation class='java.lang.StringBuffer'/>" +
@@ -64,7 +65,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServer"));
     }
 
-    public void testCreateSimpleContainerWithExplicitKeysAndParameters() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testCreateSimpleContainerWithExplicitKeysAndParameters() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation key='aBuffer' class='java.lang.StringBuffer'/>" +
@@ -82,7 +83,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServer"));
     }
 
-    public void testCreateSimpleContainerWithExplicitKeysAndImplicitParameter() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testCreateSimpleContainerWithExplicitKeysAndImplicitParameter() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation key='aBuffer' class='java.lang.StringBuffer'/>" +
@@ -100,7 +101,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServer"));
     }
 
-    public void testNonParameterElementsAreIgnoredInComponentImplementation() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testNonParameterElementsAreIgnoredInComponentImplementation() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation key='aBuffer' class='java.lang.StringBuffer'/>" +
@@ -119,7 +120,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertNotNull(pico.getComponentInstance("org.nanocontainer.testmodel.WebServer"));
     }
 
-    public void testContainerCanHostAChild() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testContainerCanHostAChild() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
@@ -136,7 +137,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertTrue(sb.toString().indexOf("-WebServerImpl") != -1);
     }
 
-    public void testClassLoaderHierarchy() throws ParserConfigurationException, ClassNotFoundException, SAXException, IOException, PicoCompositionException {
+    public void testClassLoaderHierarchy() throws IOException {
         String testcompJarFileName = System.getProperty("testcomp.jar");
 
         assertNotNull("The testcomp.jar system property should point to nanocontainer/src/test-comp/TestComp.jar", testcompJarFileName);
@@ -176,7 +177,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertTrue("Container should NOT have instantiated a 'NotStartable' component because it is NOT Startable", sb.toString().indexOf("-NotStartable") == -1);
     }
 
-    public void testUnknownclassThrowsNanoContainerMarkupException() throws SAXException, ParserConfigurationException, IOException {
+    public void testUnknownclassThrowsNanoContainerMarkupException() {
         try {
             Reader script = new StringReader("" +
                     "<container>" +
@@ -217,7 +218,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         }
     }
 
-    public void testEmptyScriptDoesNotThrowsEmptyCompositionException() throws Exception, SAXException, ParserConfigurationException, IOException {
+    public void testEmptyScriptDoesNotThrowsEmptyCompositionException() {
         Reader script = new StringReader("<container/>");
         buildContainer(script);
     }
@@ -271,7 +272,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         }
     }
 
-    public void testComponentInstanceWithFactoryCanBeUsed() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testComponentInstanceWithFactoryCanBeUsed() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance factory='org.nanocontainer.script.xml.XMLContainerBuilderTestCase$TestFactory'>" +
@@ -286,7 +287,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("Hello", instance.toString());
     }
 
-    public void testComponentInstanceWithDefaultFactory() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testComponentInstanceWithDefaultFactory() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance>" +
@@ -305,7 +306,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("hello", ((TestBean) instance).getBar());
     }
 
-    public void testComponentInstanceWithBeanFactory() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testComponentInstanceWithBeanFactory() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance factory='org.nanocontainer.script.xml.BeanComponentInstanceFactory'>" +
@@ -324,7 +325,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("hello", ((TestBean) instance).getBar());
     }
 
-    public void testComponentInstanceWithBeanFactoryAndInstanceThatIsDefinedInContainer() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testComponentInstanceWithBeanFactoryAndInstanceThatIsDefinedInContainer() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance key='date' factory='org.nanocontainer.script.xml.BeanComponentInstanceFactory'>" +
@@ -349,7 +350,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals(new Date(0), format.get2DigitYearStart());
     }
 
-    public void testComponentInstanceWithKey() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testComponentInstanceWithKey() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance key='aString'>" +
@@ -376,7 +377,23 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals(0.88, button.getAlignmentX(), 0.01);
     }
 
-    public void testComponentInstanceWithFactoryAndKey() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testComponentInstanceWithClassKey() {
+        Reader script = new StringReader("" +
+                "<container>" +
+                "  <component-instance class-name-key='java.util.Map' factory='org.nanocontainer.script.xml.XStreamComponentInstanceFactory'>" +
+                "    <properties>" +
+                "      <property name='foo' value='bar'/>" +
+                "    </properties>" +
+                "  </component-instance>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(script);
+        Map map = (Map)pico.getComponentInstance(Map.class);
+        assertNotNull(map);
+        assertEquals("bar", map.get("foo"));
+    }
+
+    public void testComponentInstanceWithFactoryAndKey() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance factory='org.nanocontainer.script.xml.XMLContainerBuilderTestCase$TestFactory'" +
@@ -392,7 +409,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("Hello", instance.toString());
     }
 
-    public void testComponentInstanceWithContainerFactoryAndKey() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, PicoCompositionException {
+    public void testComponentInstanceWithContainerFactoryAndKey() {
         Reader script = new StringReader("" +
                 "<container component-instance-factory='org.nanocontainer.script.xml.XMLContainerBuilderTestCase$ContainerTestFactory'>" +
                 "  <component-instance factory='org.nanocontainer.script.xml.XMLContainerBuilderTestCase$TestFactory'" +
@@ -416,18 +433,18 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
     }
 
     public static class TestFactory implements XMLComponentInstanceFactory {
-        public Object makeInstance(PicoContainer pico, Element elem, ClassLoader classLoader) throws ClassNotFoundException {
+        public Object makeInstance(PicoContainer pico, Element elem, ClassLoader classLoader) {
             return "Hello";
         }
     }
 
     public static class ContainerTestFactory implements XMLComponentInstanceFactory {
-        public Object makeInstance(PicoContainer pico, Element elem, ClassLoader classLoader) throws ClassNotFoundException {
+        public Object makeInstance(PicoContainer pico, Element elem, ClassLoader classLoader) {
             return "ContainerHello";
         }
     }
 
-    public void testInstantiationOfComponentsWithParams() throws IOException, SAXException, ClassNotFoundException, ParserConfigurationException {
+    public void testInstantiationOfComponentsWithParams() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.WebServerConfigComp'>" +
@@ -443,7 +460,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals(8080, config.getPort());
     }
 
-    public void testInstantiationOfComponentsWithParameterInstancesOfSameComponent() throws Exception {
+    public void testInstantiationOfComponentsWithParameterInstancesOfSameComponent() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation class='org.nanocontainer.script.xml.TestBeanComposer'>" +
@@ -468,7 +485,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("bean2", "hello2", composer.getBean2().getBar());
     }
 
-    public void testInstantiationOfComponentsWithParameterInstancesOfSameComponentAndBeanFactory() throws Exception {
+    public void testInstantiationOfComponentsWithParameterInstancesOfSameComponentAndBeanFactory() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-implementation class='org.nanocontainer.script.xml.TestBeanComposer'>" +
@@ -493,7 +510,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("bean2", "hello2", composer.getBean2().getBar());
     }
 
-    public void testInstantiationOfComponentsWithParameterKeys() throws Exception {
+    public void testInstantiationOfComponentsWithParameterKeys() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance key='bean1'>" +
@@ -520,7 +537,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("bean2", "hello2", composer.getBean2().getBar());
     }
 
-    public void testInstantiationOfComponentsWithComponentAdapter() throws Exception {
+    public void testInstantiationOfComponentsWithComponentAdapter() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance key='bean1'>" +
@@ -547,7 +564,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertEquals("bean2", "hello2", composer.getBean2().getBar());
     }
 
-    public void testComponentAdapterWithSpecifiedFactory() throws Exception {
+    public void testComponentAdapterWithSpecifiedFactory() {
         Reader script = new StringReader("" +
                 "<container>" +
                 "  <component-instance key='bean1'>" +
@@ -599,7 +616,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
     }
 
     // This is of little value given that nested adapters can't be specified in XML.
-    public void testComponentAdapterClassCanBeSpecifiedInContainerElement() throws IOException, ParserConfigurationException, SAXException {
+    public void testComponentAdapterClassCanBeSpecifiedInContainerElement() {
         Reader script = new StringReader("" +
                 "<container component-adapter-factory='" + ConstructorInjectionComponentAdapterFactory.class.getName() + "'>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
@@ -612,7 +629,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertNotSame(wsc1, wsc2);
     }
 
-    public void testComponentMonitorCanBeSpecified() throws IOException, ParserConfigurationException, SAXException {
+    public void testComponentMonitorCanBeSpecified() {
         Reader script = new StringReader("" +
                 "<container component-monitor='" + StaticWriterComponentMonitor.class.getName() + "'>" +
                 "  <component-implementation class='org.nanocontainer.testmodel.DefaultWebServerConfig'/>" +
@@ -623,7 +640,7 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertTrue(StaticWriterComponentMonitor.WRITER.toString().length() > 0);
     }
 
-    public void testComponentMonitorCanBeSpecifiedIfCAFIsSpecified() throws IOException, ParserConfigurationException, SAXException {
+    public void testComponentMonitorCanBeSpecifiedIfCAFIsSpecified() {
         Reader script = new StringReader("" +
                 "<container component-adapter-factory='" +DefaultComponentAdapterFactory.class.getName() +
                 "' component-monitor='" + StaticWriterComponentMonitor.class.getName() + "'>" +

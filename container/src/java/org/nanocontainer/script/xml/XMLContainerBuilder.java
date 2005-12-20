@@ -347,7 +347,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         String classKey = element.getAttribute(CLASS_NAME_KEY);
         if (notSet(key)) {
             if (!notSet(classKey)) {
-                container.getPico().registerComponentInstance(new ClassNameKey(key), instance);
+                container.getPico().registerComponentInstance(getClassLoader().loadClass(classKey), instance);
             } else {
                 container.getPico().registerComponentInstance(instance);
             }
