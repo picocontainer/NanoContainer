@@ -335,19 +335,14 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         } else if (getFirstChildElement(element, false) == null) {
             parameter = new ComponentParameter();
         } else {
-            XMLComponentInstanceFactory factory = createComponentInstanceFactory(element.getAttribute(FACTORY));
-            Element instanceElement = getFirstChildElement(element, true);
-            Object instance = factory.makeInstance(pico, instanceElement, getClassLoader());
+            Object instance = createInstance(pico, element);
             parameter = new ConstantParameter(instance);
         }
         return parameter;
     }
 
     private void registerComponentInstance(NanoContainer container, Element element) throws ClassNotFoundException, PicoCompositionException, MalformedURLException {
-        XMLComponentInstanceFactory factory = createComponentInstanceFactory(element.getAttribute(FACTORY));
-        Element componentElement = getFirstChildElement(element, true);
-        Object instance = factory.makeInstance(container.getPico(), componentElement, getClassLoader());
-
+        Object instance = createInstance(container.getPico(), element);
         String key = element.getAttribute(KEY);
         String classKey = element.getAttribute(CLASS_NAME_KEY);
         if (notSet(key)) {
@@ -359,6 +354,12 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         } else {
             container.getPico().registerComponentInstance(key, instance);
         }
+    }
+
+    private Object createInstance(PicoContainer pico, Element element) throws ClassNotFoundException, MalformedURLException {
+        XMLComponentInstanceFactory factory = createComponentInstanceFactory(element.getAttribute(FACTORY));
+        Element instanceElement = getFirstChildElement(element, true);
+        return factory.makeInstance(pico, instanceElement, getClassLoader());
     }
 
     private Element getFirstChildElement(Element parent, boolean fail) {
