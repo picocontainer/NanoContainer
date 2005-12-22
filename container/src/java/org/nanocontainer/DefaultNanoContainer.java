@@ -11,11 +11,8 @@
 package org.nanocontainer;
 
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.AccessController;
-import java.security.CodeSource;
 import java.security.PermissionCollection;
-import java.security.Permissions;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,11 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.nanocontainer.script.NanoContainerMarkupException;
-import org.picocontainer.ComponentAdapter;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.Parameter;
-import org.picocontainer.PicoIntrospectionException;
-import org.picocontainer.PicoRegistrationException;
+import org.picocontainer.*;
 import org.picocontainer.defaults.BeanPropertyComponentAdapter;
 import org.picocontainer.defaults.ConstantParameter;
 import org.picocontainer.defaults.DefaultPicoContainer;
@@ -155,11 +148,10 @@ public class DefaultNanoContainer implements NanoContainer {
 
     public ClassLoader getComponentClassLoader() {
         if (componentClassLoader == null) {
-            //final URL[] urlz = (URL[]) urls.toArray(new URL[urls.size()]);
             componentClassLoaderLocked = true;
             componentClassLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
-                    return new URLPrintingClassLoader(classPathElements, parentClassLoader);
+                    return new CustomPermissionsURLClassLoader(getURLz(classPathElements), makePermissions(), parentClassLoader);
                 }
             });
         }
@@ -170,90 +162,28 @@ public class DefaultNanoContainer implements NanoContainer {
         return picoContainer;
     }
 
-    public static class URLPrintingClassLoader extends URLClassLoader {
-        private final List classPathElements;
-        private Map permissionsMap;
-
-        public URLPrintingClassLoader(List classPathElements, ClassLoader parent) {
-            super(getURLs(classPathElements), parent);
-            this.classPathElements = classPathElements;
+    private Map makePermissions() {
+        Map permissionsMap = new HashMap();
+        for (int i = 0; i < classPathElements.size(); i++) {
+            ClassPathElement cpe = (ClassPathElement) classPathElements.get(i);
+            PermissionCollection permissionCollection = cpe.getPermissionCollection();
+            permissionsMap.put(cpe.getUrl(), permissionCollection);
         }
+        return permissionsMap;
+    }
 
-        private static URL[] getURLs(List classPathElemelements) {
-            final URL[] urlz = new URL[classPathElemelements.size()];
-            for(int i = 0; i < urlz.length; i++) {
-                urlz[i] = ((ClassPathElement) classPathElemelements.get(i)).getUrl();
-            }
-            return urlz;
+    private URL[] getURLz(List classPathElemelements) {
+        final URL[] urlz = new URL[classPathElemelements.size()];
+        for(int i = 0; i < urlz.length; i++) {
+            urlz[i] = ((ClassPathElement) classPathElemelements.get(i)).getUrl();
         }
-
-        public Class loadClass(String name) throws ClassNotFoundException {
-            try {
-                return super.loadClass(name);
-            } catch (ClassNotFoundException e) {
-                throw decorateException(name, e);
-            }
-        }
-
-        protected Class findClass(String name) throws ClassNotFoundException {
-            try {
-                return super.findClass(name);
-            } catch (ClassNotFoundException e) {
-                throw decorateException(name, e);
-            }
-        }
-
-        private ClassNotFoundException decorateException(String name, ClassNotFoundException e) {
-            if (name.startsWith("class ")) {
-                return new ClassNotFoundException("Class '" + name + "' is not a classInstance.getName(). " +
-                        "It's a classInstance.toString(). The clue is that it starts with 'class ', no classname contains a space.");
-            }
-            ClassLoader classLoader = this;
-            StringBuffer sb = new StringBuffer("'").append(name).append("' classloader stack [");
-            while(classLoader != null) {
-                sb.append(classLoader.toString()).append("\n");
-                final ClassLoader cl = classLoader;
-                classLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run() {
-                        return cl.getParent();
-                    }
-                });
-
-            }
-            return new ClassNotFoundException(sb.append("]").toString() , e);
-        }
-
-        public String toString() {
-            String result = super.toString();
-            URL[] urls = getURLs();
-            for (int i = 0; i < urls.length; i++) {
-                URL url = urls[i];
-                result += "\n\t" + url.toString();
-            }
-
-            return result;
-        }
-
-        protected PermissionCollection getPermissions(CodeSource codeSource) {
-            if (permissionsMap == null ) {
-                permissionsMap = new HashMap();
-                for (int i = 0; i < classPathElements.size(); i++) {
-                    ClassPathElement cpe =  (ClassPathElement) classPathElements.get(i);
-                    PermissionCollection permissionCollection = cpe.getPermissionCollection();
-                    permissionsMap.put(cpe.getUrl(),permissionCollection);
-                }
-            }
-            Permissions perms = (Permissions) permissionsMap.get(codeSource.getLocation());
-            return (PermissionCollection) perms;
-            //return super.getPermissions(codeSource);
-        }
+        return urlz;
     }
 
     public Object getComponentInstanceOfType(String componentType) {
         try {
             Class compType = getComponentClassLoader().loadClass(componentType);
-            Object componentInstance = picoContainer.getComponentInstanceOfType(compType);
-            return componentInstance;
+            return picoContainer.getComponentInstanceOfType(compType);
         } catch (ClassNotFoundException e) {
             throw new NanoContainerMarkupException("Can't resolve class as type '" + componentType + "'");
         }

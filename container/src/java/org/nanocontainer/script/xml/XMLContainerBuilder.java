@@ -154,7 +154,12 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
 
     public void populateContainer(MutablePicoContainer container) {
         try {
-            NanoContainer nanoContainer = new DefaultNanoContainer(getClassLoader(), container);
+            String parentClass = rootElement.getAttribute("parentclassloader");
+            ClassLoader classLoader = getClassLoader();
+            if (parentClass != null && !EMPTY.equals(parentClass)) {
+                classLoader = classLoader.loadClass(parentClass).getClassLoader();
+            } 
+            NanoContainer nanoContainer = new DefaultNanoContainer(classLoader, container);
             registerComponentsAndChildContainers(nanoContainer, rootElement, new DefaultNanoContainer(getClassLoader()));
         } catch (ClassNotFoundException e) {
             throw new NanoContainerMarkupException("Class not found: " + e.getMessage(), e);
@@ -237,7 +242,12 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     }
 
     private void registerClassLoader(NanoContainer parentContainer, Element childElement, NanoContainer metaContainer) throws IOException, SAXException, ClassNotFoundException {
-        NanoContainer nano = new DefaultNanoContainer(parentContainer.getComponentClassLoader(), parentContainer.getPico());
+        String parentClass = childElement.getAttribute("parentclassloader");
+        ClassLoader parentClassLoader = parentContainer.getComponentClassLoader();
+        if (parentClass != null && !EMPTY.equals(parentClass)) {
+            parentClassLoader = parentClassLoader.loadClass(parentClass).getClassLoader();
+        }
+        NanoContainer nano = new DefaultNanoContainer(parentClassLoader, parentContainer.getPico());
         registerComponentsAndChildContainers(nano, childElement, metaContainer);
     }
 
