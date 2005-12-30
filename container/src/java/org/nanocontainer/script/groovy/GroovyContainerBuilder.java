@@ -42,21 +42,21 @@ import org.picocontainer.alternatives.EmptyPicoContainer;
  * @version $Revision$
  */
 public class GroovyContainerBuilder extends ScriptedContainerBuilder {
-    private Script groovyScript;
+    private Class scriptClass;
 
     public GroovyContainerBuilder(final Reader script, ClassLoader classLoader) {
         super(script, classLoader);
+        createGroovyClass();
     }
 
     public GroovyContainerBuilder(final URL script, ClassLoader classLoader) {
         super(script, classLoader);
+        createGroovyClass();
     }
 
     // TODO: This should really return NanoContainer using a nano variable in the script. --Aslak
     protected PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope) {
-        if (groovyScript == null) {
-            createGroovyScript();
-        }
+
         Binding binding = new Binding();
         if ( parentContainer == null ){
             // NANOWAR-24: parent should not be null as groovy (as of JSR-04) cannot distinguish between
@@ -66,24 +66,8 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
         binding.setVariable("parent", parentContainer);
         binding.setVariable("builder", createGroovyNodeBuilder());
         binding.setVariable("assemblyScope", assemblyScope);
-                handleBinding(binding);
-        groovyScript.setBinding(binding);
-
-        // both returning something or defining the variable is ok.
-        Object result = groovyScript.run();
-        Object picoVariable;
-        try {
-            picoVariable = binding.getVariable("pico");
-        } catch (MissingPropertyException e) {
-            picoVariable = result;
-        }
-        if (picoVariable instanceof PicoContainer) {
-            return (PicoContainer) picoVariable;
-        } else if (picoVariable instanceof NanoContainer) {
-            return ((NanoContainer) picoVariable).getPico();
-        } else {
-            throw new NanoContainerMarkupException("Bad type for pico:" + picoVariable.getClass().getName());
-        }
+        handleBinding(binding);
+        return runGroovyScript(binding);
     }
 
     /**
@@ -103,18 +87,56 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
         // does nothing but adds flexibility for children
     }
 
-    private void createGroovyScript() {
+
+    /**
+     * Parses the groovy script into a class.  We store the Class instead
+     * of the script proper so that it doesn't invoke race conditions on
+     * multiple executions of the script.
+     */
+    private void createGroovyClass() {
         try {
             GroovyClassLoader loader = new GroovyClassLoader(getClassLoader());
             InputStream scriptIs = getScriptInputStream();
             GroovyCodeSource groovyCodeSource = new GroovyCodeSource(scriptIs,"nanocontainer.groovy","groovyGeneratedForNanoContainer");
-            Class scriptClass = loader.parseClass(groovyCodeSource);
-            groovyScript = InvokerHelper.createScript(scriptClass, null);
+            scriptClass = loader.parseClass(groovyCodeSource);
         } catch (CompilationFailedException e) {
             throw new GroovyCompilationException("Compilation Failed '" + e.getMessage() + "'", e);
         } catch (IOException e) {
             throw new NanoContainerMarkupException(e);
         }
 
+    }
+
+    /**
+     * Executes the groovy script with the given binding.
+     * @param binding Binding
+     * @return PicoContainer
+     */
+    private PicoContainer runGroovyScript(Binding binding){
+        Script script = createGroovyScript(binding);
+
+        Object result = script.run();
+        Object picoVariable;
+        try {
+            picoVariable = binding.getVariable("pico");
+        } catch (MissingPropertyException e) {
+            picoVariable = result;
+        }
+        if (picoVariable == null) {
+            throw new NullPointerException("Groovy Script Variable: pico");
+        }
+
+        if (picoVariable instanceof PicoContainer) {
+            return (PicoContainer) picoVariable;
+        } else if (picoVariable instanceof NanoContainer) {
+            return ((NanoContainer) picoVariable).getPico();
+        } else {
+            throw new NanoContainerMarkupException("Bad type for pico:" + picoVariable.getClass().getName());
+        }
+
+    }
+
+    private Script createGroovyScript(Binding binding) {
+        return  InvokerHelper.createScript(scriptClass, binding);
     }
 }
