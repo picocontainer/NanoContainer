@@ -9,7 +9,12 @@
  *****************************************************************************/
 package org.nanocontainer.script.groovy;
 
-import groovy.lang.*;
+import groovy.lang.Binding;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyCodeSource;
+import groovy.lang.GroovyObject;
+import groovy.lang.MissingPropertyException;
+import groovy.lang.Script;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +27,7 @@ import org.nanocontainer.NanoContainer;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.ScriptedContainerBuilder;
 import org.picocontainer.PicoContainer;
+import org.picocontainer.alternatives.EmptyPicoContainer;
 
 /**
  * {@inheritDoc}
@@ -52,6 +58,11 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
             createGroovyScript();
         }
         Binding binding = new Binding();
+        if ( parentContainer == null ){
+            // NANOWAR-24: parent should not be null as groovy (as of JSR-04) cannot distinguish between
+            // different types of null
+            parentContainer = new EmptyPicoContainer();
+        }
         binding.setVariable("parent", parentContainer);
         binding.setVariable("builder", createGroovyNodeBuilder());
         binding.setVariable("assemblyScope", assemblyScope);

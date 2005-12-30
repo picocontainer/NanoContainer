@@ -86,6 +86,19 @@ public class GroovyContainerBuilderTestCase extends AbstractScriptedContainerBui
         assertNotNull(pico.getComponentInstance("foo"));
     }
 
+    public void testBuildingWithPicoSyntaxAndNullParent() {
+        Reader script = new StringReader("" +
+                "pico = new org.picocontainer.defaults.DefaultPicoContainer(parent)\n" +
+                "pico.registerComponentImplementation(org.nanocontainer.script.groovy.A)\n" +
+                "");
+
+        PicoContainer parent = null;
+        PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, getClass().getClassLoader()), parent, "SOME_SCOPE");
+
+        assertNotSame(parent, pico.getParent());
+        assertNotNull(pico.getComponentInstance(A.class));
+    }
+    
     /**
 	 * Child SubclassGroovyContainerBuilder which adds additional bindings
 	 */
