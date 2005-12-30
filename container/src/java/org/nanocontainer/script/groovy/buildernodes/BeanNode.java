@@ -48,8 +48,8 @@ public class BeanNode extends AbstractCustomBuilderNode {
         super(NODE_NAME);
     }
 
-    public Object createNewNode(NanoContainer parentContainer, Map attributes) throws ClassNotFoundException {
-        MutablePicoContainer pico = parentContainer.getPico();
+    public Object createNewNode(Object current, Map attributes) {
+        MutablePicoContainer pico = ((NanoContainer) current).getPico();
         Object bean = createBean(attributes);
         pico.registerComponentInstance(bean);
         return bean;

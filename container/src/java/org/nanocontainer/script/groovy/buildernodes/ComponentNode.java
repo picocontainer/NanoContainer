@@ -79,7 +79,7 @@ public class ComponentNode extends AbstractCustomBuilderNode {
 
     /**
      * Execute the handler for the given node builder.
-     *
+     * TODO - wrong Javadoc
      * @param name Object the parent object.
      * @param value The Node value. This is almost never used, but it kept
      *   in for consistency with the Groovy Builder API. Normally set to
@@ -89,7 +89,7 @@ public class ComponentNode extends AbstractCustomBuilderNode {
      *   the builder node.
      * @return Object
      */
-    public Object createNewNode(final NanoContainer parentContainer, final Map attributes) throws ClassNotFoundException  {
+    public Object createNewNode(final Object current, final Map attributes) {
         delegate.rememberComponentKey(attributes);
         Object key = attributes.remove(KEY);
         Object cnkey = attributes.remove(CLASS_NAME_KEY);
@@ -97,7 +97,7 @@ public class ComponentNode extends AbstractCustomBuilderNode {
         Object instance = attributes.remove(INSTANCE);
         List parameters = (List) attributes.remove(PARAMETERS);
 
-        MutablePicoContainer pico = parentContainer.getPico();
+        MutablePicoContainer pico = ((NanoContainer) current).getPico();
 
         if (cnkey != null)  {
             key = new ClassNameKey((String)cnkey);
@@ -111,7 +111,11 @@ public class ComponentNode extends AbstractCustomBuilderNode {
         } else if (classValue instanceof String) {
             String className = (String) classValue;
             key = key == null ? className : key;
-            parentContainer.registerComponentImplementation(key, className, parameterArray);
+            try {
+                ((NanoContainer) current).registerComponentImplementation(key, className, parameterArray);
+            } catch (ClassNotFoundException e) {
+                throw new NanoContainerMarkupException("ClassNotFoundException: " + e.getMessage(), e);
+            }
         } else if (instance != null) {
             key = key == null ? instance.getClass() : key;
             pico.registerComponentInstance(key, instance);

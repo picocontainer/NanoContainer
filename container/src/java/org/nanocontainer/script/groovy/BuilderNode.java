@@ -40,14 +40,13 @@ public interface BuilderNode {
 
     /**
      * Execute the handler for the given node builder.
-     * @param parentContainer The parent container object.  May be null
+     * @param current the current object.  May be null
      * for no parent container.
      * @param attributes Map attributes specified in the groovy script
      * for the builder node.
      * in for consistency with the Groovy Builder API.  Normally set to null.
      * @return Object
      * @throws NanoContainerMarkupException upon Nanocontainer error.
-     * @throws java.lang.ClassNotFoundException upon object instantiation error.
      */
-    Object createNewNode(NanoContainer parentContainer, Map attributes) throws ClassNotFoundException, NanoContainerMarkupException;
+    Object createNewNode(Object current, Map attributes) throws NanoContainerMarkupException;
 }

@@ -56,11 +56,11 @@ public class NewBuilderNode extends AbstractCustomBuilderNode {
         addAttribute(VALIDATE_ATTRIBUTE);
     }
 
-    public Object createNewNode(final NanoContainer parentContainer, final Map attributes) throws ClassNotFoundException {
+    public Object createNewNode(final Object current, final Map attributes) {
         String builderClass = (String) attributes.remove(CLASS_ATTRIBUTE);
 
         NanoContainer factory = new DefaultNanoContainer();
-        MutablePicoContainer parentPico = parentContainer.getPico();
+        MutablePicoContainer parentPico = ((NanoContainer) current).getPico();
         factory.getPico().registerComponentInstance(MutablePicoContainer.class, parentPico);
         try {
             factory.registerComponentImplementation(GroovyObject.class, builderClass);

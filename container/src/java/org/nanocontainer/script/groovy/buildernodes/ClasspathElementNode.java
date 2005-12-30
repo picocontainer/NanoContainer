@@ -46,8 +46,8 @@ public class ClasspathElementNode extends AbstractCustomBuilderNode {
     }
 
 
-    public Object createNewNode(NanoContainer parentContainer, Map attributes) throws ClassNotFoundException {
-        return createClassPathElementNode(attributes, parentContainer);
+    public Object createNewNode(Object current, Map attributes) {
+        return createClassPathElementNode(attributes, (NanoContainer) current);
     }
 
     private ClassPathElement createClassPathElementNode(Map attributes, NanoContainer nanoContainer) {

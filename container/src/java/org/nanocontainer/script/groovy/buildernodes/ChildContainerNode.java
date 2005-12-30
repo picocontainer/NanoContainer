@@ -101,16 +101,15 @@ public class ChildContainerNode extends AbstractCustomBuilderNode {
      * Creates a new container.  There may or may not be a parent to this container.
      * Supported attributes are
      * <p>{@inheritDoc}</p>
-     * @param parentContainer NanoContainer
+     * @param current NanoContainer
      * @param attributes Map
      * @return Object
-     * @throws ClassNotFoundException
      * @throws NanoContainerMarkupException
      */
-    public Object createNewNode(NanoContainer parentContainer, Map attributes) throws ClassNotFoundException,
+    public Object createNewNode(Object current, Map attributes) throws
         NanoContainerMarkupException {
 
-        return createChildContainer(attributes,parentContainer);
+        return createChildContainer(attributes,(NanoContainer) current);
     }
 
     /**

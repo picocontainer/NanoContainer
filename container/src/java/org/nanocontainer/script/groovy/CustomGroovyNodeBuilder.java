@@ -9,7 +9,6 @@
  *****************************************************************************/
 package org.nanocontainer.script.groovy;
 
-import java.security.Permission;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +20,7 @@ import org.nanocontainer.NanoContainer;
 import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.NodeBuilderDecorationDelegate;
 import org.nanocontainer.script.NullNodeBuilderDecorationDelegate;
-import org.nanocontainer.script.groovy.buildernodes.BeanNode;
-import org.nanocontainer.script.groovy.buildernodes.ChildContainerNode;
-import org.nanocontainer.script.groovy.buildernodes.ClasspathElementNode;
-import org.nanocontainer.script.groovy.buildernodes.ComponentNode;
-import org.nanocontainer.script.groovy.buildernodes.DoCallNode;
-import org.nanocontainer.script.groovy.buildernodes.NewBuilderNode;
+import org.nanocontainer.script.groovy.buildernodes.*;
 import org.picocontainer.MutablePicoContainer;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
@@ -121,7 +115,8 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
             .setNode(new ClasspathElementNode())
             .setNode(new DoCallNode())
             .setNode(new NewBuilderNode())
-            .setNode(new ClasspathElementNode());
+            .setNode(new ClassLoaderElementNode())
+            .setNode(new GrantElementNode());
 
     }
 
@@ -181,41 +176,45 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
             return createChildBuilder(current, name, attributes);
         } else if (current == null || current instanceof NanoContainer) {
             NanoContainer parent = extractOrCreateValidNanoContainer(attributes, current);
-            try {
-                //
-                //Previously, there was a if name.equals('container') here.  But
-                //since container is a registered node handler, then fold
-                //the logic here.  -MR
-                //
+            //
+            //Previously, there was a if name.equals('container') here.  But
+            //since container is a registered node handler, then fold
+            //the logic here.  -MR
+            //
 
-                BuilderNode nodeHandler = this.getNode(name.toString());
+            return handleNode(name, attributes, current, parent);
 
-                if (nodeHandler == null) {
-                    // we don't know how to handle it - delegate to the decorator.
-                    return getDecorationDelegate().createNode(name, attributes, current);
-                } else {
-                    //We found a handler.
-
-                    if (performAttributeValidation) {
-                        //Validate
-                        nodeHandler.validateScriptedAttributes(attributes);
-                    }
-
-                    //Execute.
-                    return nodeHandler.createNewNode(parent, attributes);
-                }
-
-            } catch (ClassNotFoundException e) {
-                throw new NanoContainerMarkupException("ClassNotFoundException: " + e.getMessage(), e);
-            }
         } else if (current instanceof ClassPathElement) {
-            if (name.equals(GRANT)) {
-                return createGrantPermission(attributes, (ClassPathElement) current);
-            }
-            return EMPTY;
+            return handleNode(name, attributes, current, current);
         } else {
             // we don't know how to handle it - delegate to the decorator.
             return getDecorationDelegate().createNode(name, attributes, current);
+        }
+    }
+
+    private Object handleNode(Object name, Map attributes, Object current, Object parent) {
+
+        BuilderNode nodeHandler = this.getNode(name.toString());
+
+        if (nodeHandler == null) {
+            // we don't know how to handle it - delegate to the decorator.
+            return getDecorationDelegate().createNode(name, attributes, current);
+        } else {
+            //We found a handler.
+
+            if (performAttributeValidation) {
+                //Validate
+                nodeHandler.validateScriptedAttributes(attributes);
+            }
+
+            //Execute.
+            if (name.equals("grant")) {
+                current = parent;
+            }
+            if (current == null) {
+                current = parent;
+            }
+            return nodeHandler.createNewNode(current, attributes);
         }
     }
 
@@ -228,7 +227,7 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
      * @throws NanoContainerMarkupException
      */
     private NanoContainer extractOrCreateValidNanoContainer(final Map attributes,
-        final Object current) throws NanoContainerMarkupException {
+                                                            final Object current) throws NanoContainerMarkupException {
         NanoContainer parent = (NanoContainer) current;
         Object parentAttribute = attributes.get(PARENT);
         if (parent != null && parentAttribute != null) {
@@ -249,12 +248,6 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
     private Object createChildBuilder(Object current, Object name, Map attributes) {
         GroovyObject groovyObject = (GroovyObject) current;
         return groovyObject.invokeMethod(name.toString(), attributes);
-    }
-
-    private Object createGrantPermission(Map attributes, ClassPathElement cpe) {
-        Permission perm = (Permission) attributes.remove(CLASS);
-        return cpe.grantPermission(perm);
-
     }
 
     /**

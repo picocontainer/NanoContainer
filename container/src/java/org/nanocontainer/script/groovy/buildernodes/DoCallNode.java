@@ -31,7 +31,7 @@ public class DoCallNode extends AbstractCustomBuilderNode {
         super(NODE_NAME);
     }
 
-    public Object createNewNode(final NanoContainer parentContainer, final Map attributes) throws ClassNotFoundException {
+    public Object createNewNode(final Object current, final Map attributes) {
         // TODO does this node need to be handled?
         return null;
     }

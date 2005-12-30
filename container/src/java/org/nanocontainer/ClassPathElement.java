@@ -31,6 +31,9 @@ public class ClassPathElement implements Serializable {
     }
 
     public Permission grantPermission(Permission permission) {
+        if (permission == null) {
+            throw new NullPointerException();
+        }
         permissions.add(permission);
         return permission;
     }
