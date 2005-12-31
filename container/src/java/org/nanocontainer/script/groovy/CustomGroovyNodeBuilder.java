@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.codehaus.groovy.runtime.InvokerHelper;
-import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.script.NanoContainerMarkupException;
@@ -170,17 +169,17 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
             GroovyObject groovyObject = (GroovyObject) current;
             return groovyObject.invokeMethod(name.toString(), attributes);
         } else if (current == null) {
-            NanoContainer parent = extractOrCreateValidNanoContainer(attributes);
-            return handleNode(name, attributes, current, parent);
+            current = extractOrCreateValidRootNanoContainer(attributes);
         } else {
             if (attributes.containsKey(PARENT)) {
                 throw new NanoContainerMarkupException("You can't explicitly specify a parent in a child element.");
             }
-            return handleNode(name, attributes, current, current);
         }
+        return handleNode(name, attributes, current);
+
     }
 
-    private Object handleNode(Object name, Map attributes, Object current, Object parent) {
+    private Object handleNode(Object name, Map attributes, Object current) {
 
         BuilderNode nodeHandler = this.getNode(name.toString());
 
@@ -195,13 +194,6 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
                 nodeHandler.validateScriptedAttributes(attributes);
             }
 
-            //Execute.
-            if (name.equals("grant")) {
-                current = parent;
-            }
-            if (current == null) {
-                current = parent;
-            }
             return nodeHandler.createNewNode(current, attributes);
         }
     }
@@ -213,7 +205,7 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
      * @return NanoContainer, never null.
      * @throws NanoContainerMarkupException
      */
-    private NanoContainer extractOrCreateValidNanoContainer(final Map attributes) throws NanoContainerMarkupException {
+    private NanoContainer extractOrCreateValidRootNanoContainer(final Map attributes) throws NanoContainerMarkupException {
         Object parentAttribute = attributes.get(PARENT);
         if (parentAttribute instanceof MutablePicoContainer) {
             // we're not in an enclosing scope - look at parent attribute instead
@@ -259,11 +251,9 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
         return this;
     }
 
-
     protected Object createNode(Object name, Map attributes) {
         return createNode(name, attributes, null);
     }
-
 
 
 }
