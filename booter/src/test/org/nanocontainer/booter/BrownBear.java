@@ -86,13 +86,26 @@ public class BrownBear implements Startable {
         subContainer = new DefaultPicoContainer();
         subContainer.registerComponentImplementation(Map.class, HashMap.class);
         subContainer.registerComponentImplementation(PicoContainer.class, DefaultPicoContainer.class);
+        subContainer.getComponentInstance(Map.class);
+        subContainer.getComponentInstance(PicoContainer.class);
+
+        System.out.println("BrownBear: Can instantiate new DefaultPicoContainer (sub-container)");
+
+        try {
+            new BrownBearHelper();
+            System.out.println("BrownBear: Can instantiate new DefaultNanoContainer (sub-container) - wrong, DefaultNanoContainer should not be in the classpath");
+        } catch (NoClassDefFoundError e) {
+            System.out.println("BrownBear: Cannot instantiate new DefaultNanoContainer (sub-container) - correct, DefaultNanoContainer is not in the classpath");
+        } catch (ClassNotFoundException e) {
+            System.out.println("BrownBear: Cannot instantiate new HashMap (error!)");
+        }
 
 
     }
 
     public void start() {
         subContainer.start();
-        System.out.println("BrownBear:  Started Sub-Container? - " + subContainer.getComponentInstanceOfType(PicoContainer.class));
+        System.out.println("BrownBear:  Started sub-container");
     }
 
     public void stop() {
