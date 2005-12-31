@@ -163,8 +163,6 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
      * @param attributes Map  attributes of the current invocation.
      * @param value A closure passed into the node.  Currently unused.
      * @return Object the created object.
-     * @todo Refactor ClassPathElement and grant permissions into custom node
-     * builders as well.
      */
     protected Object createNode(Object name, Map attributes, Object value) {
         Object current = getCurrent();
@@ -227,20 +225,16 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
      */
     private NanoContainer extractOrCreateValidNanoContainer(final Map attributes,
                                                             final Object current) throws NanoContainerMarkupException {
-        NanoContainer parent = (NanoContainer) current;
         Object parentAttribute = attributes.get(PARENT);
-        if (parent != null && parentAttribute != null) {
-            throw new NanoContainerMarkupException("You can't explicitly specify a parent in a child element.");
-        }
-        if (parent == null && (parentAttribute instanceof MutablePicoContainer)) {
+        if (parentAttribute instanceof MutablePicoContainer) {
             // we're not in an enclosing scope - look at parent attribute instead
-            parent = new DefaultNanoContainer((MutablePicoContainer) parentAttribute);
+            return new DefaultNanoContainer((MutablePicoContainer) parentAttribute);
         }
-        if (parent == null && (parentAttribute instanceof NanoContainer)) {
+        if (parentAttribute instanceof NanoContainer) {
             // we're not in an enclosing scope - look at parent attribute instead
-            parent = (NanoContainer) parentAttribute;
+            return (NanoContainer) parentAttribute;
         }
-        return parent;
+        return null;
     }
 
 
