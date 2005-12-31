@@ -61,11 +61,7 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
 
     private static final String CLASS = "class";
 
-    private static final String GRANT = "grant";
-
     private static final String PARENT = "parent";
-
-    private static final String EMPTY = "";
 
 
     /**
@@ -173,8 +169,10 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
     protected Object createNode(Object name, Map attributes, Object value) {
         Object current = getCurrent();
         if (current != null && current instanceof GroovyObject) {
-            return createChildBuilder(current, name, attributes);
-        } else if (current == null || current instanceof NanoContainer) {
+            GroovyObject groovyObject = (GroovyObject) current;
+            return groovyObject.invokeMethod(name.toString(), attributes);
+        } else if (current == null) {
+
             NanoContainer parent = extractOrCreateValidNanoContainer(attributes, current);
             //
             //Previously, there was a if name.equals('container') here.  But
@@ -184,11 +182,12 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
 
             return handleNode(name, attributes, current, parent);
 
-        } else if (current instanceof ClassPathElement) {
-            return handleNode(name, attributes, current, current);
         } else {
-            // we don't know how to handle it - delegate to the decorator.
-            return getDecorationDelegate().createNode(name, attributes, current);
+            if (attributes.containsKey(PARENT)) {
+                throw new NanoContainerMarkupException("You can't explicitly specify a parent in a child element.");
+            }
+
+            return handleNode(name, attributes, current, current);
         }
     }
 
@@ -244,11 +243,6 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
         return parent;
     }
 
-
-    private Object createChildBuilder(Object current, Object name, Map attributes) {
-        GroovyObject groovyObject = (GroovyObject) current;
-        return groovyObject.invokeMethod(name.toString(), attributes);
-    }
 
     /**
      * Retrieve the current decoration delegate.
