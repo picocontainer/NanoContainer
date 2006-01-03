@@ -2,18 +2,18 @@
     xmlns:j="jelly:core">
 
     <goal name="booter:demo" prereqs="jar:jar, booter:test-comps">
-    		<attainGoal name="nanodist:build"/>
+        <attainGoal name="nanodist:build"/>
         <copy todir="${maven.build.dir}/nanodist">
-        		<fileset dir="src/test">
-				<include name="composition.*"/>
-			</fileset>
-         </copy>    		
+            <fileset dir="src/test">
+                <include name="composition.*"/>
+		    </fileset>
+        </copy>
         <copy todir="${maven.build.dir}/nanodist/lib" 
         			file="${maven.build.dir}/${maven.final.name}.jar"/>        
         <mkdir dir="${maven.build.dir}/nanodist/comps"/>
         <copy todir="${maven.build.dir}/nanodist/comps">
-        		<fileset dir="${maven.build.dir}/test-comps/"/>
-         </copy>    		
+            <fileset dir="${maven.build.dir}/test-comps/"/>
+        </copy>
     </goal>
 
     <goal name="booter:test-comps" prereqs="test:compile">    
