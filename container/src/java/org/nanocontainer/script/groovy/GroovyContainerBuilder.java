@@ -59,8 +59,6 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
 
         Binding binding = new Binding();
         if ( parentContainer == null ){
-            // NANOWAR-24: parent should not be null as groovy (as of JSR-04) cannot distinguish between
-            // different types of null
             parentContainer = new EmptyPicoContainer();
         }
         binding.setVariable("parent", parentContainer);
