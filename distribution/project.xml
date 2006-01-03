@@ -39,7 +39,7 @@
         <dependency>
             <groupId>nanocontainer</groupId>
             <artifactId>nanodist-maven-plugin</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
 	    	    <type>plugin</type>
         </dependency>
 
