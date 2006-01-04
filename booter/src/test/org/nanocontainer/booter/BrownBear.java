@@ -8,12 +8,14 @@ import java.net.URLClassLoader;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.security.AccessControlException;
+import java.security.AllPermission;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.Startable;
+import org.picocontainer.CustomPermissionsURLClassLoader;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 public class BrownBear implements Startable {
@@ -103,8 +105,9 @@ public class BrownBear implements Startable {
             System.out.println("BrownBear: Cannot instantiate new HashMap (error!)");
         }
 
+        String qdox = "http://www.ibiblio.org/maven/qdox/jars/qdox-1.5.jar";
         try {
-            URLClassLoader urlClassLoader = new URLClassLoader(new URL[] {new URL("http://www.ibiblio.org/maven/qdox/jars/qdox-1.5.jar")} );
+            URLClassLoader urlClassLoader = new URLClassLoader(new URL[] {new URL(qdox)} );
             Class qdoxClass = urlClassLoader.loadClass("com.thoughtworks.qdox.JavaDocBuilder");
             Object instance = qdoxClass.newInstance();
             System.out.println("BrownBear: Can instantiate new URLClassLoader (incorrect)");
@@ -112,6 +115,17 @@ public class BrownBear implements Startable {
             System.out.println("BrownBear: Cannot instantiate new URLClassLoader (correct)");
         }
 
+        Map permissionsMap = new HashMap();
+        permissionsMap.put(qdox, new AllPermission());
+
+        try {
+            URLClassLoader urlClassLoader = new CustomPermissionsURLClassLoader(new URL[] {new URL(qdox)}, permissionsMap, this.getClass().getClassLoader() );
+            Class qdoxClass = urlClassLoader.loadClass("com.thoughtworks.qdox.JavaDocBuilder");
+            Object instance = qdoxClass.newInstance();
+            System.out.println("BrownBear: Can instantiate new CustomPermissionsURLClassLoader (incorrect)");
+        } catch (AccessControlException e) {
+            System.out.println("BrownBear: Cannot instantiate new CustomPermissionsURLClassLoader (correct)");
+        }
 
     }
 
