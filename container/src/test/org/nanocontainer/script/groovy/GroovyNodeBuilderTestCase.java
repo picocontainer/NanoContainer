@@ -26,7 +26,7 @@ import java.io.IOException;
  * @author Mauro Talevi
  * @version $Revision: 1775 $
  */
-public class CustomGroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
+public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
     private static final String ASSEMBLY_SCOPE = "SOME_SCOPE";
 
     public void testInstantiateBasicScriptable() throws PicoCompositionException {
