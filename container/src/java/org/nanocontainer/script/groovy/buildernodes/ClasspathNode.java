@@ -29,7 +29,7 @@ import org.nanocontainer.ClassPathElement;
  * @author Mauro Talevi
  * @version $Revision: 2695 $
  */
-public class ClasspathElementNode extends AbstractCustomBuilderNode {
+public class ClasspathNode extends AbstractBuilderNode {
 
     public static final String NODE_NAME = "classPathElement";
 
@@ -39,7 +39,7 @@ public class ClasspathElementNode extends AbstractCustomBuilderNode {
     private static final String HTTP = "http://";
 
 
-    public ClasspathElementNode() {
+    public ClasspathNode() {
         super(NODE_NAME);
 
         addAttribute(PATH);

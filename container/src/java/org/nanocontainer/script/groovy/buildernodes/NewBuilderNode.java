@@ -27,7 +27,7 @@ import org.picocontainer.MutablePicoContainer;
  * @author Mauro Talevi
  * @version $Revision: 2695 $
  */
-public class NewBuilderNode extends AbstractCustomBuilderNode {
+public class NewBuilderNode extends AbstractBuilderNode {
 
     /**
      * Node name we're handling: 'newBuilder'.

@@ -31,7 +31,7 @@ import org.picocontainer.defaults.ConstantParameter;
  * @author Mauro Talevi
  * @version $Revision: 2695 $
  */
-public class ComponentNode extends AbstractCustomBuilderNode {
+public class ComponentNode extends AbstractBuilderNode {
 
     public static final String NODE_NAME =  "component";
 

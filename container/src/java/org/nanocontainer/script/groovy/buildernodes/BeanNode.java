@@ -28,7 +28,7 @@ import org.codehaus.groovy.runtime.InvokerHelper;
  * @author Mauro Talevi
  * @version $Revision: 2695 $
  */
-public class BeanNode extends AbstractCustomBuilderNode {
+public class BeanNode extends AbstractBuilderNode {
 
     /**
      * The name of the node we're handling.

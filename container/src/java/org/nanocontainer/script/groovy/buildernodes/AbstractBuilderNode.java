@@ -30,7 +30,7 @@ import java.util.Iterator;
  * @author Mauro Talevi
  * @version $Revision: 2443 $
  */
-abstract public class AbstractCustomBuilderNode implements BuilderNode, Serializable {
+abstract public class AbstractBuilderNode implements BuilderNode, Serializable {
 
     /**
      * The name of the node we're working with.
@@ -51,7 +51,7 @@ abstract public class AbstractCustomBuilderNode implements BuilderNode, Serializ
      * to customize the validation capabilities of the Node.
      * @param nodeName the name of the node we're constructing.
      */
-    public AbstractCustomBuilderNode(final String nodeName) {
+    public AbstractBuilderNode(final String nodeName) {
         this.nodeName = nodeName;
 
     }
@@ -60,9 +60,9 @@ abstract public class AbstractCustomBuilderNode implements BuilderNode, Serializ
     /**
      * Add an attribute to the list of ones supported by this node.
      * @param name String the name of the attribute we support.
-     * @return AbstractCustomBuilderNode (this) to allow for method chaining.
+     * @return AbstractBuilderNode (this) to allow for method chaining.
      */
-    protected AbstractCustomBuilderNode addAttribute(final String name) {
+    protected AbstractBuilderNode addAttribute(final String name) {
         supportedAttributes.add(name);
         return this;
     }

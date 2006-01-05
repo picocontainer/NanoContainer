@@ -12,8 +12,6 @@ package org.nanocontainer.script.groovy.buildernodes;
 
 import java.util.Map;
 
-import org.nanocontainer.NanoContainer;
-
 /**
  * Handles 'doCall' nodes.
  * @author James Strachan
@@ -23,7 +21,7 @@ import org.nanocontainer.NanoContainer;
  * @author Mauro Talevi
  * @version $Revision: 2695 $
  */
-public class DoCallNode extends AbstractCustomBuilderNode {
+public class DoCallNode extends AbstractBuilderNode {
 
     public static final String NODE_NAME = "doCall";
 

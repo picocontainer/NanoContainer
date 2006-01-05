@@ -107,11 +107,11 @@ public class GroovyNodeBuilder extends BuilderSupport {
         this.setNode(new ComponentNode(decorationDelegate))
             .setNode(new ChildContainerNode(decorationDelegate))
             .setNode(new BeanNode())
-            .setNode(new ClasspathElementNode())
+            .setNode(new ClasspathNode())
             .setNode(new DoCallNode())
             .setNode(new NewBuilderNode())
-            .setNode(new ClassLoaderElementNode())
-            .setNode(new GrantElementNode());
+            .setNode(new ClassLoaderNode())
+            .setNode(new GrantNode());
 
     }
 

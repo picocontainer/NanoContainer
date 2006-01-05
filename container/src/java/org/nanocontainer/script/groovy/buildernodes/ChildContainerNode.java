@@ -36,7 +36,7 @@ import org.picocontainer.defaults.ComponentMonitorStrategy;
  * @author Mauro Talevi
  * @version $Revision: 2695 $
  */
-public class ChildContainerNode extends AbstractCustomBuilderNode {
+public class ChildContainerNode extends AbstractBuilderNode {
 
     /**
      * Node name.

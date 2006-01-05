@@ -11,27 +11,35 @@
 package org.nanocontainer.script.groovy.buildernodes;
 
 import java.util.Map;
+import java.security.Permission;
 
-import org.nanocontainer.NanoContainer;
-import org.nanocontainer.DefaultNanoContainer;
+import org.nanocontainer.ClassPathElement;
+import org.nanocontainer.script.NanoContainerMarkupException;
 
 /**
  * @author Paul Hammant
  * @version $Revision: 2695 $
  */
-public class ClassLoaderElementNode extends AbstractCustomBuilderNode {
+public class GrantNode extends AbstractBuilderNode {
 
-    public static final String NODE_NAME = "classLoader";
+    public static final String NODE_NAME = "grant";
 
-    public ClassLoaderElementNode() {
+    public GrantNode() {
         super(NODE_NAME);
     }
 
 
+
     public Object createNewNode(Object current, Map attributes) {
 
-        NanoContainer nanoContainer = (NanoContainer) current;
-        return new DefaultNanoContainer(nanoContainer.getComponentClassLoader(), nanoContainer.getPico());
+        if (!(current instanceof ClassPathElement)) {
+            throw new NanoContainerMarkupException("Don't know how to create a 'grant' child of a '" + current.getClass() + "'parent");
+        }
+
+        Permission perm = (Permission) attributes.remove("class");
+        ClassPathElement cpe = (ClassPathElement) current;
+
+        return cpe.grantPermission(perm);
     }
 
 }
