@@ -70,10 +70,10 @@ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
 
     /**
      * Allows customization of the groovy node builder in descendants.
-     * @return CustomGroovyNodeBuilder
+     * @return GroovyNodeBuilder
      */
     protected GroovyObject createGroovyNodeBuilder() {
-        return new CustomGroovyNodeBuilder();
+        return new GroovyNodeBuilder();
     }
 
     /**

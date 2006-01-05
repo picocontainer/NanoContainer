@@ -25,7 +25,7 @@ import org.picocontainer.defaults.UnsatisfiableDependenciesException;
  * @author Mauro Talevi
  * @version $Revision: 1775 $
  */
-public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
+public class OldGroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
     private static final String ASSEMBLY_SCOPE = "SOME_SCOPE";
 
     public void testInstantiateBasicScriptable() throws PicoCompositionException {

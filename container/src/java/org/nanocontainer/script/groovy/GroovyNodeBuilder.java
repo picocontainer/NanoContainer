@@ -29,14 +29,14 @@ import groovy.util.BuilderSupport;
  * Builds node trees of PicoContainers and Pico components using GroovyMarkup.
  * <p>Simple example usage in your groovy script:
  * <code><pre>
- * builder = new org.nanocontainer.script.groovy.CustomGroovyNodeBuilder()
+ * builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()
  * pico = builder.container(parent:parent) {
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.DefaultWebServerConfig)
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.WebServerImpl)
  * }
  * </pre></code>
  * </p>
- * <h4>Extending/Enhancing CustomGroovyNodeBuilder</h4>
+ * <h4>Extending/Enhancing GroovyNodeBuilder</h4>
  * <p>Often-times people need there own assembly commands that are needed
  * for extending/enhancing the node builder tree.  The perfect example of this
  * is <tt>DynaopGroovyNodeBuilder</tt> which provides a new vocabulary for
@@ -45,7 +45,7 @@ import groovy.util.BuilderSupport;
  * by the groovy builder: {@link org.nanocontainer.script.NodeBuilderDecorationDelegate}
  * and special node handlers {@link org.nanocontainer.script.groovy.BuilderNode}.
  * Using NodeBuilderDecorationDelegate is often a preferred method because it is
- * ultimately script independent.  However, replacing an existing CustomGroovyNodeBuilder's
+ * ultimately script independent.  However, replacing an existing GroovyNodeBuilder's
  * behavior is currently the only way to replace the behavior of an existing
  * groovy node handler.
  * </p>
@@ -56,7 +56,7 @@ import groovy.util.BuilderSupport;
  * @author Mauro Talevi
  * @version $Revision: 2695 $
  */
-public class CustomGroovyNodeBuilder extends BuilderSupport {
+public class GroovyNodeBuilder extends BuilderSupport {
 
     private static final String CLASS = "class";
 
@@ -92,14 +92,14 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
 
     /**
      * Allows the composition of a <tt>{@link NodeBuilderDecorationDelegate}</tt> -- an
-     * object that extends the capabilities of the <tt>CustomGroovyNodeBuilder</tt>
+     * object that extends the capabilities of the <tt>GroovyNodeBuilder</tt>
      * with new tags, new capabilities, etc.
      * @param decorationDelegate NodeBuilderDecorationDelegate
      * @param performAttributeValidation should be set to PERFORM_ATTRIBUTE_VALIDATION
      * or SKIP_ATTRIBUTE_VALIDATION
      * @see org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate
      */
-    public CustomGroovyNodeBuilder(NodeBuilderDecorationDelegate decorationDelegate, boolean performAttributeValidation) {
+    public GroovyNodeBuilder(NodeBuilderDecorationDelegate decorationDelegate, boolean performAttributeValidation) {
         this.decorationDelegate = decorationDelegate;
         this.performAttributeValidation = performAttributeValidation;
 
@@ -118,7 +118,7 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
     /**
      * Default constructor.
      */
-    public CustomGroovyNodeBuilder() {
+    public GroovyNodeBuilder() {
         this(new NullNodeBuilderDecorationDelegate(), SKIP_ATTRIBUTE_VALIDATION);
     }
 
@@ -244,9 +244,9 @@ public class CustomGroovyNodeBuilder extends BuilderSupport {
      * handler with the same node name already exists in the map of handlers, then
      * the <tt>GroovyNode</tt> replaces the existing node handler.
      * @param newGroovyNode CustomGroovyNode
-     * @return CustomGroovyNodeBuilder to allow for method chaining.
+     * @return GroovyNodeBuilder to allow for method chaining.
      */
-    public synchronized CustomGroovyNodeBuilder setNode(final BuilderNode newGroovyNode) {
+    public synchronized GroovyNodeBuilder setNode(final BuilderNode newGroovyNode) {
         nodeBuilderHandlers.put(newGroovyNode.getNodeName(), newGroovyNode);
         return this;
     }

@@ -10,23 +10,23 @@
 package org.nanocontainer.aop.dynaop;
 
 import org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate;
-import org.nanocontainer.script.groovy.CustomGroovyNodeBuilder;
+import org.nanocontainer.script.groovy.GroovyNodeBuilder;
 
 /**
- * A {@link org.nanocontainer.script.groovy.CustomGroovyNodeBuilder} that supports
+ * A {@link org.nanocontainer.script.groovy.GroovyNodeBuilder} that supports
  * scripting of aspects via dynaop.
  *
  * @author Stephen Molitor
  * @version $Revision$
  */
-public class DynaopGroovyNodeBuilder extends CustomGroovyNodeBuilder {
+public class DynaopGroovyNodeBuilder extends GroovyNodeBuilder {
 
     /**
      * Creates a new <code>DynaopGroovyNodeBuilder</code> that will use
      * the default @{link DynaopAspectsManager} to apply aspects.
      */
     public DynaopGroovyNodeBuilder() {
-        super(new AopNodeBuilderDecorationDelegate(new DynaopAspectsManager()), CustomGroovyNodeBuilder.SKIP_ATTRIBUTE_VALIDATION);
+        super(new AopNodeBuilderDecorationDelegate(new DynaopAspectsManager()), GroovyNodeBuilder.SKIP_ATTRIBUTE_VALIDATION);
     }
 
 

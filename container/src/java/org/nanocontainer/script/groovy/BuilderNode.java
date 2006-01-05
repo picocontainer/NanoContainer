@@ -2,13 +2,12 @@ package org.nanocontainer.script.groovy;
 
 import java.util.Map;
 import java.util.Set;
-import org.nanocontainer.NanoContainer;
 import org.nanocontainer.script.NanoContainerMarkupException;
 
 /**
  * In a groovy node builder environment, there is often one class per
  * node that is possible in a builder.  This interface provides the necessary
- * validation and interaction methods for the mediator (The CustomGroovyNodeBuilder
+ * validation and interaction methods for the mediator (The GroovyNodeBuilder
  * object) to figure out who should handle what.
  * @author Michael Rimov
  * @version 1.0
@@ -24,7 +23,7 @@ public interface BuilderNode {
     /**
      * Retrieve a map of supported attribute names.
      * <p><strong>note:</strong>Supported attributes are currently unverified by the
-     * CustomGroovyNodeBuilder as this would result in a change of behavior.</p>
+     * GroovyNodeBuilder as this would result in a change of behavior.</p>
      * @return Set of Strings.
      */
     Set getSupportedAttributes();

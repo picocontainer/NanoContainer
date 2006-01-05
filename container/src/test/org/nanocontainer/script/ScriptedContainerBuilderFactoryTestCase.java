@@ -33,7 +33,7 @@ public class ScriptedContainerBuilderFactoryTestCase
             "import org.nanocontainer.script.groovy.X\n" +
             "import org.nanocontainer.script.groovy.A\n" +
             "X.reset()\n" +
-            "builder = new org.nanocontainer.script.groovy.CustomGroovyNodeBuilder()\n" +
+            "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
             "nano = builder.container {\n" +
             "    component(A)\n" +
             "}");
