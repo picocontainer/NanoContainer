@@ -610,7 +610,7 @@ public class CustomGroovyNodeBuilderTestCase extends AbstractScriptedContainerBu
                 "import org.nanocontainer.script.groovy.X\n" +
                 "import org.nanocontainer.script.groovy.A\n" +
                 "X.reset()\n" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    ca = component(java.lang.Object) \n" +
                 "    component(instance:ca.getClass().getName())\n" +

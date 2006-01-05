@@ -144,7 +144,7 @@ public class GroovyNodeBuilderAopTestCase extends AbstractScriptedContainerBuild
                 "aspectsManager = new org.nanocontainer.aop.dynaop.DynaopAspectsManager()\n" +
                 "cuts = aspectsManager.getPointcutsFactory()\n" +
                 "decorator = new org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate(aspectsManager)\n" +
-                "builder = new GroovyNodeBuilder(decorator) \n" +
+                "builder = new OldGroovyNodeBuilder(decorator) \n" +
                 "nano = builder.container() {\n" +
                 "    component(key:Dao, class:DaoImpl) \n" +
                 "    aspect(classCut:cuts.instancesOf(Dao), mixinClass:IdentifiableMixin)\n" +

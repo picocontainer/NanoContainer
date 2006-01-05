@@ -58,7 +58,7 @@ import org.picocontainer.defaults.DelegatingComponentMonitor;
  * </p>
  * <p>Simple example usage in your groovy script:
  * <code><pre>
- * builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()
+ * builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()
  * pico = builder.container(parent:parent) {
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.DefaultWebServerConfig)
  * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.WebServerImpl)
@@ -73,7 +73,7 @@ import org.picocontainer.defaults.DelegatingComponentMonitor;
  * @version $Revision$
  * @deprecated Since version 1.0-RC-3, use CustomGroovyNodeBuilder instead.
  */
-public class GroovyNodeBuilder extends BuilderSupport {
+public class OldGroovyNodeBuilder extends BuilderSupport {
 
     private static final String NEW_BUILDER = "newBuilder";
     private static final String CONTAINER = "container";
@@ -98,11 +98,11 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
     private final NodeBuilderDecorationDelegate decorationDelegate;
 
-    public GroovyNodeBuilder(NodeBuilderDecorationDelegate decorationDelegate) {
+    public OldGroovyNodeBuilder(NodeBuilderDecorationDelegate decorationDelegate) {
         this.decorationDelegate = decorationDelegate;
     }
 
-    public GroovyNodeBuilder() {
+    public OldGroovyNodeBuilder() {
         this(new NullNodeBuilderDecorationDelegate());
     }
 

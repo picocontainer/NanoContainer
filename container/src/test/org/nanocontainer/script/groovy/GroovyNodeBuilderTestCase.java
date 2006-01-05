@@ -3,7 +3,6 @@ package org.nanocontainer.script.groovy;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.BufferedReader;
 
 import org.jmock.Mock;
 import org.nanocontainer.NanoPicoContainer;
@@ -34,7 +33,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "import org.nanocontainer.script.groovy.X\n" +
                 "import org.nanocontainer.script.groovy.A\n" +
                 "X.reset()\n" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(A)\n" +
                 "}");
@@ -49,7 +48,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     public void testComponentInstances() throws PicoCompositionException {
         Reader script = new StringReader("" +
                 "import org.nanocontainer.script.groovy.A\n" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'a', instance:'apple')\n" +
                 "    component(key:'b', instance:'banana')\n" +
@@ -64,7 +63,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
 
     public void testShouldFailWhenNeitherClassNorInstanceIsSpecifiedForComponent() {
         Reader script = new StringReader("" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'a')\n" +
                 "}");
@@ -82,7 +81,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "import org.picocontainer.defaults.ConstantParameter\n" +
                 "import org.nanocontainer.script.groovy.HasParams\n" +
                 "" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'byClass', class:HasParams, parameters:[ 'a', 'b', new ConstantParameter('c') ])\n" +
                 "    component(key:'byClassString', class:'org.nanocontainer.script.groovy.HasParams', parameters:[ 'c', 'a', 't' ])\n" +
@@ -102,7 +101,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "import org.nanocontainer.script.groovy.A\n" +
                 "import org.nanocontainer.script.groovy.B\n" +
                 "" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'a1', class:A)\n" +
                 "    component(key:'a2', class:A)\n" +
@@ -133,7 +132,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "import org.nanocontainer.script.groovy.A\n" +
                 "import org.nanocontainer.script.groovy.B\n" +
                 "" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(class:A)\n" +
                 "    component(key:B, class:B, parameters:[ new ComponentParameter(A) ])\n" +
@@ -152,7 +151,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "import org.picocontainer.defaults.ComponentParameter\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'a', class:A)\n" +
                 "    component(key:'b', class:B, parameters:[ new ComponentParameter('a') ])\n" +
@@ -167,7 +166,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     public void testShouldBeAbleToHandOffToNestedBuilder() {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'a', class:A)\n" +
                 "    newBuilder(class:'org.nanocontainer.script.groovy.TestingChildBuilder') {\n" +
@@ -187,7 +186,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         X.reset();
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    container() {\n" +
                 "        component(A)\n" +
@@ -202,7 +201,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     public void testCustomComponentAdapterFactoryCanBeSpecified() {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "nano = builder.container(componentAdapterFactory:assemblyScope) {\n" +
                 "    component(A)\n" +
                 "}");
@@ -220,7 +219,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "package org.nanocontainer.script.groovy\n" +
                 "import java.io.StringWriter\n" +
                 "import org.picocontainer.monitors.WriterComponentMonitor\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "writer = new StringWriter()\n" +
                 "monitor = new WriterComponentMonitor(writer) \n"+
                 "nano = builder.container(componentMonitor: monitor) {\n" +
@@ -240,7 +239,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "import java.io.StringWriter\n" +
                 "import org.picocontainer.defaults.DefaultComponentAdapterFactory\n" +
                 "import org.picocontainer.monitors.WriterComponentMonitor\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "writer = new StringWriter()\n" +
                 "monitor = new WriterComponentMonitor(writer) \n"+
                 "nano = builder.container(componentAdapterFactory: new DefaultComponentAdapterFactory(), componentMonitor: monitor) {\n" +
@@ -260,7 +259,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "package org.nanocontainer.script.groovy\n" +
                 "import java.io.StringWriter\n" +
                 "import org.picocontainer.monitors.WriterComponentMonitor\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "writer = new StringWriter()\n" +
                 "monitor = new WriterComponentMonitor(writer) \n"+
                 "nano = builder.container(parent:parent, componentMonitor: monitor) {\n" +
@@ -281,7 +280,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "import java.io.StringWriter\n" +
                 "import org.picocontainer.defaults.DefaultComponentAdapterFactory\n" +
                 "import org.picocontainer.monitors.WriterComponentMonitor\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "writer = new StringWriter()\n" +
                 "monitor = new WriterComponentMonitor(writer) \n"+
                 "nano = builder.container(parent:parent, componentAdapterFactory: new DefaultComponentAdapterFactory(), componentMonitor: monitor) {\n" +
@@ -299,7 +298,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         X.reset();
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(B)\n" +
                 "    container() {\n" +
@@ -319,7 +318,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         X.reset();
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "builder = new GroovyNodeBuilder()\n" +
+                "builder = new OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(A)\n" +
                 "    container() {\n" +
@@ -436,7 +435,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
-                "nano = new GroovyNodeBuilder().container() {\n" +
+                "nano = new OldGroovyNodeBuilder().container() {\n" +
                 "    component(A)\n" +
                 "    container(parent:parent) {\n" +
                 "         component(B)\n" +
@@ -536,7 +535,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 "import org.nanocontainer.script.groovy.X\n" +
                 "import org.nanocontainer.script.groovy.A\n" +
                 "X.reset()\n" +
-                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "builder = new org.nanocontainer.script.groovy.OldGroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    ca = component(java.lang.Object) \n" +
                 "    component(instance:ca.getClass().getName())\n" +
