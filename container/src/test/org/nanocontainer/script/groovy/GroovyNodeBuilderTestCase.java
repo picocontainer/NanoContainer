@@ -5,20 +5,29 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import org.jmock.Mock;
 import org.nanocontainer.NanoPicoContainer;
+import org.nanocontainer.NanoContainer;
+import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.NanoContainerMarkupException;
+import org.nanocontainer.script.FooDecoratingPicoContainer;
+import org.nanocontainer.script.BarDecoratingPicoContainer;
 import org.nanocontainer.testmodel.WebServerConfig;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
+import org.picocontainer.PicoRegistrationException;
+import org.picocontainer.alternatives.AbstractDelegatingMutablePicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.InstanceComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Vector;
+import java.util.HashMap;
 
 /**
  *
@@ -625,5 +634,28 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     private PicoContainer buildContainer(Reader script, PicoContainer parent, Object scope) {
         return buildContainer(new GroovyContainerBuilder(script, getClass().getClassLoader()), parent, scope);
     }
+
+
+    public void testChainOfDecoratingPicoContainersCanDoInterceptionOfMutablePicoContainerMethods() throws ClassNotFoundException {
+
+        Reader script = new StringReader("" +
+                "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
+                "nano = builder.container {\n" +
+                "    decoratingPicoContainer("+ FooDecoratingPicoContainer.class.getName()+")\n" +
+                "    decoratingPicoContainer("+ BarDecoratingPicoContainer.class.getName()+")\n" +
+                "    component(\"java.util.Vector\")\n" +
+                "}");
+
+        PicoContainer pico = buildContainer(script, null, ASSEMBLY_SCOPE);
+
+
+        // decorators are fairly dirty - they replace a very select implementation in this TestCase.
+        assertNotNull(pico.getComponentInstanceOfType(ArrayList.class));
+        assertNull(pico.getComponentInstanceOfType(Vector.class));
+    }
+
+
+
+
 
 }

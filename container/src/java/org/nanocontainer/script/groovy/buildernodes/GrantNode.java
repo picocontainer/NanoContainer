@@ -33,7 +33,7 @@ public class GrantNode extends AbstractBuilderNode {
     public Object createNewNode(Object current, Map attributes) {
 
         if (!(current instanceof ClassPathElement)) {
-            throw new NanoContainerMarkupException("Don't know how to create a 'grant' child of a '" + current.getClass() + "'parent");
+            throw new NanoContainerMarkupException("Don't know how to create a 'grant' child of a '" + current.getClass() + "' parent");
         }
 
         Permission perm = (Permission) attributes.remove("class");
