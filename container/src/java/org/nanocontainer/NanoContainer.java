@@ -75,4 +75,7 @@ public interface NanoContainer {
     Object getComponentInstanceOfType(String componentType);
 
 
+    MutablePicoContainer addDecoratingPicoContainer(Class picoContainerClass);
+
+
 }

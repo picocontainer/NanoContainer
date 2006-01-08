@@ -15,14 +15,14 @@ import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.testmodel.ThingThatTakesParamsInConstructor;
 import org.nanocontainer.testmodel.WebServerImpl;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.PicoException;
-import org.picocontainer.PicoInitializationException;
-import org.picocontainer.PicoIntrospectionException;
-import org.picocontainer.PicoRegistrationException;
+import org.picocontainer.*;
+import org.picocontainer.alternatives.AbstractDelegatingMutablePicoContainer;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Vector;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class DefaultNanoContainerTestCase extends TestCase {
 
@@ -209,5 +209,48 @@ public class DefaultNanoContainerTestCase extends TestCase {
             // expected
         }
     }
+
+
+    public void testChainOfDecoratingPicoContainersCanDoInterceptionOfMutablePicoContainerMethods() throws ClassNotFoundException {
+        NanoContainer nanoContainer = new DefaultNanoContainer();
+        MutablePicoContainer decorating = nanoContainer.addDecoratingPicoContainer(FooDecoratingPicoContainer.class);
+        assertTrue(decorating instanceof FooDecoratingPicoContainer);
+        MutablePicoContainer decorating2 = nanoContainer.addDecoratingPicoContainer(BarDecoratingPicoContainer.class);
+        assertTrue(decorating2 instanceof BarDecoratingPicoContainer);
+        nanoContainer.registerComponentImplementation("java.util.Vector");
+        // decorators are fairly dirty - they replace a very select implementation in this TestCase.
+        assertNotNull(nanoContainer.getComponentInstanceOfType("java.util.ArrayList"));
+        assertNull(nanoContainer.getComponentInstanceOfType("java.util.Vector"));
+        assertNotNull(nanoContainer.getPico().getComponentInstanceOfType(ArrayList.class));
+        assertNull(nanoContainer.getPico().getComponentInstanceOfType(Vector.class));
+    }
+
+    public static class FooDecoratingPicoContainer extends AbstractDelegatingMutablePicoContainer {
+        public FooDecoratingPicoContainer(MutablePicoContainer delegate) {
+            super(delegate);
+        }
+        public MutablePicoContainer makeChildContainer() {
+            return null;
+        }
+
+        public ComponentAdapter registerComponentImplementation(Class compImpl) throws PicoRegistrationException {
+            assertEquals(HashMap.class, compImpl);
+            return super.registerComponentImplementation(ArrayList.class);
+        }
+    }
+
+    public static class BarDecoratingPicoContainer extends AbstractDelegatingMutablePicoContainer {
+        public BarDecoratingPicoContainer(MutablePicoContainer delegate) {
+            super(delegate);
+        }
+        public MutablePicoContainer makeChildContainer() {
+            return null;
+        }
+        public ComponentAdapter registerComponentImplementation(Class compImpl) throws PicoRegistrationException {
+            assertEquals(Vector.class, compImpl);
+            return super.registerComponentImplementation(HashMap.class);
+        }
+    }
+
 
 }

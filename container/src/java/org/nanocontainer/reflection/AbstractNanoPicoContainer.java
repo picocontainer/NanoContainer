@@ -81,7 +81,7 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
         }
     }
 
-    private final Object getComponentInstanceFromChildren(Object componentKey) {
+    private Object getComponentInstanceFromChildren(Object componentKey) {
         String componentKeyPath = componentKey.toString();
         int ix = componentKeyPath.indexOf('/');
         if (ix != -1) {
@@ -119,6 +119,10 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
 
     public Object getComponentInstanceOfType(String componentType) {
         return container.getComponentInstanceOfType(componentType);
+    }
+
+    public MutablePicoContainer addDecoratingPicoContainer(Class picoContainerClass) {
+        return container.addDecoratingPicoContainer(picoContainerClass);
     }
 
 

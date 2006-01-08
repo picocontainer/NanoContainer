@@ -44,7 +44,7 @@ public class DefaultNanoContainer implements NanoContainer {
     }
 
     private final List classPathElements = new ArrayList();
-    private final MutablePicoContainer picoContainer;
+    private MutablePicoContainer picoContainer;
     private final ClassLoader parentClassLoader;
 
     private ClassLoader componentClassLoader;
@@ -187,6 +187,13 @@ public class DefaultNanoContainer implements NanoContainer {
         } catch (ClassNotFoundException e) {
             throw new NanoContainerMarkupException("Can't resolve class as type '" + componentType + "'");
         }
+    }
+
+    public MutablePicoContainer addDecoratingPicoContainer(Class picoContainerClass) {
+        DefaultPicoContainer pico = new DefaultPicoContainer();
+        pico.registerComponentImplementation(MutablePicoContainer.class, picoContainerClass, new Parameter[] { new ConstantParameter(picoContainer) });
+        picoContainer = (MutablePicoContainer) pico.getComponentInstanceOfType(MutablePicoContainer.class);
+        return picoContainer;
     }
 
 }
