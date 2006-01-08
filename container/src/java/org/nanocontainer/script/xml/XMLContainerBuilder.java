@@ -74,6 +74,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     private final static String COMPONENT_ADAPTER_FACTORY = "component-adapter-factory";
     private final static String COMPONENT_INSTANCE_FACTORY = "component-instance-factory";
     private final static String COMPONENT_MONITOR = "component-monitor";
+    private final static String DECORATING_PICOCONTAINER = "decorating-picocontainer";
     private final static String CLASS = "class";
     private final static String FACTORY = "factory";
     private final static String FILE = "file";
@@ -203,12 +204,15 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
                     addComponentAdapterFactory(childElement, metaContainer);
                 } else if (CLASSLOADER.equals(name)) {
                     registerClassLoader(parentContainer, childElement, metaContainer);
+                } else if (DECORATING_PICOCONTAINER.equals(name)) {
+                    addDecoratingPicoContainer(parentContainer, childElement);
                 } else if (CLASSPATH.equals(name) != true) {
                     throw new NanoContainerMarkupException("Unsupported element:" + name);
                 }
             }
         }
     }
+
 
     private void addComponentAdapterFactory(Element element, NanoContainer metaContainer) throws MalformedURLException, ClassNotFoundException {
         if (notSet(element.getAttribute(KEY))) {
@@ -317,6 +321,15 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
             container.getPico().registerComponentImplementation(key, clazz, parameters);
         }
     }
+
+    private void addDecoratingPicoContainer(NanoContainer parentContainer, Element childElement) throws ClassNotFoundException {
+        String className = childElement.getAttribute("class");
+
+        parentContainer.addDecoratingPicoContainer(getClassLoader().loadClass(className));
+
+    }
+
+
 
     private Parameter[] createChildParameters(NanoContainer container, Element element) throws ClassNotFoundException, MalformedURLException {
         List parametersList = new ArrayList();

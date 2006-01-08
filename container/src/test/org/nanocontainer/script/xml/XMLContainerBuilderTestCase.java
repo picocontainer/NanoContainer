@@ -19,6 +19,8 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,6 +28,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.NanoContainerMarkupException;
+import org.nanocontainer.script.FooDecoratingPicoContainer;
+import org.nanocontainer.script.BarDecoratingPicoContainer;
 import org.nanocontainer.testmodel.DefaultWebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfigComp;
@@ -714,5 +718,24 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
 
     static private class PrivateComponent {
     }
+
+
+    public void testChainOfDecoratingPicoContainersCanDoInterceptionOfMutablePicoContainerMethods() throws ClassNotFoundException {
+
+       Reader script = new StringReader("" +
+                "<container>\n" +
+               "   <decorating-picocontainer class='"+FooDecoratingPicoContainer.class.getName()+"'/>" +
+               "   <decorating-picocontainer class='"+BarDecoratingPicoContainer.class.getName()+"'/>" +
+                "  <component-implementation class='java.util.Vector'/>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(script);
+
+        // decorators are fairly dirty - they replace a very select implementation in this TestCase.
+        assertNotNull(pico.getComponentInstanceOfType(ArrayList.class));
+        assertNull(pico.getComponentInstanceOfType(Vector.class));
+    }
+
+
 }
 

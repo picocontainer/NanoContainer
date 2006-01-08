@@ -23,4 +23,9 @@ public class FooDecoratingPicoContainer extends AbstractDelegatingMutablePicoCon
         Assert.assertEquals(HashMap.class, componentImplementation);
         return super.registerComponentImplementation(ArrayList.class, ArrayList.class, parameters);
     }
+    public ComponentAdapter registerComponentImplementation(Object componentKey, Class componentImplementation) throws PicoRegistrationException {
+        Assert.assertEquals(HashMap.class, componentImplementation);
+        return super.registerComponentImplementation(ArrayList.class, ArrayList.class);
+    }
+
 }
