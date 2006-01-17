@@ -3,10 +3,10 @@ package org.nanocontainer.booter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.Socket;
-import java.net.URLClassLoader;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.security.AccessControlException;
 import java.security.AllPermission;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.Startable;
-import org.picocontainer.CustomPermissionsURLClassLoader;
+import org.picocontainer.defaults.CustomPermissionsURLClassLoader;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 public class BrownBear implements Startable {
@@ -109,7 +109,7 @@ public class BrownBear implements Startable {
         try {
             URLClassLoader urlClassLoader = new URLClassLoader(new URL[] {new URL(qdox)} );
             Class qdoxClass = urlClassLoader.loadClass("com.thoughtworks.qdox.JavaDocBuilder");
-            Object instance = qdoxClass.newInstance();
+            qdoxClass.newInstance();
             System.out.println("BrownBear: Can instantiate new URLClassLoader (incorrect)");
         } catch (AccessControlException e) {
             System.out.println("BrownBear: Cannot instantiate new URLClassLoader (correct)");
@@ -121,7 +121,7 @@ public class BrownBear implements Startable {
         try {
             URLClassLoader urlClassLoader = new CustomPermissionsURLClassLoader(new URL[] {new URL(qdox)}, permissionsMap, this.getClass().getClassLoader() );
             Class qdoxClass = urlClassLoader.loadClass("com.thoughtworks.qdox.JavaDocBuilder");
-            Object instance = qdoxClass.newInstance();
+            qdoxClass.newInstance();
             System.out.println("BrownBear: Can instantiate new CustomPermissionsURLClassLoader (incorrect)");
         } catch (AccessControlException e) {
             System.out.println("BrownBear: Cannot instantiate new CustomPermissionsURLClassLoader (correct)");

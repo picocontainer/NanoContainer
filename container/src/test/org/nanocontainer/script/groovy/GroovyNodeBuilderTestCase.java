@@ -1,33 +1,29 @@
 package org.nanocontainer.script.groovy;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Vector;
+
 import org.jmock.Mock;
 import org.nanocontainer.NanoPicoContainer;
-import org.nanocontainer.NanoContainer;
-import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
-import org.nanocontainer.script.NanoContainerMarkupException;
-import org.nanocontainer.script.FooDecoratingPicoContainer;
 import org.nanocontainer.script.BarDecoratingPicoContainer;
+import org.nanocontainer.script.FooDecoratingPicoContainer;
+import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.testmodel.WebServerConfig;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
-import org.picocontainer.PicoRegistrationException;
-import org.picocontainer.alternatives.AbstractDelegatingMutablePicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.InstanceComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Vector;
-import java.util.HashMap;
 
 /**
  *

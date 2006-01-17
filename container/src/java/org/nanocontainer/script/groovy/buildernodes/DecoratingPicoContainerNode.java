@@ -1,12 +1,9 @@
 package org.nanocontainer.script.groovy.buildernodes;
 
-import org.nanocontainer.script.groovy.BuilderNode;
-import org.nanocontainer.script.NanoContainerMarkupException;
-import org.nanocontainer.ClassPathElement;
-import org.nanocontainer.NanoContainer;
-
 import java.util.Map;
-import java.security.Permission;
+
+import org.nanocontainer.NanoContainer;
+import org.nanocontainer.script.NanoContainerMarkupException;
 
 public class DecoratingPicoContainerNode extends AbstractBuilderNode {
 
@@ -15,8 +12,6 @@ public class DecoratingPicoContainerNode extends AbstractBuilderNode {
     public DecoratingPicoContainerNode() {
         super(NODE_NAME);
     }
-
-
 
     public Object createNewNode(Object current, Map attributes) {
 

@@ -20,9 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.nanocontainer.script.NanoContainerMarkupException;
-import org.picocontainer.*;
+import org.picocontainer.ComponentAdapter;
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.Parameter;
+import org.picocontainer.PicoIntrospectionException;
+import org.picocontainer.PicoRegistrationException;
 import org.picocontainer.defaults.BeanPropertyComponentAdapter;
 import org.picocontainer.defaults.ConstantParameter;
+import org.picocontainer.defaults.CustomPermissionsURLClassLoader;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 /**
@@ -151,7 +156,7 @@ public class DefaultNanoContainer implements NanoContainer {
             componentClassLoaderLocked = true;
             componentClassLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
-                    return new CustomPermissionsURLClassLoader(getURLz(classPathElements), makePermissions(), parentClassLoader);
+                    return new CustomPermissionsURLClassLoader(getURLs(classPathElements), makePermissions(), parentClassLoader);
                 }
             });
         }
@@ -172,12 +177,12 @@ public class DefaultNanoContainer implements NanoContainer {
         return permissionsMap;
     }
 
-    private URL[] getURLz(List classPathElemelements) {
-        final URL[] urlz = new URL[classPathElemelements.size()];
-        for(int i = 0; i < urlz.length; i++) {
-            urlz[i] = ((ClassPathElement) classPathElemelements.get(i)).getUrl();
+    private URL[] getURLs(List classPathElemelements) {
+        final URL[] urls = new URL[classPathElemelements.size()];
+        for(int i = 0; i < urls.length; i++) {
+            urls[i] = ((ClassPathElement) classPathElemelements.get(i)).getUrl();
         }
-        return urlz;
+        return urls;
     }
 
     public Object getComponentInstanceOfType(String componentType) {

@@ -17,19 +17,17 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.xml.parsers.ParserConfigurationException;
 
-import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
-import org.nanocontainer.script.NanoContainerMarkupException;
-import org.nanocontainer.script.FooDecoratingPicoContainer;
 import org.nanocontainer.script.BarDecoratingPicoContainer;
+import org.nanocontainer.script.FooDecoratingPicoContainer;
+import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.testmodel.DefaultWebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfigComp;

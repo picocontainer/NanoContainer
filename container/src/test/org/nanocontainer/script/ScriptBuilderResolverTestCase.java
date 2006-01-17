@@ -72,7 +72,7 @@ public class ScriptBuilderResolverTestCase extends TestCase {
     }
 
     public void testGetBuilderClassName2() {
-        final String resourceName = "/org/nanocontainer/script/groovy/CustomGroovyNodeBuilderScriptedTestCase.groovy";
+        final String resourceName = "/org/nanocontainer/script/groovy/GroovyNodeBuilderScriptedTestCase.groovy";
         URL compositionURL = this.getClass().getResource(resourceName);
         if (compositionURL == null) {
             fail("This test depended on resource '"+ resourceName + "' which appears to have been moved");
