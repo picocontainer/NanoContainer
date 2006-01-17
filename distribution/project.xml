@@ -47,7 +47,7 @@
             <id>commons-cli</id>
             <version>1.0</version>
  	        <properties>
-                <nanodist.booter.common>true</nanodist.booter.common>
+                <nanodist.booter.hidden>true</nanodist.booter.hidden>
             </properties>
         </dependency>
 
