@@ -4,7 +4,7 @@
 	<groupId>org.nanocontainer</groupId>
 	<artifactId>nanocontainer-all</artifactId>
 	<name>NanoContainer All</name>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 	<url>http://www.nanocontainer.org</url>
 	<modules>
@@ -56,12 +56,12 @@
 			<dependency>
 				<groupId>org.picocontainer</groupId>
 				<artifactId>picocontainer</artifactId>
-				<version>1.2-SNAPSHOT</version>
+				<version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.picocontainer</groupId>
 				<artifactId>picocontainer-tck</artifactId>
-				<version>1.2-SNAPSHOT</version>
+				<version>1.2</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
