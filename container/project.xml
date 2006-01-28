@@ -14,6 +14,12 @@
         </dependency>
 
         <dependency>
+            <id>picocontainer-gems</id>
+            <version>${picocontainer.version}</version>
+            <url>http://www.picocontainer.org/</url>
+        </dependency>
+
+        <dependency>
             <groupId>picocontainer</groupId>
             <artifactId>picocontainer-tck</artifactId>
             <version>${picocontainer.version}</version>
