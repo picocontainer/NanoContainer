@@ -75,7 +75,7 @@
 <!--
     Component adapter factories may optionally specify a key with to address the adapter factory
 -->
-<!ATTLIST component-implementation key CDATA #IMPLIED>
+<!ATTLIST component-adapter-factory key CDATA #IMPLIED>
 
 <!--
     Registers the implemention of a component
