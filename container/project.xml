@@ -14,9 +14,13 @@
         </dependency>
 
         <dependency>
-            <id>picocontainer-gems</id>
+            <id>picocontainer</id>
+            <artifactId>picocontainer-gems</artifactId>
             <version>${picocontainer.version}</version>
             <url>http://www.picocontainer.org/</url>
+            <properties>
+            	<scope>test</scope>
+            </properties>
         </dependency>
 
         <dependency>
@@ -24,12 +28,18 @@
             <artifactId>picocontainer-tck</artifactId>
             <version>${picocontainer.version}</version>
             <url>http://www.picocontainer.org/</url>
+            <properties>
+            	<scope>test</scope>
+            </properties>
         </dependency>
 
         <dependency>
             <groupId>nanocontainer</groupId>
             <artifactId>nanocontainer-testmodel</artifactId>
             <version>${pom.currentVersion}</version>
+            <properties>
+            	<scope>test</scope>
+            </properties>
         </dependency>
 
         <dependency>
@@ -97,6 +107,17 @@
         <dependency>
             <id>oro</id>
             <version>2.0.8</version>
+        </dependency>
+
+		<!-- pico-gems dependencies -->
+        <dependency>
+            <groupId>proxytoys</groupId>
+            <artifactId>proxytoys</artifactId>
+            <version>0.2.1</version>
+            <url>http://proxytoys.codehaus.org/</url>
+            <properties>
+            	<scope>test</scope>
+            </properties>
         </dependency>
     </dependencies>
                    
