@@ -310,7 +310,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         String classKey = element.getAttribute(CLASS_NAME_KEY);
         if (notSet(key)) {
             if (!notSet(classKey)) {
-                key = new ClassNameKey(classKey);
+                key = getClassLoader().loadClass(classKey);
             } else {
                 key = clazz;
             }

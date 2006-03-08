@@ -36,7 +36,10 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.PicoException;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
+import org.picocontainer.defaults.CollectionComponentParameterTestCase.TouchableObserver;
 import org.picocontainer.monitors.WriterComponentMonitor;
+import org.picocontainer.testmodel.SimpleTouchable;
+import org.picocontainer.testmodel.Touchable;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -701,23 +704,6 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         }
     }
 
-    private PicoContainer buildContainer(Reader script) {
-        return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
-    }
-
-    static public class StaticWriterComponentMonitor extends WriterComponentMonitor {
-        static Writer WRITER = new StringWriter();
-
-        public StaticWriterComponentMonitor() {
-            super(WRITER);
-        }
-
-    }
-
-    static private class PrivateComponent {
-    }
-
-
     public void testChainOfDecoratingPicoContainersCanDoInterceptionOfMutablePicoContainerMethods() throws ClassNotFoundException {
 
        Reader script = new StringReader("" +
@@ -734,6 +720,47 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         assertNull(pico.getComponentInstanceOfType(Vector.class));
     }
 
+    public void testChainOfWrappedComponents() {
 
+       Reader script = new StringReader("" +
+                "<container>\n" +
+               "   <component-implementation key='wrapped' class='"+SimpleTouchable.class.getName()+"'/>" +
+               "   <component-implementation class-name-key=\'"+Touchable.class.getName()+"\' class='"+WrapsTouchable.class.getName()+"'/>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(script);
+
+        // decorators are fairly dirty - they replace a very select implementation in this TestCase.
+        assertNotNull(pico.getComponentInstanceOfType(Touchable.class));
+    }
+
+    private PicoContainer buildContainer(Reader script) {
+        return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+    }
+
+    static public class StaticWriterComponentMonitor extends WriterComponentMonitor {
+        static Writer WRITER = new StringWriter();
+
+        public StaticWriterComponentMonitor() {
+            super(WRITER);
+        }
+
+    }
+
+    static private class PrivateComponent {
+    }
+
+    // TODO: Move this into pico-tck as soon as nano is dependend on a pico snapshot again ...
+    public static class WrapsTouchable implements Touchable {
+        private final Touchable wrapped;
+        
+        public WrapsTouchable(final Touchable wrapped) {
+            this.wrapped = wrapped;
+        }
+
+        public void touch() {
+            this.wrapped.touch();
+        }
+    }
 }
 
