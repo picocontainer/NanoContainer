@@ -36,7 +36,6 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.PicoException;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
-import org.picocontainer.defaults.CollectionComponentParameterTestCase.TouchableObserver;
 import org.picocontainer.monitors.WriterComponentMonitor;
 import org.picocontainer.testmodel.SimpleTouchable;
 import org.picocontainer.testmodel.Touchable;
