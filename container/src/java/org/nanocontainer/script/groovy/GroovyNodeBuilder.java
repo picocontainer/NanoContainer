@@ -210,13 +210,17 @@ public class GroovyNodeBuilder extends BuilderSupport {
      */
     private NanoContainer extractOrCreateValidRootNanoContainer(final Map attributes) throws NanoContainerMarkupException {
         Object parentAttribute = attributes.get(PARENT);
-        if (parentAttribute instanceof MutablePicoContainer) {
-            // we're not in an enclosing scope - look at parent attribute instead
-            return new DefaultNanoContainer((MutablePicoContainer) parentAttribute);
-        }
+        //
+        //NanoPicoContainer implements MutablePicoCotainer AND NanoContainer
+        //So we want to check for NanoContainer first.
+        //
         if (parentAttribute instanceof NanoContainer) {
             // we're not in an enclosing scope - look at parent attribute instead
             return (NanoContainer) parentAttribute;
+        }
+        if (parentAttribute instanceof MutablePicoContainer) {
+            // we're not in an enclosing scope - look at parent attribute instead
+            return new DefaultNanoContainer((MutablePicoContainer) parentAttribute);
         }
         return null;
     }
