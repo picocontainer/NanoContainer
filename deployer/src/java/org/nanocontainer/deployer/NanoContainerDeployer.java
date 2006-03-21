@@ -157,6 +157,10 @@ public class NanoContainerDeployer implements Deployer {
      * @throws org.nanocontainer.integrationkit.PicoCompositionException if the deployment failed for some reason.
      */
     public ObjectReference deploy(FileObject applicationFolder, ClassLoader parentClassLoader, ObjectReference parentContainerRef) throws FileSystemException, ClassNotFoundException {
+        return deploy(applicationFolder, parentClassLoader, parentContainerRef, null);
+    }
+
+    public ObjectReference deploy(FileObject applicationFolder, ClassLoader parentClassLoader, ObjectReference parentContainerRef, Object assemblyScope) throws FileSystemException, ClassNotFoundException {
         ClassLoader applicationClassLoader = new VFSClassLoader(applicationFolder, fileSystemManager, parentClassLoader);
 
         FileObject deploymentScript = getDeploymentScript(applicationFolder);
@@ -176,10 +180,13 @@ public class NanoContainerDeployer implements Deployer {
 
         ScriptedContainerBuilderFactory scriptedContainerBuilderFactory = new ScriptedContainerBuilderFactory(scriptReader, builderClassName, applicationClassLoader);
         ContainerBuilder builder = scriptedContainerBuilderFactory.getContainerBuilder();
-        builder.buildContainer(result, parentContainerRef, null, true);
+        builder.buildContainer(result, parentContainerRef, assemblyScope, true);
 
         return result;
+
     }
+
+
 
 
     /**

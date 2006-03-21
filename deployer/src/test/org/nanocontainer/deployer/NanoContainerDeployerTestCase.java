@@ -43,7 +43,7 @@ public class NanoContainerDeployerTestCase extends TestCase {
 
       try {
         Deployer deployer = new NanoContainerDeployer(manager);
-        ObjectReference containerRef= deployer.deploy(applicationFolder, getClass().getClassLoader(), null);
+        ObjectReference containerRef= deployer.deploy(applicationFolder, getClass().getClassLoader(), null,null);
         fail("Deployment should have thrown FileSystemException for bad script file name.  Instead got:" + containerRef.toString() + " built.");
       }
       catch (FileSystemException ex) {
@@ -57,7 +57,7 @@ public class NanoContainerDeployerTestCase extends TestCase {
 
       try {
         Deployer deployer = new NanoContainerDeployer(manager);
-        ObjectReference containerRef= deployer.deploy(applicationFolder, getClass().getClassLoader(), null);
+        ObjectReference containerRef= deployer.deploy(applicationFolder, getClass().getClassLoader(), null,null);
         fail("Deployment should have thrown FileSystemException for badly formed archive. Instead got:" + containerRef.toString() + " built.");
       }
       catch (FileSystemException ex) {
@@ -72,15 +72,15 @@ public class NanoContainerDeployerTestCase extends TestCase {
         try {
             Deployer deployer = null;
             deployer = new NanoContainerDeployer(manager);
-            ObjectReference containerRef = deployer.deploy(applicationFolder, getClass().getClassLoader(), null);
+            ObjectReference containerRef = deployer.deploy(applicationFolder, getClass().getClassLoader(), null,null);
             PicoContainer pico = (PicoContainer) containerRef.get();
             Object zap = pico.getComponentInstance("zap");
             assertEquals("Groovy Started", zap.toString());
 
         } catch (Exception e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }
-    }    
+    }
 
     public void testZapClassCanBeLoadedByVFSClassLoader() throws FileSystemException, MalformedURLException, ClassNotFoundException {
         DefaultFileSystemManager manager = new DefaultFileSystemManager();
@@ -108,6 +108,31 @@ public class NanoContainerDeployerTestCase extends TestCase {
 
     }
 
+
+    public void testParentClassLoadersArePropertyPropagated() throws FileSystemException, MalformedURLException, ClassNotFoundException {
+        DefaultFileSystemManager manager = new DefaultFileSystemManager();
+        FileObject applicationFolder = getApplicationFolder(manager, folderPath);
+        NanoContainerDeployer deployer = new NanoContainerDeployer(manager);
+        FileObject badArchive = getApplicationArchive(manager, jarsDir + "/successful-deploy.jar");
+        VFSClassLoader classLoader = new VFSClassLoader(new FileObject[] {badArchive}, manager, getClass().getClassLoader());
+
+        ObjectReference containerRef = deployer.deploy(applicationFolder, classLoader, null, null);
+
+    }
+
+    public void testAssemblyScope() throws FileSystemException, MalformedURLException, ClassNotFoundException {
+        DefaultFileSystemManager manager = new DefaultFileSystemManager();
+        FileObject applicationArchive = getApplicationArchive(manager, jarsDir + "/successful-deploy.jar");
+
+        Deployer deployer = new NanoContainerDeployer(manager);
+
+        ObjectReference containerRef = deployer.deploy(applicationArchive, getClass().getClassLoader(), null, "Test");
+        PicoContainer pico = (PicoContainer)containerRef.get();
+        assertEquals("Assembly Scope Test", pico.getComponentInstance(String.class));
+        assertNull(pico.getComponentInstance("zap"));
+    }
+
+
     private FileObject getApplicationFolder(final DefaultFileSystemManager manager, String folderPath) throws FileSystemException, MalformedURLException {
         manager.setDefaultProvider(new DefaultLocalFileProvider());
         manager.init();
@@ -128,5 +153,9 @@ public class NanoContainerDeployerTestCase extends TestCase {
         FileObject applicationFolder = manager.resolveFile("zip:/" + src.getAbsolutePath());
         return applicationFolder;
     }
+
+
+
+
 
 }
