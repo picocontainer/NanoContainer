@@ -64,6 +64,10 @@
 		</dependency>
 		<!-- Test scoped dependencies -->
 		<dependency>
+			<groupId>org.picocontainer</groupId>
+			<artifactId>picocontainer-gems</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>nanocontainer-testmodel</artifactId>
 		</dependency>
