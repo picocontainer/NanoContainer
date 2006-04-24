@@ -20,19 +20,21 @@ import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.defaults.LifecycleStrategy;
+import org.picocontainer.defaults.ComponentMonitorStrategy;
 
 /**
  * This is a MutablePicoContainer that also supports soft composition. i.e. assembly by class name rather that class
  * reference.
- * <p/>
- * In terms of implementation it adopts the behaviour of DefaultPicoContainer and DefaultNanoContainer
+ * <p>
+ * In terms of implementation it adopts the behaviour of DefaultPicoContainer and DefaultNanoContainer.</p>
  *
  * @author Paul Hammant
  * @author Mauro Talevi
  * @author Michael Rimov
  * @version $Revision$
  */
-public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implements NanoPicoContainer, Serializable {
+public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implements NanoPicoContainer, Serializable,
+    ComponentMonitorStrategy {
 
     public DefaultNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent) {
         super(new DefaultPicoContainer(caf, parent), classLoader);
@@ -83,7 +85,7 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
 
     /**
      * Copy Constructor.  Makes a new DefaultNanoPicoContainer with the same
-     * attributes - ClassLoader, child PicoContainer type, ComponentAdapterFactory - 
+     * attributes - ClassLoader, child PicoContainer type, ComponentAdapterFactory -
      * as the parent.
      * <p><tt>Note:</tt> This constructor is protected because are existing scripts
      * that call <tt>new DefaultNanoPicoContainer(PicoContainer)</tt>, and they get this
@@ -104,6 +106,14 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
         DefaultNanoPicoContainer child = new DefaultNanoPicoContainer(this);
         namedChildContainers.put(name, child);
         return child;
+    }
+
+    public void changeMonitor(ComponentMonitor monitor) {
+        ((ComponentMonitorStrategy)getDelegate()).changeMonitor(monitor);
+    }
+
+    public ComponentMonitor currentMonitor() {
+        return ((ComponentMonitorStrategy)getDelegate()).currentMonitor();
     }
 
 }

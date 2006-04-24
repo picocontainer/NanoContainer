@@ -27,6 +27,7 @@ import org.nanocontainer.ClassNameKey;
 import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
+import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.integrationkit.ContainerPopulator;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.NanoContainerMarkupException;
@@ -145,7 +146,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     }
 
     private MutablePicoContainer createMutablePicoContainer(String cafName, String monitorName, PicoContainer parentContainer) throws PicoCompositionException, ClassNotFoundException {
-        MutablePicoContainer container = new DefaultPicoContainer(createComponentAdapterFactory(cafName, new DefaultNanoContainer(getClassLoader())), parentContainer);
+        MutablePicoContainer container = new DefaultNanoPicoContainer(getClassLoader(),createComponentAdapterFactory(cafName, new DefaultNanoContainer(getClassLoader())), parentContainer);
         if ( !notSet(monitorName) ){
             ComponentMonitor monitor = createComponentMonitor(monitorName);
             ((ComponentMonitorStrategy)container).changeMonitor(monitor);
@@ -159,7 +160,7 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
             ClassLoader classLoader = getClassLoader();
             if (parentClass != null && !EMPTY.equals(parentClass)) {
                 classLoader = classLoader.loadClass(parentClass).getClassLoader();
-            } 
+            }
             NanoContainer nanoContainer = new DefaultNanoContainer(classLoader, container);
             registerComponentsAndChildContainers(nanoContainer, rootElement, new DefaultNanoContainer(getClassLoader()));
         } catch (ClassNotFoundException e) {
