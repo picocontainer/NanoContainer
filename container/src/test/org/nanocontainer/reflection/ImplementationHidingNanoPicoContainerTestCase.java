@@ -13,6 +13,7 @@ package org.nanocontainer.reflection;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.tck.AbstractImplementationHidingPicoContainerTestCase;
+import org.nanocontainer.NanoPicoContainer;
 
 /**
  * @author Paul Hammant
@@ -29,4 +30,15 @@ public class ImplementationHidingNanoPicoContainerTestCase extends AbstractImple
         return new ImplementationHidingNanoPicoContainer(this.getClass().getClassLoader(), parent);
     }
     // test methods inherited. This container is part compliant.
+
+    public void testMakeRemoveChildContainer() {
+        final NanoPicoContainer parent = (NanoPicoContainer) createPicoContainer(null);
+        parent.registerComponentInstance("java.lang.String", "This is a test");
+        MutablePicoContainer pico = parent.makeChildContainer();
+        // Verify they are indeed wired together.
+        assertNotNull(pico.getComponentInstance("java.lang.String"));
+        boolean result = parent.removeChildContainer(pico);
+        assertTrue(result);
+    }
+
 }

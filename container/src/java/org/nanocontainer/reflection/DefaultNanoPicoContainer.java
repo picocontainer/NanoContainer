@@ -11,16 +11,15 @@
 package org.nanocontainer.reflection;
 
 import java.io.Serializable;
-
 import org.nanocontainer.NanoPicoContainer;
 import org.picocontainer.ComponentMonitor;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
+import org.picocontainer.defaults.ComponentMonitorStrategy;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.defaults.LifecycleStrategy;
-import org.picocontainer.defaults.ComponentMonitorStrategy;
 
 /**
  * This is a MutablePicoContainer that also supports soft composition. i.e. assembly by class name rather that class
@@ -94,19 +93,15 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
      */
     protected DefaultNanoPicoContainer(final DefaultNanoPicoContainer parent) {
         super(parent.getDelegate().makeChildContainer(),  parent.getComponentClassLoader());
+        MutablePicoContainer parentDelegate = parent.getDelegate();
+        parentDelegate.removeChildContainer(getDelegate());
+        parentDelegate.addChildContainer(this);
     }
 
-    /**
-     * Makes a child container with the same basic characteristics of <tt>this</tt>
-     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
-     * @param name the name of the child container
-     * @return The child MutablePicoContainer
-     */
-    public MutablePicoContainer makeChildContainer(String name) {
-        DefaultNanoPicoContainer child = new DefaultNanoPicoContainer(this);
-        namedChildContainers.put(name, child);
-        return child;
-    }
+
+    protected AbstractNanoPicoContainer createCopy() {
+        return new DefaultNanoPicoContainer(this);
+     }
 
     public void changeMonitor(ComponentMonitor monitor) {
         ((ComponentMonitorStrategy)getDelegate()).changeMonitor(monitor);

@@ -10,10 +10,16 @@
 
 package org.nanocontainer.reflection;
 
+import java.io.Serializable;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import org.nanocontainer.ClassPathElement;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.NanoPicoContainer;
-import org.nanocontainer.ClassPathElement;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
@@ -22,13 +28,6 @@ import org.picocontainer.PicoException;
 import org.picocontainer.PicoIntrospectionException;
 import org.picocontainer.PicoRegistrationException;
 import org.picocontainer.alternatives.AbstractDelegatingMutablePicoContainer;
-
-import java.io.Serializable;
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * A base class for NanoPicoContainers. As well as the functionality indicated by the interface it
@@ -45,8 +44,6 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
     // need to implement custom Externalisable regime.
     protected transient NanoContainer container;
 
-//    protected AbstractNanoPicoContainer() {
-//    }
 
     protected AbstractNanoPicoContainer(MutablePicoContainer delegate, ClassLoader classLoader) {
         super(delegate);
@@ -99,6 +96,23 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
     public final MutablePicoContainer makeChildContainer() {
         return makeChildContainer("containers" + namedChildContainers.size());
     }
+
+    /**
+     * Makes a child container with the same basic characteristics of <tt>this</tt>
+     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
+     * @param name the name of the child container
+     * @return The child MutablePicoContainer
+     */
+    public MutablePicoContainer makeChildContainer(String name) {
+        AbstractNanoPicoContainer child = createCopy();
+        MutablePicoContainer parentDelegate = getDelegate();
+        parentDelegate.removeChildContainer(child.getDelegate());
+        parentDelegate.addChildContainer(child);
+        namedChildContainers.put(name, child);
+        return child;
+    }
+
+    protected abstract AbstractNanoPicoContainer createCopy();
 
     public boolean removeChildContainer(PicoContainer child) {
         boolean result = getDelegate().removeChildContainer(child);
@@ -162,12 +176,16 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
 
     public boolean addChildContainer(PicoContainer child) {
         boolean result = getDelegate().addChildContainer(child);
+
+
         namedChildContainers.put("containers" + namedChildContainers.size(), child);
         return result;
     }
 
     public void addChildContainer(String name, PicoContainer child) {
-        getDelegate().addChildContainer(child);
+
+        super.addChildContainer(child);
+
         namedChildContainers.put(name, child);
     }
 

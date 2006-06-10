@@ -60,5 +60,17 @@ public class DefaultNanoPicoContainerTestCase extends AbstractPicoContainerTestC
         assertTrue(sb.toString().indexOf("-instantiated") != -1);
     }
 
+    public void testMakeRemoveChildContainer() {
+        final NanoPicoContainer parent = (NanoPicoContainer) createPicoContainer(null);
+        parent.registerComponentInstance("java.lang.String", "This is a test");
+        MutablePicoContainer pico = parent.makeChildContainer();
+        // Verify they are indeed wired together.
+        assertNotNull(pico.getComponentInstance("java.lang.String"));
+        boolean result = parent.removeChildContainer(pico);
+        assertTrue(result);
+    }
+
     // test methods inherited. This container is otherwise fully compliant.
+
+
 }

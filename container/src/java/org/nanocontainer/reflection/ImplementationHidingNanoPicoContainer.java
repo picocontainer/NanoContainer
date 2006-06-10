@@ -54,7 +54,7 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
 
     /**
      * Copy Constructor.  Makes a new ImplementationHidingNanoPicoContainer with the same
-     * attributes - ClassLoader, child PicoContainer type, ComponentAdapterFactory - 
+     * attributes - ClassLoader, child PicoContainer type, ComponentAdapterFactory -
      * as the parent.
      * <p><tt>Note:</tt> This constructor is protected because are existing scripts
      * that call <tt>new ImplementationHidingNanoPicoContainer(PicoContainer)</tt>, and they get this
@@ -64,18 +64,9 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
     protected ImplementationHidingNanoPicoContainer(final ImplementationHidingNanoPicoContainer parent) {
         super(parent.getDelegate().makeChildContainer(), parent.getComponentClassLoader());
     }
-    
 
-    /**
-     * Makes a child container with the same basic characteristics of <tt>this</tt>
-     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
-     * @param name the name of the child container
-     * @return The child MutablePicoContainer
-     */    
-    public MutablePicoContainer makeChildContainer(String name) {
-        ImplementationHidingNanoPicoContainer child = new ImplementationHidingNanoPicoContainer(this);
-        namedChildContainers.put(name, child);
-        return child;
+
+    protected AbstractNanoPicoContainer createCopy() {
+        return new ImplementationHidingNanoPicoContainer(this);
     }
-
 }
