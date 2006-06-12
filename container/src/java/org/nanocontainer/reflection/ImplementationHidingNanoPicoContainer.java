@@ -66,7 +66,7 @@ public class ImplementationHidingNanoPicoContainer extends AbstractNanoPicoConta
     }
 
 
-    protected AbstractNanoPicoContainer createCopy() {
+    protected AbstractNanoPicoContainer createChildContainer() {
         return new ImplementationHidingNanoPicoContainer(this);
     }
 }

@@ -104,7 +104,7 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
      * @return The child MutablePicoContainer
      */
     public MutablePicoContainer makeChildContainer(String name) {
-        AbstractNanoPicoContainer child = createCopy();
+        AbstractNanoPicoContainer child = createChildContainer();
         MutablePicoContainer parentDelegate = getDelegate();
         parentDelegate.removeChildContainer(child.getDelegate());
         parentDelegate.addChildContainer(child);
@@ -112,7 +112,7 @@ public abstract class AbstractNanoPicoContainer extends AbstractDelegatingMutabl
         return child;
     }
 
-    protected abstract AbstractNanoPicoContainer createCopy();
+    protected abstract AbstractNanoPicoContainer createChildContainer();
 
     public boolean removeChildContainer(PicoContainer child) {
         boolean result = getDelegate().removeChildContainer(child);

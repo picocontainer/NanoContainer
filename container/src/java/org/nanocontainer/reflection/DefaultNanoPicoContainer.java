@@ -99,7 +99,7 @@ public class DefaultNanoPicoContainer extends AbstractNanoPicoContainer implemen
     }
 
 
-    protected AbstractNanoPicoContainer createCopy() {
+    protected AbstractNanoPicoContainer createChildContainer() {
         return new DefaultNanoPicoContainer(this);
      }
 
