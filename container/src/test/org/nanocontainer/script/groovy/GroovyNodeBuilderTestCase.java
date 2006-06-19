@@ -24,6 +24,9 @@ import org.picocontainer.defaults.InstanceComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
+import java.io.File;
+import java.net.URLClassLoader;
+import java.net.URL;
 
 /**
  *
@@ -522,6 +525,9 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                 .getName());
     }
 
+
+
+
     public void testWithDynamicClassPathWithPermissions() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
         Reader script = new StringReader(
@@ -544,6 +550,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         // testing the syntax here.
     }
 
+
     public void testGrantPermissionInWrongPlace() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
         try {
@@ -565,6 +572,43 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
 
     }
 
+    /**
+     * Santity check to make sure testcomp doesn't exist in the testing classpath
+     * otherwise all the tests that depend on the custom classpaths are suspect.
+     */
+    public void testTestCompIsNotAvailableViaSystemClassPath() {
+        try {
+            Class testComp = getClass().getClassLoader().loadClass("TestComp");
+            fail("Invalid configuration TestComp exists in system classpath. ");
+        } catch (ClassNotFoundException ex) {
+            //ok.
+        }
+
+    }
+
+    public void testWithParentClassPathPropagatesWithNoParentContainer()throws IOException {
+        File testCompJar = new File(System.getProperty("testcomp.jar"));
+        URLClassLoader classLoader = new URLClassLoader(new URL[] {testCompJar.toURL()}, this.getClass().getClassLoader());
+        Class testComp = null;
+
+        try {
+            testComp = classLoader.loadClass("TestComp");
+        } catch (ClassNotFoundException ex) {
+            fail("Unable to load test component from the jar using a url classloader");
+        }
+        Reader script = new StringReader(
+                          ""
+                        + "        pico = builder.container(parent:parent) {\n"
+                        + "            component(class:\"TestComp\")\n"
+                        + "        }"
+                        + "");
+
+        PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, classLoader), null, null);
+        assertNotNull(pico);
+        Object testCompInstance = pico.getComponentInstance(testComp.getName());
+        assertEquals(testCompInstance.getClass().getName(), testComp.getName());
+
+    }
 
     public void testValidationTurnedOnThrowsExceptionForUnknownAttributes() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
@@ -649,6 +693,10 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         assertNotNull(pico.getComponentInstanceOfType(ArrayList.class));
         assertNull(pico.getComponentInstanceOfType(Vector.class));
     }
+
+
+
+
 
 
 

@@ -167,10 +167,20 @@ public class ScriptedContainerBuilderFactory {
 
             if(classLoader == null) {
                 // on some weird JVMs (like jeode) Thread.currentThread().getContextClassLoader() returns null !?!?
+                //Found out on JDK 1.5 javadocs that Thread.currentThread().getContextClassLoader() MAY return null
+                //while Class.getClassLoader() should NEVER return null.  -MR
+                //
+                //
                 classLoader = getClass().getClassLoader();
             }
             factory.registerComponentInstance(classLoader);
-            defaultNanoContainer = new DefaultNanoContainer(factory);
+
+            //
+            //If we don't specify the classloader here, some of the things that make
+            //up a nanocontainer may bomb. And we're only talking a reload
+            //within a webapp!  -MR
+            //
+            defaultNanoContainer = new DefaultNanoContainer(classLoader,factory);
         }
         ComponentAdapter componentAdapter = defaultNanoContainer.registerComponentImplementation(builderClass);
         containerBuilder = (ScriptedContainerBuilder) componentAdapter.getComponentInstance(defaultNanoContainer.getPico());
