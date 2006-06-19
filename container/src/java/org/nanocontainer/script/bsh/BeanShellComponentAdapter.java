@@ -45,7 +45,6 @@ import java.util.Collections;
  * <li>componentImplementation - the component implementation</li>
  * <li>parameters - the ComponentParameters (as a List)</li>
  * </ul>
- *
  * @author <a href="mail at leosimons dot com">Leo Simons</a>
  * @author Aslak Hellesoy
  * @version $Id$
@@ -55,9 +54,19 @@ public class BeanShellComponentAdapter extends AbstractComponentAdapter {
 
     private Object instance = null;
 
-    public BeanShellComponentAdapter(Object componentKey, Class componentImplementation, Parameter[] parameters) {
+    /**
+     * Classloader to set for the BeanShell interpreter.
+     */
+    private final ClassLoader classLoader;
+
+    public BeanShellComponentAdapter(final Object componentKey, final Class componentImplementation, final Parameter[] parameters, final ClassLoader classLoader) {
         super(componentKey, componentImplementation);
         this.parameters = parameters;
+        this.classLoader = classLoader;
+    }
+
+    public BeanShellComponentAdapter(final Object componentKey, final Class componentImplementation, final Parameter[] parameters) {
+        this(componentKey, componentImplementation, parameters, BeanShellComponentAdapter.class.getClassLoader());
     }
 
     public Object getComponentInstance(PicoContainer pico)
@@ -66,6 +75,7 @@ public class BeanShellComponentAdapter extends AbstractComponentAdapter {
         if (instance == null) {
             try {
                 Interpreter i = new Interpreter();
+                i.setClassLoader(classLoader);
                 i.set("adapter", this);
                 i.set("picoContainer", pico);
                 i.set("componentKey", getComponentKey());

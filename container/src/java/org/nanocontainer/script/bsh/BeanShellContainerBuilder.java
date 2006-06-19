@@ -20,6 +20,7 @@ import bsh.Interpreter;
  * PicoContainer.
  *
  * @author Aslak Helles&oslash;y
+ * @author Michael Rimov
  * @author Mauro Talevi
  * @version $Revision$
  */
@@ -32,12 +33,13 @@ public class BeanShellContainerBuilder extends ScriptedContainerBuilder {
     public BeanShellContainerBuilder(URL script, ClassLoader classLoader) {
         super(script, classLoader);
     }
-    
+
     protected PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope) {
         Interpreter i = new Interpreter();
         try {
             i.set("parent", parentContainer);
             i.set("assemblyScope", assemblyScope);
+            i.setClassLoader(this.getClassLoader());
             i.eval(getScriptReader(), i.getNameSpace(), "nanocontainer.bsh");
             return (PicoContainer) i.get("pico");
         } catch (EvalError e) {

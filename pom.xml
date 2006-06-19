@@ -129,9 +129,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>bsh</groupId>
+			<groupId>org.beanshell</groupId>
 			<artifactId>bsh</artifactId>
-			<version>2.0b1</version>
+			<version>2.0b4</version>
 			<exclusions>
 				<exclusion>
 					<groupId>tonic</groupId>
