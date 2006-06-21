@@ -52,7 +52,6 @@ public class BeanShellContainerBuilderTestCase extends AbstractScriptedContainer
         Reader script = new StringReader("" +
             "try {\n" +
             "    getClass(\"TestComp\");\n" +
-            "    System.out.println(\"Got Here\");\n" +
             "} catch (ClassNotFoundException ex) {\n" +
             "     ClassLoader current = this.getClass().getClassLoader(); \n" +
             "     print(current.toString());\n" +
