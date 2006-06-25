@@ -8,11 +8,13 @@
 	</parent>
 	<artifactId>nanocontainer-deployer</artifactId>
 	<name>NanoContainer Deployer</name>
+	<packaging>jar</packaging>
 	<scm>
-		<connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</connection>
-		<developerConnection>svn+ssh://svn.picocontainer.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/deployer</developerConnection>
-		<url>https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</url>
+		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</connection>
+		<developerConnection>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</developerConnection>
+		<url>https://svn.codehaus.org/picocontainer/java/nanoocontainer/trunk/deployer</url>
 	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.picocontainer</groupId>

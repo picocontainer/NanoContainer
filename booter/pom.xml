@@ -8,10 +8,11 @@
 	</parent>
 	<artifactId>nanocontainer-booter</artifactId>
 	<name>NanoContainer Booter</name>
+	<packaging>jar</packaging>
 	<scm>
-		<connection>scm:svn:https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/booter</connection>
-		<developerConnection>svn+ssh://svn.picocontainer.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/booter</developerConnection>
-		<url>https://svn.picocontainer.codehaus.org/picocontainer/java/nanocontainer/trunk/booter</url>
+		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/booter</connection>
+		<developerConnection>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/booter</developerConnection>
+		<url>https://svn.codehaus.org/picocontainer/java/nanoocontainer/trunk/booter</url>
 	</scm>
 	<dependencies>
 		<dependency>
