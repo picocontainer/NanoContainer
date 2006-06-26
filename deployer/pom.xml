@@ -11,7 +11,7 @@
 	<packaging>jar</packaging>
 	<scm>
 		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</connection>
-		<developerConnection>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</developerConnection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</developerConnection>
 		<url>https://svn.codehaus.org/picocontainer/java/nanoocontainer/trunk/deployer</url>
 	</scm>
 

@@ -36,7 +36,7 @@
 
 	<scm>
 		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</connection>
-		<developerConnection>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</developerConnection>
 		<url>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</url>
 	</scm>
 

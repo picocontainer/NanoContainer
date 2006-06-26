@@ -10,7 +10,7 @@
 	<name>NanoContainer Test Model</name>
 	<scm>
 		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/testmodel</connection>
-		<developerConnection>https://svn.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/testmodel</developerConnection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/testmodel</developerConnection>
 		<url>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/testmodel</url>
 	</scm>
 	<dependencies>
