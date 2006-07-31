@@ -16,24 +16,35 @@ import org.nanocontainer.script.ScriptedContainerBuilder;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.alternatives.EmptyPicoContainer;
 
+/**
+ * The script uses the {@code nanocontainer.rb} script to create an instance of
+ * {@link PicoContainer}.
+ * There are implicit variables named "$parent" and "$assembly_scope".
+ * 
+ * @author Nick Sieger
+ */
 public class JRubyContainerBuilder extends ScriptedContainerBuilder {
     public static final String MARKUP_EXCEPTION_PREFIX = "nanobuilder: ";
 
-    private String scriptString;
+    private String script;
 
     public JRubyContainerBuilder(Reader script, ClassLoader classLoader) {
-        super(script, classLoader);
-        int charsRead;
-        char[] chars = new char[1024];
-        StringWriter writer = new StringWriter();
-        try {
-            while ((charsRead = script.read(chars)) != -1) {
-                writer.write(chars, 0, charsRead);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("unable to read script from reader", e);
-        }
-        scriptString = writer.toString();
+        super(script, classLoader);        
+        this.script = toString( script );
+    }
+
+    private String toString(Reader script) {
+	int charsRead;
+	char[] chars = new char[1024];
+	StringWriter writer = new StringWriter();
+	try {
+	    while ((charsRead = script.read(chars)) != -1) {
+		writer.write(chars, 0, charsRead);
+	    }
+	} catch (IOException e) {
+	    throw new RuntimeException("unable to read script from reader", e);
+	}
+	return writer.toString();
     }
 
     protected PicoContainer createContainerFromScript(PicoContainer parentContainer, Object assemblyScope) {
@@ -47,7 +58,7 @@ public class JRubyContainerBuilder extends ScriptedContainerBuilder {
         ruby.defineReadonlyVariable("$parent", JavaEmbedUtils.javaToRuby(ruby, parentContainer));
         ruby.defineReadonlyVariable("$assembly_scope", JavaEmbedUtils.javaToRuby(ruby, assemblyScope));
         try {
-            IRubyObject result = ruby.evalScript(scriptString);
+            IRubyObject result = ruby.evalScript(script);
             return (PicoContainer) JavaEmbedUtils.rubyToJava(ruby, result, PicoContainer.class);
         } catch (RaiseException re) {
             String message = (String) JavaEmbedUtils.rubyToJava(ruby, re.getException().message, String.class);
