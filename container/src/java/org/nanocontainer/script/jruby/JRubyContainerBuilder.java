@@ -1,3 +1,12 @@
+/*****************************************************************************
+ * Copyright (C) NanoContainer Organization. All rights reserved.            *
+ * ------------------------------------------------------------------------- *
+ * The software in this package is published under the terms of the BSD      *
+ * style license a copy of which has been included with this distribution in *
+ * the LICENSE.txt file.                                                     *
+ * Original code by Nick Sieger                                                                          *
+ *****************************************************************************/
+
 package org.nanocontainer.script.jruby;
 
 import java.io.IOException;
@@ -20,7 +29,7 @@ import org.picocontainer.alternatives.EmptyPicoContainer;
  * The script uses the {@code nanocontainer.rb} script to create an instance of
  * {@link PicoContainer}.
  * There are implicit variables named "$parent" and "$assembly_scope".
- * 
+ *
  * @author Nick Sieger
  */
 public class JRubyContainerBuilder extends ScriptedContainerBuilder {
@@ -29,7 +38,7 @@ public class JRubyContainerBuilder extends ScriptedContainerBuilder {
     private String script;
 
     public JRubyContainerBuilder(Reader script, ClassLoader classLoader) {
-        super(script, classLoader);        
+        super(script, classLoader);
         this.script = toString( script );
     }
 

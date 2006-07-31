@@ -111,7 +111,13 @@ module Nano
     end
 
     def container(options = {}, &block)
-      container = Container.new(options.merge(:parent => @container))
+      if !options[:parent].nil? && options[:parent].equal?($parent)
+          raise "#{MARKUP_EXCEPTION_PREFIX}You can't explicitly specify a parent in a child element."
+      end
+      if options[:parent].nil?
+        options[:parent] = @container
+      end
+      container = Container.new(options)
       container.build(&block)
       container
     end

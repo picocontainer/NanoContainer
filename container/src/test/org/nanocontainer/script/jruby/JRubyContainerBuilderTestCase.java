@@ -26,8 +26,17 @@ import org.picocontainer.defaults.SetterInjectionComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
 
+/**
+ * @author Nick Sieger
+ * @author Paul Hammant
+ * @author Chris Bailey
+ * @author Mauro Talevi
+ *
+ */
 public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
     private static final String ASSEMBLY_SCOPE = "SOME_SCOPE";
+
+
 
     public void testContainerCanBeBuiltWithParentGlobal() {
         Reader script = new StringReader("" +
@@ -403,6 +412,46 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
         ComponentAdapter componentAdapter = pico.registerComponentImplementation(String.class);
         assertTrue("ComponentAdapter should be originally defined by parent" , componentAdapter instanceof SetterInjectionComponentAdapter);
     }
+
+    public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
+        Reader script = new StringReader("" +
+                "include_class 'org.nanocontainer.script.groovy.A'\n" +
+                "include_class 'org.nanocontainer.script.groovy.B'\n" +
+                "container() {\n" +
+                "    component(A)\n" +
+                "    container(:parent => $parent) {\n" +
+                "         component(B)\n" +
+                "    }\n" +
+                "}\n");
+
+        try {
+            buildContainer(script, parent, ASSEMBLY_SCOPE);
+            fail("NanoContainerMarkupException should have been thrown.");
+        } catch (NanoContainerMarkupException ignore) {
+            // expected
+        }
+    }
+
+
+//    public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
+//        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
+//        Reader script = new StringReader("" +
+//                "package org.nanocontainer.script.groovy\n" +
+//                "nano = new GroovyNodeBuilder().container() {\n" +
+//                "    component(A)\n" +
+//                "    container(parent:parent) {\n" +
+//                "         component(B)\n" +
+//                "    }\n" +
+//                "}\n");
+//
+//        try {
+//            buildContainer(script, parent, ASSEMBLY_SCOPE);
+//            fail("NanoContainerMarkupException should have been thrown.");
+//        } catch (NanoContainerMarkupException ignore) {
+//            // ignore
+//        }
+//    }
 
     private PicoContainer buildContainer(Reader script, PicoContainer parent, Object scope) {
         return buildContainer(new JRubyContainerBuilder(script, getClass().getClassLoader()), parent, scope);

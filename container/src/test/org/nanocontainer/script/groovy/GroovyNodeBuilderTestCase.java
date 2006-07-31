@@ -461,7 +461,9 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
             buildContainer(script, parent, ASSEMBLY_SCOPE);
             fail("NanoContainerMarkupException should have been thrown.");
         } catch (NanoContainerMarkupException ignore) {
-            // ignore
+            System.out.println("-->" );
+            ignore.printStackTrace();
+            // expected
         }
     }
 
