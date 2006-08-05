@@ -93,6 +93,12 @@
             <version>2.0b4</version>
         </dependency>
 
+		<dependency>
+	      <groupId>org.jruby</groupId>
+     	  <artifactId>jruby</artifactId>
+      	  <version>0.9.0</version>
+    	</dependency>
+    	
 		<!-- aop dependencies -->
         <dependency>
 			<groupId>aopalliance</groupId>
