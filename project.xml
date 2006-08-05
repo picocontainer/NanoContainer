@@ -138,6 +138,7 @@
                     <include>**/*.dtd</include>
                     <include>**/*.xsd</include>
                     <include>**/*.xhtml</include>
+                    <include>**/*.rb</include>
                     <include>**/*.xml</include>
                     <include>**/*.png</include>
                     <include>**/*.jpg</include>
