@@ -74,10 +74,14 @@ public class DefaultNanoContainerTestCase extends TestCase {
 
     public void testThatTestCompIsNotNaturallyInTheClassPathForTesting() {
 
+        // the following tests try to load the jar containing TestComp - it
+        // won't do to have the class already available in the classpath
+
         try {
             DefaultNanoContainer dfca = new DefaultNanoContainer();
             dfca.registerComponentImplementation("foo", "TestComp");
             Object o = dfca.getPico().getComponentInstance("foo");
+            System.out.println("");
             fail("Should have failed. Class was loaded from " + o.getClass().getProtectionDomain().getCodeSource().getLocation());
         } catch (ClassNotFoundException expected) {
         }
