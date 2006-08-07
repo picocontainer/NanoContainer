@@ -3,15 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.nanocontainer</groupId>
-		<artifactId>nanocontainer-nanowar-parent</artifactId>
+		<artifactId>nanocontainer-parent</artifactId>
 		<version>1.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>nanocontainer-nanowar-server</artifactId>
-	<name>NanoContainer Nanowar Server</name>
+	<artifactId>nanocontainer-webcontainer</artifactId>
+	<name>NanoContainer WebContainer</name>
 	<scm>
-		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer-nanowar/trunk/server</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/scm/picocontainer/java/nanocontainer-nanowar/trunk/server</developerConnection>
-		<url>https://svn.codehaus.org/picocontainer/java/nanocontainer-nanowar/trunk/server</url>
+		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/webcontainer</connection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/webcontainer</developerConnection>
+		<url>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/webcontainer</url>
 	</scm>
 	<dependencies>
 		<dependency>

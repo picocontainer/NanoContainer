@@ -10,13 +10,11 @@
 package org.nanocontainer.nanowar.server;
 
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.util.LazyList;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-import javax.servlet.Filter;
 import java.util.EventListener;
 
 public class PicoContextHandler {
