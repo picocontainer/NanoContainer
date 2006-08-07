@@ -7,7 +7,7 @@
  *                                                                           *
  *****************************************************************************/
 
-package org.nanocontainer.nanowar.server;
+package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -15,8 +15,9 @@ import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.nio.BlockingChannelConnector;
 import org.picocontainer.PicoContainer;
-import org.picocontainer.Startable;
 import org.picocontainer.alternatives.EmptyPicoContainer;
+import org.nanocontainer.webcontainer.JettyServerLifecycleException;
+import org.nanocontainer.webcontainer.PicoContextHandler;
 
 public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer {
 

@@ -7,7 +7,7 @@
  *                                                                           *
  *****************************************************************************/
 
-package org.nanocontainer.nanowar.server;
+package org.nanocontainer.webcontainer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -16,20 +16,31 @@ import junit.framework.TestCase;
 
 import org.mortbay.io.IO;
 import org.picocontainer.defaults.DefaultPicoContainer;
+import org.nanocontainer.webcontainer.PicoJettyServer;
+import org.nanocontainer.webcontainer.PicoContextHandler;
+import org.nanocontainer.webcontainer.PicoServletHolder;
 
 public class DependencyInjectionServletTestCase extends TestCase {
+
+    PicoJettyServer server;
+    protected void tearDown() throws Exception {
+        if (server != null) {
+            server.stop();
+        }
+        Thread.sleep(1 * 1000);
+    }
 
     public void testCanInstantiateWebContainerContextAndServlet() throws InterruptedException, IOException {
 
         final DefaultPicoContainer parentContainer = new DefaultPicoContainer();
         parentContainer.registerComponentInstance(String.class, "Fred");
 
-        PicoJettyServer server = new PicoJettyServer("localhost", 8080, parentContainer);
+        server = new PicoJettyServer("localhost", 8080, parentContainer);
         PicoContextHandler barContext = server.createContext("/bar");
         Class servletClass = DependencyInjectionTestServlet.class;
         PicoServletHolder holder = barContext.addServletWithMapping(servletClass, "/foo");
         holder.setInitParameter("foo", "bar");
-       
+
         server.start();
 
         Thread.sleep(2 * 1000);
@@ -37,9 +48,6 @@ public class DependencyInjectionServletTestCase extends TestCase {
         URL url = new URL("http://localhost:8080/bar/foo");
         assertEquals("hello Fred bar", IO.toString(url.openStream()));
 
-        //Thread.sleep(50 * 1000);
-
-        server.stop();
 
     }
 

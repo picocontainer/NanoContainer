@@ -1,7 +1,7 @@
-package org.nanocontainer.nanowar.server.groovy;
+package org.nanocontainer.webcontainer.groovy;
 
 import groovy.util.NodeBuilder;
-import org.nanocontainer.nanowar.server.PicoWebAppContext;
+import org.nanocontainer.webcontainer.PicoWebAppContext;
 
 public class WarFileBuilder extends NodeBuilder {
     public WarFileBuilder(PicoWebAppContext context) {

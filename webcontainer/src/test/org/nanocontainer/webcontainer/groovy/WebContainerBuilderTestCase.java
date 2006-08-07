@@ -8,10 +8,11 @@
  *                                                                           *
  *****************************************************************************/
 
-package org.nanocontainer.nanowar.server.groovy;
+package org.nanocontainer.webcontainer.groovy;
 
 import junit.framework.TestCase;
 import org.nanocontainer.script.groovy.GroovyContainerBuilder;
+import org.nanocontainer.webcontainer.TestHelper;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ObjectReference;
 import org.picocontainer.defaults.SimpleReference;
@@ -20,6 +21,7 @@ import org.mortbay.io.IO;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.IOException;
+import java.io.File;
 import java.net.URL;
 
 public class WebContainerBuilderTestCase extends TestCase {
@@ -32,7 +34,8 @@ public class WebContainerBuilderTestCase extends TestCase {
     protected void tearDown() throws Exception {
         if (pico != null) {
             pico.stop();
-        }        
+        }
+        Thread.sleep(1 * 1000);
     }
 
     public void testCanComposeWebContainerContextAndFilter() throws InterruptedException, IOException {
@@ -42,15 +45,15 @@ public class WebContainerBuilderTestCase extends TestCase {
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
                 "    component(instance:new Integer(5))\n" +
-                "    newBuilder(class:'org.nanocontainer.nanowar.server.groovy.WebContainerBuilder') {\n" +
+                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
                 // declare the web container
                 "        webContainer(port:8080) {\n" +
                 "            context(path:'/bar') {\n" +
-                "                filter(path:'/*', class:org.nanocontainer.nanowar.server.DependencyInjectionTestFilter," +
+                "                filter(path:'/*', class:org.nanocontainer.webcontainer.DependencyInjectionTestFilter," +
                 "                       dispatchers: new Integer(0)){\n" +
                 "                   initParam(name:'foo', value:'bau')\n" +
                 "                }\n" +
-                "                servlet(path:'/foo2', class:org.nanocontainer.nanowar.server.DependencyInjectionTestServlet)\n" +
+                "                servlet(path:'/foo2', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet)\n" +
 
                 "            }\n" +
                 "        }\n" +
@@ -67,11 +70,11 @@ public class WebContainerBuilderTestCase extends TestCase {
                 "builder = new GroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
-                "    newBuilder(class:'org.nanocontainer.nanowar.server.groovy.WebContainerBuilder') {\n" +
+                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
                 // declare the web container
                 "        webContainer(port:8080) {\n" +
                 "            context(path:'/bar') {\n" +
-                "                servlet(path:'/foo', class:org.nanocontainer.nanowar.server.DependencyInjectionTestServlet){\n" +
+                "                servlet(path:'/foo', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet){\n" +
                 "                   initParam(name:'foo', value:'bar')\n" +
                 "                }\n" +
                 "            }\n" +
@@ -89,12 +92,12 @@ public class WebContainerBuilderTestCase extends TestCase {
                 "builder = new GroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
-                "    newBuilder(class:'org.nanocontainer.nanowar.server.groovy.WebContainerBuilder') {\n" +
+                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
                 // declare the web container
                 "        webContainer() {\n" +
                 "            blockingChannelConnector(host:'localhost', port:8080)\n" +
                 "            context(path:'/bar') {\n" +
-                "                servlet(path:'/foo', class:org.nanocontainer.nanowar.server.DependencyInjectionTestServlet)\n" +
+                "                servlet(path:'/foo', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet)\n" +
                 "            }\n" +
                 "        }\n" +
                 // end declaration
@@ -105,22 +108,26 @@ public class WebContainerBuilderTestCase extends TestCase {
     }
 
     public void testCanComposeWebContainerAndWarFile() throws InterruptedException, IOException {
+
+        File testWar = TestHelper.getTestWarFile();
+
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
-                "    newBuilder(class:'org.nanocontainer.nanowar.server.groovy.WebContainerBuilder') {\n" +
+                "    component(instance:new Integer(5))\n" +
+                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
                 // declare the web container
                 "        webContainer() {\n" +
                 "            blockingChannelConnector(host:'localhost', port:8080)\n" +
-                "            xmlWebApplication(path:'/bar', warfile:'testwar.war')" +
+                "            xmlWebApplication(path:'/bar', warfile:'"+testWar.getAbsolutePath()+"')" +
                 "        }\n" +
                 // end declaration
                 "    }\n" +
                 "}\n");
 
-        assertPageIsHostedWithContents(script, "hello Fred", "http://localhost:8080/bar/foo");
+        assertPageIsHostedWithContents(script, "hello Fred bar", "http://localhost:8080/bar/foo");
     }
 
     public void testCanComposeWebContainerContextAndListener() throws InterruptedException, IOException {
@@ -129,11 +136,11 @@ public class WebContainerBuilderTestCase extends TestCase {
                 "builder = new GroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(class:StringBuffer.class)\n" +
-                "    newBuilder(class:'org.nanocontainer.nanowar.server.groovy.WebContainerBuilder') {\n" +
+                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
                 // declare the web container
                 "        webContainer(port:8080) {\n" +
                 "            context(path:'/bar') {\n" +
-                "                listener(class:org.nanocontainer.nanowar.server.DependencyInjectionTestListener)\n" +
+                "                listener(class:org.nanocontainer.webcontainer.DependencyInjectionTestListener)\n" +
                 "            }\n" +
                 "        }\n" +
                 // end declaration

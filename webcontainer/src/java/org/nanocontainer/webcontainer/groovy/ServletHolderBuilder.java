@@ -1,4 +1,4 @@
-package org.nanocontainer.nanowar.server.groovy;
+package org.nanocontainer.webcontainer.groovy;
 
 import groovy.util.NodeBuilder;
 

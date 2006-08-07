@@ -1,0 +1,13 @@
+<project name="test-war">
+
+    <target name="war" description="Create test WAR file">
+        <war destfile="../testwar.war" webxml="src/test/org/nanocontainer/webcontainer/web.xml">
+            <classes dir="target/test-classes">
+                <include name="**/*Filter.class"/>
+                <include name="**/*Servlet.class"/>
+                <include name="**/*Listener.class"/>
+            </classes>
+        </war>
+    </target>
+
+</project>

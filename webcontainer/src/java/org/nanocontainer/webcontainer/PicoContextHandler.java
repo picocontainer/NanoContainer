@@ -7,7 +7,7 @@
  *                                                                           *
  *****************************************************************************/
 
-package org.nanocontainer.nanowar.server;
+package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;

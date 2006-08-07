@@ -1,4 +1,4 @@
-package org.nanocontainer.nanowar.server;
+package org.nanocontainer.webcontainer;
 
 import java.io.IOException;
 

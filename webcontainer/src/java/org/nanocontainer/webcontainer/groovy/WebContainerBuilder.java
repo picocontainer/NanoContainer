@@ -8,12 +8,12 @@
  *                                                                           *
  *****************************************************************************/
 
-package org.nanocontainer.nanowar.server.groovy;
+package org.nanocontainer.webcontainer.groovy;
 
 import groovy.util.NodeBuilder;
 import org.picocontainer.MutablePicoContainer;
-import org.nanocontainer.nanowar.server.groovy.ServerBuilder;
-import org.nanocontainer.nanowar.server.PicoJettyServer;
+import org.nanocontainer.webcontainer.groovy.ServerBuilder;
+import org.nanocontainer.webcontainer.PicoJettyServer;
 
 import java.util.Map;
 

@@ -7,17 +7,18 @@
  *                                                                           *
  *****************************************************************************/
 
-package org.nanocontainer.nanowar.server;
+package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.picocontainer.PicoContainer;
+import org.nanocontainer.webcontainer.PicoFilterHolder;
 
 public class PicoServletHandler extends ServletHandler {
 
     private final PicoContainer parentContainer;
-    
+
     public PicoServletHandler(PicoContainer parentContainer) {
         this.parentContainer = parentContainer;
     }

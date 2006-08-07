@@ -6,28 +6,31 @@
  * the LICENSE.txt file.                                                     *
  *                                                                           *
  *****************************************************************************/
+package org.nanocontainer.webcontainer;
 
-package org.nanocontainer.nanowar.server;
-
-import org.mortbay.jetty.webapp.WebXmlConfiguration;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.servlet.FilterHolder;
 import org.picocontainer.PicoContainer;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
-public class PicoWebXmlConfiguration extends WebXmlConfiguration {
+import javax.servlet.Servlet;
 
-    private PicoContainer parentContainer;
+public class PicoServletHolder extends ServletHolder {
 
-    public PicoWebXmlConfiguration(PicoContainer parentContainer) {
+    private final PicoContainer parentContainer;
+
+    public PicoServletHolder(PicoContainer parentContainer) {
         this.parentContainer = parentContainer;
     }
 
-    protected ServletHolder newServletHolder() {
-        return new PicoServletHolder(parentContainer);
+
+    public PicoServletHolder(Class clazz, PicoContainer parentContainer) {
+        super(clazz);
+        this.parentContainer = parentContainer;
     }
 
-    protected FilterHolder newFilterHolder() {
-        return new PicoFilterHolder(parentContainer);
+    public synchronized Object newInstance() throws InstantiationException, IllegalAccessException {
+        DefaultPicoContainer child = new DefaultPicoContainer(parentContainer);
+        child.registerComponentImplementation(Servlet.class, _class);
+        return child.getComponentInstance(Servlet.class);
     }
-
 }
