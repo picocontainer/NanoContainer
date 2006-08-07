@@ -14,6 +14,7 @@ import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.testmodel.WebServer;
 import org.nanocontainer.testmodel.WebServerConfig;
+import org.nanocontainer.TestHelper;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
@@ -55,16 +56,12 @@ public class JavascriptContainerBuilderTestCase extends AbstractScriptedContaine
 
     public void testClassLoaderHierarchy() throws ClassNotFoundException, IOException, PicoCompositionException, JavaScriptException {
 
-        String testcompJarFileName = System.getProperty("testcomp.jar");
-        // Paul's path to TestComp. PLEASE do not take out.
-        //testcompJarFileName = "D:/OSS/PN/java/nanocontainer/src/test-comp/TestComp.jar";
-
-        assertNotNull("The testcomp.jar system property should point to TestComp.jar", testcompJarFileName);
-        File testCompJar = new File(testcompJarFileName);
+        File testCompJar = TestHelper.getTestCompJarFile();
         assertTrue(testCompJar.isFile());
 
         final String testCompJarPath = testCompJar.getCanonicalPath().replace('\\', '/');
-        Reader script = new StringReader("var pico = new DefaultNanoPicoContainer()\n" +
+        Reader script = new StringReader(
+                "var pico = new DefaultNanoPicoContainer()\n" +
                 "pico.registerComponentImplementation('parentComponent', Packages." + FooTestComp.class.getName() + ")\n" +
                 "child = new DefaultNanoPicoContainer(pico)\n" +
                 "pico.addChildContainer(child)\n" +
@@ -79,7 +76,9 @@ public class JavascriptContainerBuilderTestCase extends AbstractScriptedContaine
 
         Object childComponent = pico.getComponentInstance("wayOfPassingSomethingToTestEnv");
 
-        assertNotSame(parentComponent.getClass().getClassLoader(), childComponent.getClass().getClassLoader());
+        ClassLoader classLoader1 = parentComponent.getClass().getClassLoader();
+        ClassLoader classLoader2 = childComponent.getClass().getClassLoader();
+        assertNotSame(classLoader1, classLoader2);
         /*
         system cl -> loads FooTestComp
           parent container cl

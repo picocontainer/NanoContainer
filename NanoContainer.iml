@@ -9,7 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/booter/src/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/container/src/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/container/src/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/container/src/test-comp" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/deployer/src/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/deployer/src/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/testmodel/src/java" isTestSource="true" />

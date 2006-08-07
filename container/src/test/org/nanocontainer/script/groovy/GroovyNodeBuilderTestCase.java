@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import org.jmock.Mock;
 import org.nanocontainer.NanoPicoContainer;
+import org.nanocontainer.TestHelper;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
@@ -461,8 +462,6 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
             buildContainer(script, parent, ASSEMBLY_SCOPE);
             fail("NanoContainerMarkupException should have been thrown.");
         } catch (NanoContainerMarkupException ignore) {
-            System.out.println("-->" );
-            ignore.printStackTrace();
             // expected
         }
     }
@@ -512,7 +511,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         Reader script = new StringReader(
                 ""
                         + "        builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n"
-                        + "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n"
+                        + "        File testCompJar = org.nanocontainer.TestHelper.getTestCompJarFile()\n"
                         + "        compJarPath = testCompJar.getCanonicalPath()\n"
                         + "        child = null\n"
                         + "        pico = builder.container {\n"
@@ -535,7 +534,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         Reader script = new StringReader(
                 ""
                 + "        builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n"
-                        + "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n"
+                        + "        File testCompJar = org.nanocontainer.TestHelper.getTestCompJarFile()\n"
                         + "        compJarPath = testCompJar.getCanonicalPath()\n"
                         + "        child = null\n"
                         + "        pico = builder.container {\n"
@@ -558,7 +557,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         try {
             Reader script = new StringReader("" +
                     "        builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
-                    "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+                    "        File testCompJar = org.nanocontainer.TestHelper.getTestCompJarFile()\n" +
                     "        compJarPath = testCompJar.getCanonicalPath()\n" +
                     "        child = null\n" +
                     "        pico = builder.container {\n" +
@@ -588,8 +587,10 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
 
     }
 
+
     public void testWithParentClassPathPropagatesWithNoParentContainer()throws IOException {
-        File testCompJar = new File(System.getProperty("testcomp.jar"));
+        File testCompJar = TestHelper.getTestCompJarFile();
+
         URLClassLoader classLoader = new URLClassLoader(new URL[] {testCompJar.toURL()}, this.getClass().getClassLoader());
         Class testComp = null;
 
