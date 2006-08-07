@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.nanocontainer</groupId>
+		<artifactId>nanocontainer-nanowar-parent</artifactId>
+		<version>1.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>nanocontainer-nanowar-server</artifactId>
+	<name>NanoContainer Nanowar Server</name>
+	<scm>
+		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer-nanowar/trunk/server</connection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/scm/picocontainer/java/nanocontainer-nanowar/trunk/server</developerConnection>
+		<url>https://svn.codehaus.org/picocontainer/java/nanocontainer-nanowar/trunk/server</url>
+	</scm>
+	<dependencies>
+		<dependency>
+			<groupId>org.picocontainer</groupId>
+			<artifactId>picocontainer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.picocontainer</groupId>
+			<artifactId>picocontainer-gems</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.nanocontainer</groupId>
+			<artifactId>nanocontainer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>groovy</groupId>
+			<artifactId>groovy-all-1.0-jsr</artifactId>
+		</dependency>
+	</dependencies>
+</project>
