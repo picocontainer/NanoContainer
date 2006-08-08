@@ -20,6 +20,7 @@
       <excludeFolder url="file://$MODULE_DIR$/deployer" />
       <excludeFolder url="file://$MODULE_DIR$/deployer/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/testmodel/target" />
       <excludeFolder url="file://$MODULE_DIR$/webcontainer/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -46,7 +47,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/groovy/groovy-all-1.0-jsr/04/groovy-all-1.0-jsr-04.jar!/" />
+          <root url="jar://$M2_REPOSITORY$/groovy/groovy-all-1.0-jsr/06/groovy-all-1.0-jsr-06.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -64,7 +65,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/rhino/js/1.5R4.1/js-1.5R4.1.jar!/" />
+          <root url="jar://$M2_REPOSITORY$/rhino/js/1.6R2/js-1.6R2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
