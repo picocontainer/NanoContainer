@@ -9,10 +9,9 @@
  *****************************************************************************/
 package org.nanocontainer.script.groovy;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import groovy.lang.Closure;
+import groovy.lang.GroovyObject;
+import groovy.util.BuilderSupport;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.nanocontainer.DefaultNanoContainer;
 import org.nanocontainer.NanoContainer;
@@ -21,9 +20,11 @@ import org.nanocontainer.script.NodeBuilderDecorationDelegate;
 import org.nanocontainer.script.NullNodeBuilderDecorationDelegate;
 import org.nanocontainer.script.groovy.buildernodes.*;
 import org.picocontainer.MutablePicoContainer;
-import groovy.lang.Closure;
-import groovy.lang.GroovyObject;
-import groovy.util.BuilderSupport;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Builds node trees of PicoContainers and Pico components using GroovyMarkup.
@@ -43,12 +44,13 @@ import groovy.util.BuilderSupport;
  * the groovy node builder with terms such as 'aspect', 'pointcut', etc.</p>
  * <p>GroovyNodeBuilder provides two primary ways of enhancing the nodes supported
  * by the groovy builder: {@link org.nanocontainer.script.NodeBuilderDecorationDelegate}
- * and special node handlers {@link org.nanocontainer.script.groovy.BuilderNode}.
+ * and special node handlers {@link BuilderNode}.
  * Using NodeBuilderDecorationDelegate is often a preferred method because it is
  * ultimately script independent.  However, replacing an existing GroovyNodeBuilder's
  * behavior is currently the only way to replace the behavior of an existing
  * groovy node handler.
  * </p>
+ *
  * @author James Strachan
  * @author Paul Hammant
  * @author Aslak Helles&oslash;y
@@ -85,7 +87,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
      * Map of node handlers.
      */
     private Map nodeBuilderHandlers = new HashMap();
-
+    private Map nodeBuilders = new HashMap();
 
     private final boolean performAttributeValidation;
 
@@ -94,9 +96,10 @@ public class GroovyNodeBuilder extends BuilderSupport {
      * Allows the composition of a <tt>{@link NodeBuilderDecorationDelegate}</tt> -- an
      * object that extends the capabilities of the <tt>GroovyNodeBuilder</tt>
      * with new tags, new capabilities, etc.
-     * @param decorationDelegate NodeBuilderDecorationDelegate
+     *
+     * @param decorationDelegate         NodeBuilderDecorationDelegate
      * @param performAttributeValidation should be set to PERFORM_ATTRIBUTE_VALIDATION
-     * or SKIP_ATTRIBUTE_VALIDATION
+     *                                   or SKIP_ATTRIBUTE_VALIDATION
      * @see org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate
      */
     public GroovyNodeBuilder(NodeBuilderDecorationDelegate decorationDelegate, boolean performAttributeValidation) {
@@ -105,16 +108,15 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
         //Build and register node handlers.
         this.setNode(new ComponentNode(decorationDelegate))
-            .setNode(new ChildContainerNode(decorationDelegate))
-            .setNode(new BeanNode())
-            .setNode(new ClasspathNode())
-            .setNode(new DoCallNode())
-            .setNode(new NewBuilderNode())
-            .setNode(new ClassLoaderNode())
-            .setNode(new DecoratingPicoContainerNode())
-            .setNode(new GrantNode())
-            .setNode(new AppendContainerNode());
-
+                .setNode(new ChildContainerNode(decorationDelegate))
+                .setNode(new BeanNode())
+                .setNode(new ClasspathNode())
+                .setNode(new DoCallNode())
+                .setNode(new NewBuilderNode())
+                .setNode(new ClassLoaderNode())
+                .setNode(new DecoratingPicoContainerNode())
+                .setNode(new GrantNode())
+                .setNode(new AppendContainerNode());
 
     }
 
@@ -124,9 +126,6 @@ public class GroovyNodeBuilder extends BuilderSupport {
     public GroovyNodeBuilder() {
         this(new NullNodeBuilderDecorationDelegate(), SKIP_ATTRIBUTE_VALIDATION);
     }
-
-
-
 
 
     protected void setParent(Object parent, Object child) {
@@ -158,12 +157,13 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
     /**
      * Override of create node.  Called by BuilderSupport.  It examines the
-    * current state of the builder and the given parameters and dispatches the
+     * current state of the builder and the given parameters and dispatches the
      * code to one of the create private functions in this object.
-     * @param name The name of the groovy node we're building.  Examples are
-     * 'container', and 'grant',
+     *
+     * @param name       The name of the groovy node we're building.  Examples are
+     *                   'container', and 'grant',
      * @param attributes Map  attributes of the current invocation.
-     * @param value A closure passed into the node.  Currently unused.
+     * @param value      A closure passed into the node.  Currently unused.
      * @return Object the created object.
      */
     protected Object createNode(Object name, Map attributes, Object value) {
@@ -178,17 +178,47 @@ public class GroovyNodeBuilder extends BuilderSupport {
                 throw new NanoContainerMarkupException("You can't explicitly specify a parent in a child element.");
             }
         }
-        return handleNode(name, attributes, current);
+        if (name.equals("registerBuilder")) {
+            return registerBuilder(attributes);
 
+        } else {
+            return handleNode(name, attributes, current);
+        }
+
+    }
+
+    private Object registerBuilder(Map attributes) {
+        String builderName = (String) attributes.remove("name");
+        Object clazz = attributes.remove("class");
+        try {
+            if (clazz instanceof String) {
+                clazz = this.getClass().getClassLoader().loadClass((String) clazz);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new NanoContainerMarkupException("ClassNotFoundException " + clazz);
+        }
+        nodeBuilders.put(builderName, clazz);
+        return clazz;
     }
 
     private Object handleNode(Object name, Map attributes, Object current) {
 
+        attributes = new HashMap(attributes);
+
         BuilderNode nodeHandler = this.getNode(name.toString());
+
+        if (nodeHandler == null) {
+            Class builderClass = (Class) nodeBuilders.get(name);
+            if (builderClass != null) {
+                nodeHandler = this.getNode("newBuilder");
+                attributes.put("class",builderClass);
+            }
+        }
 
         if (nodeHandler == null) {
             // we don't know how to handle it - delegate to the decorator.
             return getDecorationDelegate().createNode(name, attributes, current);
+
         } else {
             //We found a handler.
 
@@ -204,6 +234,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
     /**
      * Pulls the nanocontainer from the 'current' method or possibly creates
      * a new blank one if needed.
+     *
      * @param attributes Map the attributes of the current node.
      * @return NanoContainer, never null.
      * @throws NanoContainerMarkupException
@@ -228,6 +259,7 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
     /**
      * Retrieve the current decoration delegate.
+     *
      * @return NodeBuilderDecorationDelegate, should never be null.
      */
     public NodeBuilderDecorationDelegate getDecorationDelegate() {
@@ -237,19 +269,22 @@ public class GroovyNodeBuilder extends BuilderSupport {
 
     /**
      * Returns an appropriate node handler for a given node and
+     *
      * @param tagName String
      * @return CustomGroovyNode the appropriate node builder for the given
-     * tag name, or null if no handler exists. (In which case, the Delegate
-     * receives the createChildContainer() call)
+     *         tag name, or null if no handler exists. (In which case, the Delegate
+     *         receives the createChildContainer() call)
      */
     public synchronized BuilderNode getNode(final String tagName) {
-        return (BuilderNode)nodeBuilderHandlers.get(tagName);
+        Object o = nodeBuilderHandlers.get(tagName);
+        return (BuilderNode) o;
     }
 
     /**
      * Add's a groovy node handler to the table of possible handlers. If a node
      * handler with the same node name already exists in the map of handlers, then
      * the <tt>GroovyNode</tt> replaces the existing node handler.
+     *
      * @param newGroovyNode CustomGroovyNode
      * @return GroovyNodeBuilder to allow for method chaining.
      */

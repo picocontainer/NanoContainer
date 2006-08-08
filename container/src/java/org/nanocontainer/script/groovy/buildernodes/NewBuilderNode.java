@@ -57,13 +57,18 @@ public class NewBuilderNode extends AbstractBuilderNode {
     }
 
     public Object createNewNode(final Object current, final Map attributes) {
-        String builderClass = (String) attributes.remove(CLASS_ATTRIBUTE);
+        Object builderClass = attributes.remove(CLASS_ATTRIBUTE);
+
 
         NanoContainer factory = new DefaultNanoContainer();
         MutablePicoContainer parentPico = ((NanoContainer) current).getPico();
         factory.getPico().registerComponentInstance(MutablePicoContainer.class, parentPico);
         try {
-            factory.registerComponentImplementation(GroovyObject.class, builderClass);
+            if (builderClass instanceof String) {
+                factory.registerComponentImplementation(GroovyObject.class, (String) builderClass);
+            } else {
+                factory.getPico().registerComponentImplementation(GroovyObject.class, (Class) builderClass);
+            }
         } catch (ClassNotFoundException e) {
             throw new NanoContainerMarkupException("ClassNotFoundException " + builderClass);
         }

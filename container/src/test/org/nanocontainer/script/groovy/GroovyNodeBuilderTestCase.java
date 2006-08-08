@@ -177,6 +177,26 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.script.groovy.TestingChildBuilder')\n" +
+                "nano = builder.container {\n" +
+                "    component(key:'a', class:A)\n" +
+                "    foo {\n" +
+                "      component(key:'b', class:B)\n" +
+                "    }\n" +
+                "}");
+
+        PicoContainer pico = buildContainer(script, null, ASSEMBLY_SCOPE);
+        Object a = pico.getComponentInstance("a");
+        Object b = pico.getComponentInstance("b");
+
+        assertNotNull(a);
+        assertNotNull(b);
+    }
+
+    public void testShouldBeAbleToHandOffToNestedBuilderTheInlinedWay() {
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "builder = new GroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'a', class:A)\n" +
                 "    newBuilder(class:'org.nanocontainer.script.groovy.TestingChildBuilder') {\n" +
@@ -191,6 +211,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         assertNotNull(a);
         assertNotNull(b);
     }
+
 
     public void testInstantiateBasicComponentInDeeperTree() {
         X.reset();

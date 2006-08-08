@@ -45,7 +45,6 @@ public class TestingChildBuilder extends BuilderSupport {
         return createNode(name);
     }
 
-
     protected Object createNode(Object name, Map map) {
         if (name.equals("component")) {
             return toOperateOn.registerComponentImplementation(map.remove("key"), (Class) map.remove("class"));
