@@ -42,10 +42,11 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
                 "    component(instance:new Integer(5))\n" +
-                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
+                "    foo {\n" +
                 // declare the web container
                 "        webContainer(port:8080) {\n" +
                 "            context(path:'/bar') {\n" +
@@ -68,9 +69,10 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
-                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
+                "    foo {\n" +
                 // declare the web container
                 "        webContainer(port:8080) {\n" +
                 "            context(path:'/bar') {\n" +
@@ -90,9 +92,10 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
-                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
+                "    foo {\n" +
                 // declare the web container
                 "        webContainer() {\n" +
                 "            blockingChannelConnector(host:'localhost', port:8080)\n" +
@@ -114,10 +117,11 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
                 "    component(instance:new Integer(5))\n" +
-                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
+                "    foo {\n" +
                 // declare the web container
                 "        webContainer() {\n" +
                 "            blockingChannelConnector(host:'localhost', port:8080)\n" +
@@ -134,9 +138,10 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(class:StringBuffer.class)\n" +
-                "    newBuilder(class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder') {\n" +
+                "    foo {\n" +
                 // declare the web container
                 "        webContainer(port:8080) {\n" +
                 "            context(path:'/bar') {\n" +
