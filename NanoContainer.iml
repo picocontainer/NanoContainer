@@ -13,11 +13,14 @@
       <sourceFolder url="file://$MODULE_DIR$/deployer/src/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/testmodel/src/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/testmodel/src/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/webcontainer/src/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/webcontainer/src/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/booter/target" />
       <excludeFolder url="file://$MODULE_DIR$/container/target" />
       <excludeFolder url="file://$MODULE_DIR$/deployer" />
       <excludeFolder url="file://$MODULE_DIR$/deployer/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/webcontainer/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -125,6 +128,33 @@
       <library>
         <CLASSES>
           <root url="jar://$M2_REPOSITORY$/org/jruby/jruby/0.9.0/jruby-0.9.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty/6.0.0rc0/jetty-6.0.0rc0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPOSITORY$/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty-util/6.0.0rc0/jetty-util-6.0.0rc0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
