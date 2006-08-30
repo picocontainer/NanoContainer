@@ -290,6 +290,12 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>tomcat</groupId>
+                <artifactId>jasper-compiler-jdt</artifactId>
+                <version>5.5.15</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
                 <version>1.0.4</version>

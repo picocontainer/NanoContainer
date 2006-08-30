@@ -52,6 +52,10 @@
             </dependency>
             <dependency>
                 <groupId>tomcat</groupId>
+                <artifactId>jasper-compiler-jdt</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>tomcat</groupId>
                 <artifactId>jasper-compiler</artifactId>
             </dependency>
             <dependency>
