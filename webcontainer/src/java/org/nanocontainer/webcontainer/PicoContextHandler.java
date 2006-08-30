@@ -85,4 +85,11 @@ public class PicoContextHandler {
         resourceHandler.setResourceBase(absolutePath);
         context.addHandler(resourceHandler);
     }
+
+    public void setStaticContext(String absolutePath, String welcomePage) {
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setResourceBase(absolutePath);
+        resourceHandler.setWelcomeFiles(new String[] {welcomePage});
+        context.addHandler(resourceHandler);
+    }
 }
