@@ -41,7 +41,39 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
 
         URL url = new URL("http://localhost:8080/bar/foo");
         assertEquals("hello Fred bar", IO.toString(url.openStream()));
+
         assertEquals("-contextInitialized", sb.toString());
+
+    }
+
+    public void testCanHostJspPage()
+            throws InterruptedException, IOException {
+
+        File testWar = TestHelper.getTestWarFile();
+
+        final DefaultPicoContainer parentContainer = new DefaultPicoContainer();
+        parentContainer.registerComponentInstance(String.class, "Fred");
+        parentContainer.registerComponentInstance(StringBuffer.class, new StringBuffer());
+        parentContainer.registerComponentInstance(Integer.class, new Integer(5));
+
+        server = new PicoJettyServer("localhost", 8080, parentContainer);
+        WebAppContext wac = server.addWebApplication("/bar", testWar.getAbsolutePath());
+        assertNotNull(wac);
+
+        server.start();
+
+        Thread.sleep(2 * 1000);
+
+        URL url = new URL("http://localhost:8080/bar/test.jsp");
+        assertEquals("<HTML>\n" +
+                "  <HEAD>\n" +
+                "    <TITLE>Test JSP</TITLE>\n" +
+                "  </HEAD>\n" +
+                "  <BODY>\n" +
+                "    hello\n" +
+                "  </BODY>\n" +
+                "</HTML>", IO.toString(url.openStream()));
+
 
     }
 

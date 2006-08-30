@@ -15,7 +15,6 @@ import org.mortbay.jetty.servlet.FilterHolder;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-import javax.servlet.Servlet;
 
 public class PicoWebXmlConfiguration extends WebXmlConfiguration {
 
@@ -34,11 +33,9 @@ public class PicoWebXmlConfiguration extends WebXmlConfiguration {
     }
 
     protected Object newListenerInstance(Class clazz) throws InstantiationException, IllegalAccessException {
-        System.out.println("--> listener - " + parentContainer.getComponentInstance(StringBuffer.class));
         DefaultPicoContainer child = new DefaultPicoContainer(parentContainer);
         child.registerComponentImplementation("listener", clazz);
         Object componentInstance = child.getComponentInstance("listener");
-        System.out.println("--> Listener - " + componentInstance + " " + clazz);
         return componentInstance;
 
     }
