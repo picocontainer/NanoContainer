@@ -6,10 +6,9 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.mortbay.io.IO;
 import org.mortbay.jetty.webapp.WebAppContext;
+import org.mortbay.util.IO;
 import org.picocontainer.defaults.DefaultPicoContainer;
-import org.nanocontainer.webcontainer.PicoJettyServer;
 
 public class DependencyInjectionServletWarFileTestCase extends TestCase {
 
@@ -28,6 +27,8 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
 
         final DefaultPicoContainer parentContainer = new DefaultPicoContainer();
         parentContainer.registerComponentInstance(String.class, "Fred");
+        StringBuffer sb = new StringBuffer();
+        parentContainer.registerComponentInstance(StringBuffer.class, sb);
         parentContainer.registerComponentInstance(Integer.class, new Integer(5));
 
         server = new PicoJettyServer("localhost", 8080, parentContainer);
@@ -40,6 +41,7 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
 
         URL url = new URL("http://localhost:8080/bar/foo");
         assertEquals("hello Fred bar", IO.toString(url.openStream()));
+        assertEquals("-contextInitialized", sb.toString());
 
     }
 

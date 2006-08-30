@@ -58,6 +58,7 @@ public class PicoContextHandler {
 
     public EventListener addListener(Class listenerClass) {
 
+        //context.add
         DefaultPicoContainer child = new DefaultPicoContainer(parentContainer);
         child.registerComponentImplementation(EventListener.class, listenerClass);
         EventListener instance = (EventListener) child.getComponentInstance(EventListener.class);

@@ -6,11 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.picocontainer.defaults.DefaultPicoContainer;
-import org.mortbay.io.IO;
-import org.nanocontainer.webcontainer.PicoJettyServer;
-import org.nanocontainer.webcontainer.PicoContextHandler;
-import org.nanocontainer.webcontainer.PicoFilterHolder;
-import org.nanocontainer.webcontainer.PicoServletHolder;
+import org.mortbay.util.IO;
 
 public class DependencyInjectionFilterTestCase extends TestCase {
 

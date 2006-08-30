@@ -14,11 +14,8 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.mortbay.io.IO;
+import org.mortbay.util.IO;
 import org.picocontainer.defaults.DefaultPicoContainer;
-import org.nanocontainer.webcontainer.PicoJettyServer;
-import org.nanocontainer.webcontainer.PicoContextHandler;
-import org.nanocontainer.webcontainer.PicoServletHolder;
 
 public class DependencyInjectionServletTestCase extends TestCase {
 

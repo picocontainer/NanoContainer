@@ -16,12 +16,9 @@ import org.nanocontainer.webcontainer.TestHelper;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ObjectReference;
 import org.picocontainer.defaults.SimpleReference;
-import org.mortbay.io.IO;
+import org.mortbay.util.IO;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.IOException;
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 
 public class WebContainerBuilderTestCase extends TestCase {
@@ -121,6 +118,7 @@ public class WebContainerBuilderTestCase extends TestCase {
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
                 "    component(instance:new Integer(5))\n" +
+                "    component(key:StringBuffer.class, instance:new StringBuffer())\n" +
                 "    foo {\n" +
                 // declare the web container
                 "        webContainer() {\n" +
@@ -132,9 +130,11 @@ public class WebContainerBuilderTestCase extends TestCase {
                 "}\n");
 
         assertPageIsHostedWithContents(script, "hello Fred bar", "http://localhost:8080/bar/foo");
+        assertEquals("-contextInitialized", pico.getComponentInstance(StringBuffer.class).toString());
     }
 
     public void testCanComposeWebContainerContextAndListener() throws InterruptedException, IOException {
+
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
@@ -152,7 +152,7 @@ public class WebContainerBuilderTestCase extends TestCase {
                 "    }\n" +
                 "}\n");
 
-        assertPageIsHostedWithContents(script, "", "http://localhost:8080/bar/foo");
+        assertPageIsHostedWithContents(script, "", "http://localhost:8080/bar/");
 
         StringBuffer stringBuffer = (StringBuffer) pico.getComponentInstance(StringBuffer.class);
 
@@ -171,7 +171,13 @@ public class WebContainerBuilderTestCase extends TestCase {
         
         Thread.sleep(2 * 1000);
 
-        assertEquals(message, IO.toString(new URL(url).openStream()));
+        String actual = null;
+        try {
+            actual = IO.toString(new URL(url).openStream());
+        } catch (FileNotFoundException e) {
+            actual = "";
+        }
+        assertEquals(message, actual);
     }
 
     private PicoContainer buildContainer(Reader script, PicoContainer parent, Object scope) {
