@@ -11,6 +11,7 @@ package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
+import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.util.LazyList;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
@@ -77,5 +78,11 @@ public class PicoContextHandler {
 
         return instance;
 
+    }
+
+    public void setStaticContext(String absolutePath) {
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setResourceBase(absolutePath);
+        context.addHandler(resourceHandler);
     }
 }
