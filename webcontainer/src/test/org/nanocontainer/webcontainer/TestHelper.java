@@ -10,14 +10,13 @@ public class TestHelper {
             return new File(testcompJarProperty);
         }
 
-        Class aClass = TestHelper.class;
-        File base = new File(aClass.getProtectionDomain().getCodeSource().getLocation().getFile());
-        File tj = new File(base,"testwar.war");
-        while (!tj.exists()) {
-            base = base.getParentFile();
-            tj = new File(base,"testwar.war");
+        File base = new File(TestHelper.class.getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile().getParentFile();
+        File warfile = new File(base,"src" + File.separator + "test" + File.separator + "testwar.war");
+
+        if (!warfile.exists()) {
+            warfile = new File(warfile.getAbsolutePath().replaceAll("/container/", "/webcontainer/"));
         }
-        return tj;
+        return warfile;
     }
 
 
