@@ -30,9 +30,24 @@ public class ContextBuilder extends NodeBuilder {
                 return makeServlet(map);
             } else if (name.equals("listener")) {
                 return makeListener(map);
+            } else if (name.equals("staticContent")) {
+                setStaticContent(map);
+                return null;
             }
+
             return null;
         }
+
+    private void setStaticContent(Map map) {
+
+        if (map.containsKey("welcomePage")) {
+            context.setStaticContext((String) map.remove("path"), (String) map.remove("welcomePage"));
+        } else {
+            context.setStaticContext((String) map.remove("path"));
+
+        }
+
+    }
 
     private Object makeListener(Map map) {
         return context.addListener((Class) map.remove("class"));

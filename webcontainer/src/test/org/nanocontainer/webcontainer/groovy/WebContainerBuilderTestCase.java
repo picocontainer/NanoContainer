@@ -165,6 +165,77 @@ public class WebContainerBuilderTestCase extends TestCase {
 
     }
 
+    public void testStaticContentCanBeServed() throws InterruptedException, IOException {
+
+        File testWar = TestHelper.getTestWarFile();
+
+
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
+                "nano = builder.container {\n" +
+                "    foo {\n" +
+                // declare the web container
+                "        webContainer(port:8080) {\n" +
+                "            context(path:'/bar') {\n" +
+                "                staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"')\n" +
+                "            }\n" +
+                "        }\n" +
+                // end declaration
+                "    }\n" +
+                "}\n");
+
+        assertPageIsHostedWithContents(script, "<html>\n" +
+                " <body>\n" +
+                "   hello\n" +
+                " </body>\n" +
+                "</html>", "http://localhost:8080/bar/hello.html");
+
+        Thread.sleep(1 * 1000);
+
+        pico.stop();
+        pico = null;
+
+
+    }
+
+    public void testStaticContentCanBeServedWithDefaultWelcomePage() throws InterruptedException, IOException {
+
+        File testWar = TestHelper.getTestWarFile();
+
+
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
+                "nano = builder.container {\n" +
+                "    foo {\n" +
+                // declare the web container
+                "        webContainer(port:8080) {\n" +
+                "            context(path:'/bar') {\n" +
+                "                staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"', welcomePage:'hello.html')\n" +
+                "            }\n" +
+                "        }\n" +
+                // end declaration
+                "    }\n" +
+                "}\n");
+
+        assertPageIsHostedWithContents(script, "<html>\n" +
+                " <body>\n" +
+                "   hello\n" +
+                " </body>\n" +
+                "</html>", "http://localhost:8080/bar/");
+
+        Thread.sleep(1 * 1000);
+
+        pico.stop();
+        pico = null;
+
+
+    }
+
+
     private void assertPageIsHostedWithContents(Reader script, String message, String url) throws InterruptedException, IOException {
         pico = buildContainer(script, null, "SOME_SCOPE");
         assertNotNull(pico);
