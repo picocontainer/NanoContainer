@@ -10,12 +10,14 @@
 package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.util.LazyList;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
+import javax.servlet.http.HttpServlet;
 import java.util.EventListener;
 
 public class PicoContextHandler {
@@ -42,6 +44,12 @@ public class PicoContextHandler {
         PicoServletHandler handler = getHandler();
         return (PicoServletHolder) handler.addServletWithMapping(servletClass, pathMapping);
     }
+
+    public void addServletWithMapping(HttpServlet servlet, String pathMapping) {
+        PicoServletHandler handler = getHandler();
+        handler.addServletWithMapping(new ServletHolder(servlet), pathMapping);
+    }
+
 
     private synchronized PicoServletHandler getHandler() {
         if (handler == null) {
@@ -92,4 +100,5 @@ public class PicoContextHandler {
         resourceHandler.setWelcomeFiles(new String[] {welcomePage});
         context.addHandler(resourceHandler);
     }
+
 }

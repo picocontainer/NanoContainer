@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 
 import org.mortbay.util.IO;
 import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.alternatives.EmptyPicoContainer;
 
 public class DependencyInjectionServletTestCase extends TestCase {
 
@@ -47,6 +48,26 @@ public class DependencyInjectionServletTestCase extends TestCase {
 
 
     }
+
+    public void testCanInstantiateWebContainerContextAndServletInstance() throws InterruptedException, IOException {
+
+
+        server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
+        PicoContextHandler barContext = server.createContext("/bar");
+        DependencyInjectionTestServlet servlet = new DependencyInjectionTestServlet("Fred");
+        servlet.setFoo("bar");
+        barContext.addServletWithMapping(servlet, "/foo");
+
+        server.start();
+
+        Thread.sleep(2 * 1000);
+
+        URL url = new URL("http://localhost:8080/bar/foo");
+        assertEquals("hello Fred bar", IO.toString(url.openStream()));
+
+
+    }
+
 
 
 }

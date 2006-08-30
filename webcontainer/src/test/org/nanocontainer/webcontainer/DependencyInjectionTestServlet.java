@@ -34,5 +34,8 @@ public class DependencyInjectionTestServlet extends HttpServlet {
 
     public void destroy() {
     }
-    
+
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
 }
