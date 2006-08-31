@@ -84,6 +84,27 @@ public class WebContainerBuilderTestCase extends TestCase {
 
         assertPageIsHostedWithContents(script, "hello Fred bar", "http://localhost:8080/bar/foo");
     }
+
+    public void testCanComposeWebContainerContextAndServletInstance() throws InterruptedException, IOException {
+        Reader script = new StringReader("" +
+                "package org.nanocontainer.script.groovy\n" +
+                "builder = new GroovyNodeBuilder()\n" +
+                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
+                "nano = builder.container {\n" +
+                "    foo {\n" +
+                // declare the web container
+                "        webContainer(port:8080) {\n" +
+                "            context(path:'/bar') {\n" +
+                "                servlet(path:'/foo', instance:new org.nanocontainer.webcontainer.DependencyInjectionTestServlet('Fred'))\n" +
+                "            }\n" +
+                "        }\n" +
+                // end declaration
+                "    }\n" +
+                "}\n");
+
+        assertPageIsHostedWithContents(script, "hello Fred", "http://localhost:8080/bar/foo");
+    }
+
     
     public void testCanComposeWebContainerContextWithExplicitConnector() throws InterruptedException, IOException {
         Reader script = new StringReader("" +

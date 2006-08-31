@@ -17,6 +17,8 @@ import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.nanocontainer.webcontainer.PicoContextHandler;
 
+import javax.servlet.Servlet;
+
 public class ContextBuilder extends NodeBuilder {
         private final PicoContextHandler context;
 
@@ -54,10 +56,20 @@ public class ContextBuilder extends NodeBuilder {
     }
 
     private Object makeServlet(Map map) {
-        ServletHolder servlet = context.addServletWithMapping(
-                (Class) map.remove("class"),
-                (String) map.remove("path"));
-        return new ServletHolderBuilder(servlet);
+        ServletHolder servlet;
+
+        if (map.containsKey("class")) {
+            servlet = context.addServletWithMapping(
+                    (Class) map.remove("class"),
+                    (String) map.remove("path"));
+            return new ServletHolderBuilder(servlet);
+        } else {
+            context.addServletWithMapping(
+                    (Servlet) map.remove("instance"),
+                    (String) map.remove("path"));
+            return null;
+        }
+
     }
 
     private Object makeFilter(Map map) {

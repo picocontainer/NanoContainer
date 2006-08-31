@@ -18,6 +18,7 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 import javax.servlet.http.HttpServlet;
+import javax.servlet.Servlet;
 import java.util.EventListener;
 
 public class PicoContextHandler {
@@ -45,7 +46,7 @@ public class PicoContextHandler {
         return (PicoServletHolder) handler.addServletWithMapping(servletClass, pathMapping);
     }
 
-    public void addServletWithMapping(HttpServlet servlet, String pathMapping) {
+    public void addServletWithMapping(Servlet servlet, String pathMapping) {
         PicoServletHandler handler = getHandler();
         handler.addServletWithMapping(new ServletHolder(servlet), pathMapping);
     }
