@@ -56,18 +56,19 @@ public class ContextBuilder extends NodeBuilder {
     }
 
     private Object makeServlet(Map map) {
-        ServletHolder servlet;
+
 
         if (map.containsKey("class")) {
-            servlet = context.addServletWithMapping(
+            ServletHolder servlet = context.addServletWithMapping(
                     (Class) map.remove("class"),
                     (String) map.remove("path"));
             return new ServletHolderBuilder(servlet);
         } else {
+            Servlet servlet = (Servlet) map.remove("instance");
             context.addServletWithMapping(
-                    (Servlet) map.remove("instance"),
+                    servlet,
                     (String) map.remove("path"));
-            return null;
+            return servlet;
         }
 
     }

@@ -11,6 +11,7 @@ package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHolder;
+import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.util.LazyList;
@@ -19,6 +20,7 @@ import org.picocontainer.defaults.DefaultPicoContainer;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.Servlet;
+import javax.servlet.Filter;
 import java.util.EventListener;
 
 public class PicoContextHandler {
@@ -46,9 +48,10 @@ public class PicoContextHandler {
         return (PicoServletHolder) handler.addServletWithMapping(servletClass, pathMapping);
     }
 
-    public void addServletWithMapping(Servlet servlet, String pathMapping) {
+    public Servlet addServletWithMapping(Servlet servlet, String pathMapping) {
         PicoServletHandler handler = getHandler();
         handler.addServletWithMapping(new ServletHolder(servlet), pathMapping);
+        return servlet;
     }
 
 
@@ -65,6 +68,13 @@ public class PicoContextHandler {
         PicoServletHandler handler = getHandler();
         return (PicoFilterHolder) handler.addFilterWithMapping(filterClass, pathMapping, dispatchers);
     }
+
+//    public Filter addFilterWithMapping(Filter filter, String pathMapping, int dispatchers) {
+//        PicoServletHandler handler = getHandler();
+//        handler.addFilterWithMapping(new FilterHolder(filter), pathMapping, dispatchers);
+//        return filter;
+//    }
+
 
     public EventListener addListener(Class listenerClass) {
 

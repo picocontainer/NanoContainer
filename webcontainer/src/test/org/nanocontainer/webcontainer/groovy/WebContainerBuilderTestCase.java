@@ -95,7 +95,9 @@ public class WebContainerBuilderTestCase extends TestCase {
                 // declare the web container
                 "        webContainer(port:8080) {\n" +
                 "            context(path:'/bar') {\n" +
-                "                servlet(path:'/foo', instance:new org.nanocontainer.webcontainer.DependencyInjectionTestServlet('Fred'))\n" +
+                "                servlet(path:'/foo', instance:new org.nanocontainer.webcontainer.DependencyInjectionTestServlet('Fred')) {\n" +
+                //"                    setFoo(foo:'bar')\n" +
+                "                }\n" +
                 "            }\n" +
                 "        }\n" +
                 // end declaration
