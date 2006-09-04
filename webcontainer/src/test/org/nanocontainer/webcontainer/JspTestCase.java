@@ -35,7 +35,7 @@ public class JspTestCase extends TestCase {
 
         Thread.sleep(2 * 1000);
 
-        URL url = new URL("http://localhost:8080/bar/org/nanocontainer/webcontainer/test.jsp");
+        URL url = new URL("http://localhost:8080/bar/test.jsp");
         assertEquals("<HTML>\n" +
                 "  <HEAD>\n" +
                 "    <TITLE>Test JSP</TITLE>\n" +

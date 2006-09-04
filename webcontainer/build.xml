@@ -7,7 +7,7 @@
               <include name="**/*Servlet.class"/>
               <include name="**/*Listener.class"/>
             </classes>
-            <fileset dir="src/test/org/nanocontainer/webcontainer/">
+            <fileset dir="src/test/">
               <include name="*.jsp"/>
             </fileset>
         </war>

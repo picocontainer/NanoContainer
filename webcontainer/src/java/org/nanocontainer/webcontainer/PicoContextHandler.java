@@ -10,6 +10,7 @@
 package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.webapp.WebXmlConfiguration;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.servlet.DefaultServlet;
@@ -116,13 +117,23 @@ public class PicoContextHandler {
     public void setDefaultHandling(final String absolutePath, String scratchDir, String pageSuffix) {
         context.setResourceBase(absolutePath);
         PicoServletHandler handler = getHandler();
-        ServletHolder jspHolder = new ServletHolder();
-        jspHolder.setName("JspServlet");
+        ServletHolder jspHolder = new PicoServletHolder(parentContainer);
+        jspHolder.setName("jsp");
         jspHolder.setClassName("org.apache.jasper.servlet.JspServlet");
         jspHolder.setInitParameter("scratchdir", scratchDir);
+        jspHolder.setInitParameter("logVerbosityLevel", "DEBUG");
+        jspHolder.setInitParameter("fork", "false");
+        jspHolder.setInitParameter("xpoweredBy", "false");
+        jspHolder.setForcedPath(null);
+        jspHolder.setInitOrder(0);
+
 
         handler.addServletWithMapping(jspHolder,pageSuffix);
         handler.addServletWithMapping(DefaultServlet.class.getName(), "/");
 
+    }
+
+    public void setDefaultHandling2(String absolutePath, String scratchDir) {
+        //WebXmlConfiguration          
     }
 }
