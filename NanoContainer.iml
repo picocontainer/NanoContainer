@@ -146,7 +146,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty/6.0.0rc2/jetty-6.0.0rc2.jar!/" />
+          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty/6.0.0rc2/jetty-6.0.0rc3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -155,7 +155,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty-util/6.0.0rc2/jetty-util-6.0.0rc2.jar!/" />
+          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty-util/6.0.0rc2/jetty-util-6.0.0rc3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -13,7 +13,6 @@ import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.picocontainer.PicoContainer;
-import org.nanocontainer.webcontainer.PicoFilterHolder;
 
 public class PicoServletHandler extends ServletHandler {
 
