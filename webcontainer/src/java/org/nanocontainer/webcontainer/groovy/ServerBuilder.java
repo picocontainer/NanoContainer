@@ -46,7 +46,11 @@ public class ServerBuilder extends NodeBuilder {
     }
 
     protected Object createContext(Map map) {
-        PicoContextHandler context = server.createContext((String) map.remove("path"));
+        boolean sessions = false;
+        if (map.containsKey("sessions")) {
+            sessions = Boolean.valueOf((String) map.remove("sessions")).booleanValue();
+        }
+        PicoContextHandler context = server.createContext((String) map.remove("path"), sessions);
         return new ContextBuilder(context);
     }
 

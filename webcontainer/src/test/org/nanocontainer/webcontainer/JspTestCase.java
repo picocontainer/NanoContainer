@@ -2,6 +2,7 @@ package org.nanocontainer.webcontainer;
 
 import junit.framework.TestCase;
 import org.mortbay.util.IO;
+
 import org.picocontainer.alternatives.EmptyPicoContainer;
 
 import java.io.File;
@@ -25,7 +26,12 @@ public class JspTestCase extends TestCase {
         File warFile = TestHelper.getTestWarFile();
 
         server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
-        PicoContextHandler barContext = server.createContext("/bar");
+
+
+        //server.addRequestLog(new NCSARequestLog("./logs/jetty-yyyy-mm-dd.log"));
+
+
+        PicoContextHandler barContext = server.createContext("/bar", true);
         String absolutePath = warFile.getParentFile().getAbsolutePath();
         String scratchDir = warFile.getParentFile().getParentFile().getParentFile().getAbsolutePath() + File.separator + "target" + File.separator + "work";
         new File(scratchDir).mkdirs();

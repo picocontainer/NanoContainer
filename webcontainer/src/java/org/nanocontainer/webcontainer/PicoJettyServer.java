@@ -11,13 +11,13 @@ package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.RequestLog;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.HandlerList;
+import org.mortbay.jetty.handler.RequestLogHandler;
 import org.mortbay.jetty.nio.BlockingChannelConnector;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.alternatives.EmptyPicoContainer;
-import org.nanocontainer.webcontainer.JettyServerLifecycleException;
-import org.nanocontainer.webcontainer.PicoContextHandler;
 
 public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer {
 
@@ -43,11 +43,11 @@ public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer
         return connector;
     }
 
-    public PicoContextHandler createContext(String contextPath) {
+    public PicoContextHandler createContext(String contextPath, boolean withSessionHandler) {
         ContextHandler context = new ContextHandler();
         context.setContextPath(contextPath);
         server.addHandler(context);
-        return new PicoContextHandler(context, server, parentContainer);
+        return new PicoContextHandler(context, server, parentContainer, withSessionHandler);
     }
 
 
@@ -77,5 +77,12 @@ public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer
         } catch (Exception e) {
             throw new JettyServerLifecycleException("Jetty couldn't stop", e);
         }
+    }
+
+    public void addRequestLog(RequestLog requestLog) {
+        RequestLogHandler requestLogHandler = new RequestLogHandler();
+        requestLogHandler.setRequestLog(requestLog);
+        server.addHandler(requestLogHandler);
+
     }
 }

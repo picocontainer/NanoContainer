@@ -24,7 +24,7 @@ public class StaticFileTestCase extends TestCase {
         File warFile = TestHelper.getTestWarFile();
 
         server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
-        PicoContextHandler barContext = server.createContext("/bar");
+        PicoContextHandler barContext = server.createContext("/bar", false);
         barContext.setStaticContext(warFile.getParentFile().getAbsolutePath());
 
         server.start();
@@ -47,7 +47,7 @@ public class StaticFileTestCase extends TestCase {
         File warFile = TestHelper.getTestWarFile();
 
         server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
-        PicoContextHandler barContext = server.createContext("/bar");
+        PicoContextHandler barContext = server.createContext("/bar", false);
         barContext.setStaticContext(warFile.getParentFile().getAbsolutePath(), "hello.html");
 
         server.start();
@@ -70,7 +70,7 @@ public class StaticFileTestCase extends TestCase {
         File warFile = TestHelper.getTestWarFile();
 
         server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
-        PicoContextHandler barContext = server.createContext("/bar");
+        PicoContextHandler barContext = server.createContext("/bar", false);
         barContext.setStaticContext(warFile.getParentFile().getAbsolutePath());
 
         server.start();

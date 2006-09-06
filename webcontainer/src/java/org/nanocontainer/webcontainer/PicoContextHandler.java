@@ -10,19 +10,16 @@
 package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebXmlConfiguration;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.servlet.DefaultServlet;
+import org.mortbay.jetty.servlet.SessionHandler;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.util.LazyList;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.Servlet;
-import javax.servlet.Filter;
 import java.util.EventListener;
 
 public class PicoContextHandler {
@@ -30,7 +27,8 @@ public class PicoContextHandler {
     private final ContextHandler context;
     private final Server server;
     private final PicoContainer parentContainer;
-    private PicoServletHandler handler;
+    private final boolean withSessionHandler;
+    private PicoServletHandler servletHandler;
 
     public static final int DEFAULT=0;
     public static final int REQUEST=1;
@@ -39,41 +37,49 @@ public class PicoContextHandler {
     public static final int ERROR=8;
     public static final int ALL=15;
 
-    public PicoContextHandler(ContextHandler context, Server server, PicoContainer parentContainer) {
+    public PicoContextHandler(ContextHandler context, Server server, PicoContainer parentContainer, boolean sessionManager) {
         this.context = context;
         this.server = server;
         this.parentContainer = parentContainer;
+        this.withSessionHandler = sessionManager;
     }
 
     public PicoServletHolder addServletWithMapping(Class servletClass, String pathMapping) {
-        PicoServletHandler handler = getHandler();
+        PicoServletHandler handler = getServletHandler();
         return (PicoServletHolder) handler.addServletWithMapping(servletClass, pathMapping);
     }
 
     public Servlet addServletWithMapping(Servlet servlet, String pathMapping) {
-        PicoServletHandler handler = getHandler();
+        PicoServletHandler handler = getServletHandler();
         handler.addServletWithMapping(new ServletHolder(servlet), pathMapping);
         return servlet;
     }
 
 
-    private synchronized PicoServletHandler getHandler() {
-        if (handler == null) {
-            handler = new PicoServletHandler(parentContainer);
-            context.addHandler(handler);
-            handler.setServer(server);
+    private synchronized PicoServletHandler getServletHandler() {
+        if (servletHandler == null) {
+            servletHandler = new PicoServletHandler(parentContainer);
+            servletHandler.setServer(server);
+            if (withSessionHandler) {
+                SessionHandler sessionHandler = new SessionHandler();
+                sessionHandler.setServer(server);
+                context.addHandler(sessionHandler);
+                sessionHandler.addHandler(servletHandler);
+            } else {
+                context.addHandler(servletHandler);
+            }
         }
-        return handler;
+        return servletHandler;
     }
 
     public PicoFilterHolder addFilterWithMapping(Class filterClass, String pathMapping, int dispatchers) {
-        PicoServletHandler handler = getHandler();
+        PicoServletHandler handler = getServletHandler();
         return (PicoFilterHolder) handler.addFilterWithMapping(filterClass, pathMapping, dispatchers);
     }
 
 //    public Filter addFilterWithMapping(Filter filter, String pathMapping, int dispatchers) {
-//        PicoServletHandler handler = getHandler();
-//        handler.addFilterWithMapping(new FilterHolder(filter), pathMapping, dispatchers);
+//        PicoServletHandler servletHandler = getHandler();
+//        servletHandler.addFilterWithMapping(new FilterHolder(filter), pathMapping, dispatchers);
 //        return filter;
 //    }
 
@@ -116,7 +122,7 @@ public class PicoContextHandler {
 
     public void setDefaultHandling(final String absolutePath, String scratchDir, String pageSuffix) {
         context.setResourceBase(absolutePath);
-        PicoServletHandler handler = getHandler();
+        PicoServletHandler handler = getServletHandler();
         ServletHolder jspHolder = new PicoServletHolder(parentContainer);
         jspHolder.setName("jsp");
         jspHolder.setClassName("org.apache.jasper.servlet.JspServlet");
@@ -134,6 +140,6 @@ public class PicoContextHandler {
     }
 
     public void setDefaultHandling2(String absolutePath, String scratchDir) {
-        //WebXmlConfiguration          
+        //WebXmlConfiguration
     }
 }
