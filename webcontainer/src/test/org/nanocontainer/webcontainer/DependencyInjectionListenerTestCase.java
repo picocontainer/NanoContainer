@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import java.io.IOException;
 
 import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.alternatives.EmptyPicoContainer;
 import org.nanocontainer.webcontainer.PicoJettyServer;
 import org.nanocontainer.webcontainer.PicoContextHandler;
 
@@ -18,7 +19,7 @@ public class DependencyInjectionListenerTestCase extends TestCase {
         Thread.sleep(1 * 1000);
     }
 
-    public void testCanInstantiateWebContainerContextAndServlet() throws InterruptedException, IOException {
+    public void testCanInstantiateWebContainerContextAndListener() throws InterruptedException, IOException {
 
         final DefaultPicoContainer parentContainer = new DefaultPicoContainer();
         StringBuffer sb = new StringBuffer();
@@ -38,6 +39,27 @@ public class DependencyInjectionListenerTestCase extends TestCase {
         assertEquals("-contextInitialized-contextDestroyed", sb.toString());
 
     }
+
+    public void testCanInstantiateWebContainerContextAndListenerInstance() throws InterruptedException, IOException {
+
+        StringBuffer sb = new StringBuffer();
+
+        server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
+        PicoContextHandler barContext = server.createContext("/bar", false);
+        barContext.addListener(new DependencyInjectionTestListener(sb));
+
+        server.start();
+
+        assertEquals("-contextInitialized", sb.toString());
+
+        server.stop();
+
+        assertEquals("-contextInitialized-contextDestroyed", sb.toString());
+
+    }
+
+
+
 
 
 }

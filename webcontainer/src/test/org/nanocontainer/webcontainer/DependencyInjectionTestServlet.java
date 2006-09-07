@@ -35,6 +35,7 @@ public class DependencyInjectionTestServlet extends HttpServlet {
     public void destroy() {
     }
 
+    // used when handling this servlet directly rather than letting Jetty instantiate it.    
     public void setFoo(String foo) {
         this.foo = foo;
     }

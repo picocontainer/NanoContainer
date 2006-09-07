@@ -54,7 +54,7 @@ public class DependencyInjectionServletTestCase extends TestCase {
 
         server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
         PicoContextHandler barContext = server.createContext("/bar", false);
-        
+
         DependencyInjectionTestServlet servlet = (DependencyInjectionTestServlet)
                 barContext.addServletWithMapping(new DependencyInjectionTestServlet("Fred"), "/foo");
         servlet.setFoo("bar");

@@ -30,10 +30,18 @@ public class DependencyInjectionTestFilter implements Filter {
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        foo = filterConfig.getInitParameter("foo");
+        String initParameter = filterConfig.getInitParameter("foo");
+        if (initParameter!= null) {
+            foo = initParameter;
+        }
     }
 
     public void destroy() {
+    }
+
+    // used when handling this filter directly rather than letting Jetty instantiate it.
+    public void setFoo(String foo) {
+        this.foo = foo;
     }
 }
 

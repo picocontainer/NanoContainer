@@ -10,15 +10,16 @@
 package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.servlet.DefaultServlet;
-import org.mortbay.jetty.servlet.SessionHandler;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.util.LazyList;
+import org.mortbay.jetty.servlet.DefaultServlet;
+import org.mortbay.jetty.servlet.FilterHolder;
+import org.mortbay.jetty.servlet.ServletHolder;
+import org.mortbay.jetty.servlet.SessionHandler;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
+import javax.servlet.Filter;
 import javax.servlet.Servlet;
 import java.util.EventListener;
 
@@ -30,12 +31,12 @@ public class PicoContextHandler {
     private final boolean withSessionHandler;
     private PicoServletHandler servletHandler;
 
-    public static final int DEFAULT=0;
-    public static final int REQUEST=1;
-    public static final int FORWARD=2;
-    public static final int INCLUDE=4;
-    public static final int ERROR=8;
-    public static final int ALL=15;
+    public static final int DEFAULT = 0;
+    public static final int REQUEST = 1;
+    public static final int FORWARD = 2;
+    public static final int INCLUDE = 4;
+    public static final int ERROR = 8;
+    public static final int ALL = 15;
 
     public PicoContextHandler(ContextHandler context, Server server, PicoContainer parentContainer, boolean sessionManager) {
         this.context = context;
@@ -77,35 +78,28 @@ public class PicoContextHandler {
         return (PicoFilterHolder) handler.addFilterWithMapping(filterClass, pathMapping, dispatchers);
     }
 
-//    public Filter addFilterWithMapping(Filter filter, String pathMapping, int dispatchers) {
-//        PicoServletHandler servletHandler = getHandler();
-//        servletHandler.addFilterWithMapping(new FilterHolder(filter), pathMapping, dispatchers);
-//        return filter;
-//    }
+    public Filter addFilterWithMapping(Filter filter, String pathMapping, int dispatchers) {
+        PicoServletHandler servletHandler = getServletHandler();
+        servletHandler.addFilterWithMapping(new FilterHolder(filter), pathMapping, dispatchers);
+        return filter;
+    }
 
 
     public EventListener addListener(Class listenerClass) {
 
-        //context.add
         DefaultPicoContainer child = new DefaultPicoContainer(parentContainer);
         child.registerComponentImplementation(EventListener.class, listenerClass);
         EventListener instance = (EventListener) child.getComponentInstance(EventListener.class);
 
-        EventListener[] listeners=context.getEventListeners();
-        EventListener[] newEventListeners;
-
-        if (listeners != null) {
-            listeners = (EventListener[]) listeners.clone();
-            newEventListeners = (EventListener[]) LazyList.addToArray(listeners, instance, EventListener.class);
-        } else {
-            newEventListeners = new EventListener[] {(EventListener) instance};
-        }
-
-        context.setEventListeners(newEventListeners);
-
-        return instance;
+        return addListener(instance);
 
     }
+
+    public EventListener addListener(EventListener listener) {
+        context.addEventListener(listener);
+        return listener;
+    }
+
 
     public void setStaticContext(String absolutePath) {
         ResourceHandler resourceHandler = new ResourceHandler();
@@ -116,7 +110,7 @@ public class PicoContextHandler {
     public void setStaticContext(String absolutePath, String welcomePage) {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(absolutePath);
-        resourceHandler.setWelcomeFiles(new String[] {welcomePage});
+        resourceHandler.setWelcomeFiles(new String[]{welcomePage});
         context.addHandler(resourceHandler);
     }
 
@@ -134,7 +128,7 @@ public class PicoContextHandler {
         jspHolder.setInitOrder(0);
 
 
-        handler.addServletWithMapping(jspHolder,pageSuffix);
+        handler.addServletWithMapping(jspHolder, pageSuffix);
         handler.addServletWithMapping(DefaultServlet.class.getName(), "/");
 
     }
@@ -142,4 +136,5 @@ public class PicoContextHandler {
     public void setDefaultHandling2(String absolutePath, String scratchDir) {
         //WebXmlConfiguration
     }
+
 }

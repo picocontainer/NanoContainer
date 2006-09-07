@@ -11,11 +11,10 @@ package org.nanocontainer.webcontainer.groovy;
 
 import groovy.util.NodeBuilder;
 import org.mortbay.jetty.Connector;
-import org.picocontainer.MutablePicoContainer;
-import org.nanocontainer.webcontainer.groovy.ContextBuilder;
-import org.nanocontainer.webcontainer.PicoJettyServer;
 import org.nanocontainer.webcontainer.PicoContextHandler;
+import org.nanocontainer.webcontainer.PicoJettyServer;
 import org.nanocontainer.webcontainer.PicoWebAppContext;
+import org.picocontainer.MutablePicoContainer;
 
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class ServerBuilder extends NodeBuilder {
             return createContext(map);
         } else if (name.equals("blockingChannelConnector")) {
             return createBlockingChannelConnector(map);
-        } else if(name.equals("xmlWebApplication")) {
+        } else if (name.equals("xmlWebApplication")) {
             return createXmlWebApplication(map);
         }
         return null;
@@ -41,8 +40,7 @@ public class ServerBuilder extends NodeBuilder {
 
     protected Object createBlockingChannelConnector(Map map) {
         int port = ((Integer) map.remove("port")).intValue();
-        Connector connector = server.createBlockingChannelConnector((String) map.remove("host"), port);
-        return connector;
+        return server.createBlockingChannelConnector((String) map.remove("host"), port);
     }
 
     protected Object createContext(Map map) {
@@ -55,7 +53,7 @@ public class ServerBuilder extends NodeBuilder {
     }
 
     protected Object createXmlWebApplication(Map map) {
-        PicoWebAppContext context = server.addWebApplication((String) map.remove("path"), (String) map.remove("warfile") );
+        PicoWebAppContext context = server.addWebApplication((String) map.remove("path"), (String) map.remove("warfile"));
         return new WarFileBuilder(context);
     }
 
