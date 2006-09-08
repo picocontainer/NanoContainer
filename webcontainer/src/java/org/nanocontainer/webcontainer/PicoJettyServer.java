@@ -12,7 +12,7 @@ package org.nanocontainer.webcontainer;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.RequestLog;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.mortbay.jetty.servlet.ErrorPageErrorHandler;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.RequestLogHandler;
@@ -88,18 +88,5 @@ public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer
         server.addHandler(requestLogHandler);
 
     }
-
-    //public void setErrorHandler() {
-    //    setErrorHandler(new WebAppContext.WebAppErrorHandler());
-    //}
-
-    public void setErrorHandler(ErrorHandler errorHandler) {
-        if (errorHandler!=null) {
-            errorHandler.setServer(server);
-        }
-        server.getContainer().update(this, null, errorHandler, "errorHandler");
-        this.errorHandler = errorHandler;
-    }
-
 
 }

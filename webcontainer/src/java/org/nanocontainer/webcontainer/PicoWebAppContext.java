@@ -21,7 +21,6 @@ public class PicoWebAppContext extends WebAppContext {
     public PicoWebAppContext(PicoContainer parentContainer) {
              super(null,null,new PicoServletHandler(parentContainer),null);
         this.parentContainer = parentContainer;
-
     }
 
     protected void loadConfigurations() throws Exception {

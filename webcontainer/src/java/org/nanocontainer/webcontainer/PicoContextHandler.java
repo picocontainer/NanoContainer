@@ -10,18 +10,18 @@
 package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.servlet.DefaultServlet;
-import org.mortbay.jetty.servlet.FilterHolder;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.servlet.SessionHandler;
+import org.mortbay.jetty.handler.ErrorHandler;
+import org.mortbay.jetty.servlet.*;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
 import java.util.EventListener;
+import java.io.IOException;
 
 public class PicoContextHandler {
 
@@ -133,8 +133,18 @@ public class PicoContextHandler {
 
     }
 
-    public void setDefaultHandling2(String absolutePath, String scratchDir) {
-        //WebXmlConfiguration
+    public void addErrorHandler() {
+        addErrorHandler(new ErrorPageErrorHandler());
     }
+
+    public void addErrorHandler(ErrorHandler handler) {
+        context.setErrorHandler(handler);
+    }
+
+    //     protected void handleErrorPage(HttpServletRequest request, Writer writer, int code, String message)
+//        throws IOException
+  //  {
+    //    writeErrorPage(request, writer, code, message, _showStacks);
+   // }
 
 }
