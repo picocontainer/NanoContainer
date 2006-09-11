@@ -146,43 +146,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty/6.0.0rc4/jetty-6.0.0rc4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/jetty-util/6.0.0rc4/jetty-util-6.0.0rc4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$M2_REPOSITORY$/javax/servlet/jsp-api/2.0/jsp-api-2.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/tomcat/jasper-runtime/5.5.15/jasper-runtime-5.5.15.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/tomcat/jasper-compiler/5.5.15/jasper-compiler-5.5.15.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -197,6 +161,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="JettyPlusJasper" level="application" />
+    <orderEntry type="module" module-name="Jasper" />
     <orderEntryProperties />
   </component>
 </module>
