@@ -71,7 +71,13 @@
 			<name>Apache Snapshot Repository</name>
 			<url>http://people.apache.org/maven-snapshot-repository/</url>
 		</repository>
-	</repositories>
+        <repository>
+            <id>jetty-release-repository</id>
+            <name>Jetty Release Repository</name>
+            <url>http://jetty.mortbay.org/maven2/release</url>
+        </repository>
+
+    </repositories>
 
 	<pluginRepositories>
 		<pluginRepository>
