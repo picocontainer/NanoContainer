@@ -7,6 +7,7 @@ import java.io.StringWriter;
 
 import org.jmock.Mock;
 import org.nanocontainer.NanoPicoContainer;
+import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.NanoContainerMarkupException;
@@ -502,6 +503,28 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
         // can't actually test the permission under JUNIT control. We're just
         // testing the syntax here.
     }
+
+    public void testGrantPermissionInWrongPlace() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+        try {
+            Reader script = new StringReader("" +
+                "include_class 'org.nanocontainer.TestHelper'\n" +
+                    "include_class 'java.net.SocketPermission'\n" +
+                    "testCompJar = TestHelper.getTestCompJarFile()\n" +
+                    "container {\n" +
+                    "  grant(:perm => SocketPermission.new('google.com','connect'))\n" +
+                    "}" +
+                    "");
+
+            buildContainer(script, parent, ASSEMBLY_SCOPE);
+            fail("should barf with [Don't know how to create a 'grant' child] exception");
+        } catch (PicoCompositionException e) {
+            String message = e.getCause().getMessage();
+            assertTrue(message.indexOf("undefined method `grant' for #<Nano::Container:") > -1);
+        }
+
+    }
+
 
 
 //    public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
