@@ -123,8 +123,23 @@ module Nano
       container
     end
 
-    def classPathElement(options = {})
-      ClassPathElementHelper.addClassPathElement(options[:path], @container);
+    def classPathElement(options = {}, &block)
+      cpe = ClassPathElement.new(ClassPathElementHelper.addClassPathElement(options[:path], @container), @container)
+      cpe.build(&block)
+      cpe
+    end
+
+    class ClassPathElement
+      def initialize(classPathElement, container)
+        @container = container
+        @classPathElement = classPathElement
+      end
+      def build(&block)
+        instance_eval(&block) if block
+      end
+      def grant(options = {})
+        @classPathElement.grantPermission(options[:perm])
+      end
     end
 
     private

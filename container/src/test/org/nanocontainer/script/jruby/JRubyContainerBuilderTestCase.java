@@ -482,6 +482,26 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
                 .getName());
     }
 
+    public void testWithDynamicClassPathWithPermissions() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+        Reader script = new StringReader(
+                "include_class 'org.nanocontainer.TestHelper'\n" +
+                        "include_class 'java.net.SocketPermission'\n"
+                        + "testCompJar = TestHelper.getTestCompJarFile()\n"
+                        + "compJarPath = testCompJar.getCanonicalPath()\n"
+                        + "container {\n"
+                        + "  classPathElement(:path => compJarPath) {\n"
+                        + "    grant(:perm => SocketPermission.new('google.com','connect'))\n"
+                        + "  }\n"
+                        + "  component(:class => \"TestComp\")\n"
+                        + "}" + "");
+
+        MutablePicoContainer pico = (MutablePicoContainer)buildContainer(script, parent, ASSEMBLY_SCOPE);
+
+        assertTrue(pico.getComponentInstances().size() == 1);
+        // can't actually test the permission under JUNIT control. We're just
+        // testing the syntax here.
+    }
 
 
 //    public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
