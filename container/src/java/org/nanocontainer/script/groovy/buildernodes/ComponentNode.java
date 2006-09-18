@@ -96,8 +96,6 @@ public class ComponentNode extends AbstractBuilderNode {
         Object instance = attributes.remove(INSTANCE);
         List parameters = (List) attributes.remove(PARAMETERS);
 
-        MutablePicoContainer pico = ((NanoContainer) current).getPico();
-
         ComponentElementHelper.makeComponent(cnkey, key, getParameters(parameters), classValue, (NanoContainer) current, instance);
 
         return this.getNodeName();

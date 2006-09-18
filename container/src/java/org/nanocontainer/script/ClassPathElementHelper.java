@@ -1,3 +1,12 @@
+/*****************************************************************************
+ * Copyright (C) NanoContainer Organization. All rights reserved.            *
+ * ------------------------------------------------------------------------- *
+ * The software in this package is published under the terms of the BSD      *
+ * style license a copy of which has been included with this distribution in *
+ * the LICENSE.txt file.                                                     *
+ *                                                                           *
+ *****************************************************************************/
+
 package org.nanocontainer.script;
 
 import org.nanocontainer.ClassPathElement;
@@ -9,13 +18,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.io.File;
 
-/**
- * Created by IntelliJ IDEA.
- * User: paul
- * Date: Sep 17, 2006
- * Time: 5:38:18 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ClassPathElementHelper {
     public static final String HTTP = "http://";
 
