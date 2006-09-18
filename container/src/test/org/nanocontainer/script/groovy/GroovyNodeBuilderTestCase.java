@@ -631,7 +631,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, classLoader), null, null);
         assertNotNull(pico);
         Object testCompInstance = pico.getComponentInstance(testComp.getName());
-        assertEquals(testCompInstance.getClass().getName(), testComp.getName());
+        assertSame(testCompInstance.getClass(), testComp);
 
     }
 

@@ -14,10 +14,9 @@ package org.nanocontainer.script.groovy.buildernodes;
 import java.util.List;
 import java.util.Map;
 
-import org.nanocontainer.ClassNameKey;
 import org.nanocontainer.NanoContainer;
-import org.nanocontainer.script.NanoContainerMarkupException;
 import org.nanocontainer.script.NodeBuilderDecorationDelegate;
+import org.nanocontainer.script.ComponentElementHelper;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Parameter;
 import org.picocontainer.defaults.ConstantParameter;
@@ -99,34 +98,12 @@ public class ComponentNode extends AbstractBuilderNode {
 
         MutablePicoContainer pico = ((NanoContainer) current).getPico();
 
-        if (cnkey != null)  {
-            key = new ClassNameKey((String)cnkey);
-        }
-
-        Parameter[] parameterArray = getParameters(parameters);
-        if (classValue instanceof Class) {
-            Class clazz = (Class) classValue;
-            key = key == null ? clazz : key;
-            pico.registerComponentImplementation(key, clazz, parameterArray);
-        } else if (classValue instanceof String) {
-            String className = (String) classValue;
-            key = key == null ? className : key;
-            try {
-                ((NanoContainer) current).registerComponentImplementation(key, className, parameterArray);
-            } catch (ClassNotFoundException e) {
-                throw new NanoContainerMarkupException("ClassNotFoundException: " + e.getMessage(), e);
-            }
-        } else if (instance != null) {
-            key = key == null ? instance.getClass() : key;
-            pico.registerComponentInstance(key, instance);
-        } else {
-            throw new NanoContainerMarkupException("Must specify a class attribute for a component as a class name (string) or Class. Attributes:" + attributes);
-        }
+        ComponentElementHelper.makeComponent(cnkey, key, getParameters(parameters), classValue, (NanoContainer) current, instance);
 
         return this.getNodeName();
     }
 
-    private Parameter[] getParameters(List paramsList) {
+    private static Parameter[] getParameters(List paramsList) {
         if (paramsList == null) {
             return null;
         }
@@ -140,7 +117,9 @@ public class ComponentNode extends AbstractBuilderNode {
 
 
 
-    private Parameter toParameter(Object obj) {
+    private static Parameter toParameter(Object obj) {
         return obj instanceof Parameter ? (Parameter) obj : new ConstantParameter(obj);
     }
+
+
 }

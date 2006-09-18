@@ -20,6 +20,7 @@ module Nano
   include_class 'org.picocontainer.defaults.ConstantParameter'
   include_class 'org.nanocontainer.script.jruby.JRubyContainerBuilder'
   include_class 'org.nanocontainer.script.ClassPathElementHelper'
+  include_class 'org.nanocontainer.script.ComponentElementHelper'
 
   MARKUP_EXCEPTION_PREFIX = JRubyContainerBuilder::MARKUP_EXCEPTION_PREFIX
 
@@ -55,12 +56,13 @@ module Nano
 
   class Component
     def initialize(options)
-      @key, @klass, @instance = nil, nil, nil
+      @key, @klass, @instance, @cnkey = nil, nil, nil, nil
       if options.kind_of?(Hash)
         @instance = options[:instance]
         @key      = options[:key]
         @klass    = options[:class]
         @params   = options[:parameters]
+        @cnkey = options[:classNameKey]
       else
         @klass = options
       end
@@ -68,17 +70,21 @@ module Nano
     end
 
     def build(container)
-      args = [@key]
-      if @instance
-        method = :registerComponentInstance
-        args << @instance
-      else
-        method = :registerComponentImplementation
-        args << @klass
-      end
-      args << Params.new(@params).build if @params
-      args.delete(nil)
-      container.send(method, *args)
+
+      parms = Params.new(@params).build if @params
+      ComponentElementHelper.makeComponent(@cnkey, @key, parms, @klass, container, @instance)
+
+#      args = [@key]
+#      if @instance
+#        method = :registerComponentInstance
+#        args << @instance
+#      else
+#        method = :registerComponentImplementation
+#        args << @klass
+#      end
+#      args << Params.new(@params).build if @params
+#      args.delete(nil)
+#      container.send(method, *args)
     end
   end
 

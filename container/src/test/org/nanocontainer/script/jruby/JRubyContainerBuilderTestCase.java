@@ -1,22 +1,17 @@
 package org.nanocontainer.script.jruby;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
+import java.net.URLClassLoader;
+import java.net.URL;
 
 import org.jmock.Mock;
 import org.nanocontainer.NanoPicoContainer;
+import org.nanocontainer.TestHelper;
 import org.nanocontainer.integrationkit.PicoCompositionException;
 import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.NanoContainerMarkupException;
-import org.nanocontainer.script.groovy.A;
-import org.nanocontainer.script.groovy.B;
-import org.nanocontainer.script.groovy.HasParams;
-import org.nanocontainer.script.groovy.ParentAssemblyScope;
-import org.nanocontainer.script.groovy.SomeAssemblyScope;
-import org.nanocontainer.script.groovy.X;
+import org.nanocontainer.script.groovy.*;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
@@ -522,6 +517,31 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
             String message = e.getCause().getMessage();
             assertTrue(message.indexOf("undefined method `grant' for #<Nano::Container:") > -1);
         }
+
+    }
+
+
+    public void testWithParentClassPathPropagatesWithNoParentContainer()throws IOException {
+        File testCompJar = TestHelper.getTestCompJarFile();
+
+        URLClassLoader classLoader = new URLClassLoader(new URL[] {testCompJar.toURL()}, this.getClass().getClassLoader());
+        Class testComp = null;
+
+        try {
+            testComp = classLoader.loadClass("TestComp");
+        } catch (ClassNotFoundException ex) {
+            fail("Unable to load test component from the jar using a url classloader");
+        }
+        Reader script = new StringReader(
+                          ""
+                        + "container(:parent => $parent) {\n"
+                        + "  component(:class => \"TestComp\")\n"
+                        + "}");
+
+        PicoContainer pico = buildContainer(new JRubyContainerBuilder(script, classLoader), null, null);
+        assertNotNull(pico);
+        Object testCompInstance = pico.getComponentInstance(testComp.getName());
+        assertSame(testCompInstance.getClass(), testComp);
 
     }
 
