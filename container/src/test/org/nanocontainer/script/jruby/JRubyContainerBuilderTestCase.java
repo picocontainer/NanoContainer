@@ -433,6 +433,38 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
         }
     }
 
+    //TODO
+    public void testSpuriousAttributes() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+
+        Reader script = new StringReader("" +
+                "container(:jim => 'Jam', :foo => 'bar')");
+            try {
+                buildContainer(script, parent, ASSEMBLY_SCOPE);
+                //fail("Should throw exception upon spurious attributes?");
+            } catch (NanoContainerMarkupException ex) {
+                //ok?
+            }
+    }
+
+    public void testWithDynamicClassPathThatDoesNotExist() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+        try {
+            Reader script = new StringReader("" +
+                    "container {\n" +
+                    "  classPathElement(:path => 'this/path/does/not/exist.jar')\n" +
+                    "  component(:class => \"FooBar\")\n" +
+                    "}");
+
+            buildContainer(script, parent, ASSEMBLY_SCOPE);
+            fail("should have barfed with bad path exception");
+        } catch (NanoContainerMarkupException e) {
+            // excpected
+        }
+
+    }
+
+
 
 //    public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
 //        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );

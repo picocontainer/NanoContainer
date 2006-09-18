@@ -19,6 +19,7 @@ module Nano
   include_class 'org.picocontainer.defaults.ComponentParameter'
   include_class 'org.picocontainer.defaults.ConstantParameter'
   include_class 'org.nanocontainer.script.jruby.JRubyContainerBuilder'
+  include_class 'org.nanocontainer.script.ClassPathElementHelper'
 
   MARKUP_EXCEPTION_PREFIX = JRubyContainerBuilder::MARKUP_EXCEPTION_PREFIX
 
@@ -122,6 +123,10 @@ module Nano
       container
     end
 
+    def classPathElement(options = {})
+      ClassPathElementHelper.addClassPathElement(options[:path], @container);
+    end
+
     private
     def construct_container
       if @parent && !@caf && !@impl
@@ -140,6 +145,7 @@ module Nano
     def classloader
       @parent && @parent.getComponentClassLoader || $parent && $parent.getComponentClassLoader
     end
+
   end
 
   module Builder

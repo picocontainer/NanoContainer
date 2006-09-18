@@ -13,12 +13,8 @@ package org.nanocontainer.script.groovy.buildernodes;
 import java.util.Map;
 
 import org.nanocontainer.NanoContainer;
-import org.nanocontainer.script.NanoContainerMarkupException;
-import java.net.MalformedURLException;
-import java.security.PrivilegedAction;
-import java.net.URL;
-import java.security.AccessController;
-import java.io.File;
+import org.nanocontainer.script.ClassPathElementHelper;
+
 import org.nanocontainer.ClassPathElement;
 
 /**
@@ -36,8 +32,6 @@ public class ClasspathNode extends AbstractBuilderNode {
 
     private static final String PATH = "path";
 
-    private static final String HTTP = "http://";
-
 
     public ClasspathNode() {
         super(NODE_NAME);
@@ -53,37 +47,7 @@ public class ClasspathNode extends AbstractBuilderNode {
     private ClassPathElement createClassPathElementNode(Map attributes, NanoContainer nanoContainer) {
 
         final String path = (String) attributes.remove(PATH);
-        URL pathURL = null;
-        try {
-            if (path.toLowerCase().startsWith(HTTP)) {
-                pathURL = new URL(path);
-            } else {
-                Object rVal = AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run() {
-                        try {
-                            File file = new File(path);
-                            if (!file.exists()) {
-                                return new NanoContainerMarkupException("classpath '" + path + "' does not exist ");
-                            }
-                            return file.toURL();
-                        } catch (MalformedURLException e) {
-                            return e;
-                        }
-
-                    }
-                });
-                if (rVal instanceof MalformedURLException) {
-                    throw (MalformedURLException) rVal;
-                }
-                if (rVal instanceof NanoContainerMarkupException) {
-                    throw (NanoContainerMarkupException) rVal;
-                }
-                pathURL = (URL) rVal;
-            }
-        } catch (MalformedURLException e) {
-            throw new NanoContainerMarkupException("classpath '" + path + "' malformed ", e);
-        }
-        return nanoContainer.addClassLoaderURL(pathURL);
+        return ClassPathElementHelper.addClassPathElement(path, nanoContainer);
     }
 
 }

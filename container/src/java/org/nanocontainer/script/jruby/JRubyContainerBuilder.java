@@ -70,6 +70,9 @@ public class JRubyContainerBuilder extends ScriptedContainerBuilder {
             IRubyObject result = ruby.evalScript(script);
             return (PicoContainer) JavaEmbedUtils.rubyToJava(ruby, result, PicoContainer.class);
         } catch (RaiseException re) {
+            if (re.getCause() instanceof NanoContainerMarkupException) {
+                throw (NanoContainerMarkupException) re.getCause();
+            }
             String message = (String) JavaEmbedUtils.rubyToJava(ruby, re.getException().message, String.class);
             if (message.startsWith(MARKUP_EXCEPTION_PREFIX)) {
                 throw new NanoContainerMarkupException(message.substring(MARKUP_EXCEPTION_PREFIX.length()));

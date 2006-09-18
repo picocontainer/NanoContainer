@@ -487,6 +487,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         }
     }
 
+    // TODO
     public void testSpuriousAttributes() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
 
