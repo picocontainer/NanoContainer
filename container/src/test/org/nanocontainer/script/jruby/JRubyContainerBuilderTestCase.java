@@ -464,6 +464,24 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
 
     }
 
+    public void testWithDynamicClassPath() {
+        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+        Reader script = new StringReader(
+                "include_class 'org.nanocontainer.TestHelper'\n"
+                        + "testCompJar = TestHelper.getTestCompJarFile()\n"
+                        + "compJarPath = testCompJar.getCanonicalPath()\n"
+                        + "container {\n"
+                        + "  classPathElement(:path => compJarPath)\n"
+                        + "  component(:class => \"TestComp\")\n"
+                        + "}" + "");
+
+        MutablePicoContainer pico = (MutablePicoContainer) buildContainer(script, parent, ASSEMBLY_SCOPE);
+
+        assertTrue(pico.getComponentInstances().size() == 1);
+        assertEquals("TestComp", pico.getComponentInstances().get(0).getClass()
+                .getName());
+    }
+
 
 
 //    public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
