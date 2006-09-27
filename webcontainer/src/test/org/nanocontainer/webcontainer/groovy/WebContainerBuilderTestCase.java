@@ -39,24 +39,21 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
                 "    component(instance:new Integer(5))\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer(port:8080) {\n" +
-                "            context(path:'/bar') {\n" +
-                "                filter(path:'/*', class:org.nanocontainer.webcontainer.DependencyInjectionTestFilter," +
-                "                       dispatchers: new Integer(0)){\n" +
-                "                   initParam(name:'foo', value:'bau')\n" +
-                "                }\n" +
-                "                servlet(path:'/foo2', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet)\n" +
-
+                "    webContainer(port:8080) {\n" +
+                "        context(path:'/bar') {\n" +
+                "            filter(path:'/*', class:org.nanocontainer.webcontainer.DependencyInjectionTestFilter," +
+                "                   dispatchers: new Integer(0)){\n" +
+                "               initParam(name:'foo', value:'bau')\n" +
                 "            }\n" +
+                "            servlet(path:'/foo2', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet)\n" +
+
                 "        }\n" +
-                // end declaration
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "hello Fred Filtered!(int= 5 bau)", "http://localhost:8080/bar/foo2");
@@ -66,20 +63,17 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer(port:8080) {\n" +
-                "            context(path:'/bar') {\n" +
-                "                servlet(path:'/foo', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet){\n" +
-                "                   initParam(name:'foo', value:'bar')\n" +
-                "                }\n" +
+                "    webContainer(port:8080) {\n" +
+                "        context(path:'/bar') {\n" +
+                "            servlet(path:'/foo', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet){\n" +
+                "               initParam(name:'foo', value:'bar')\n" +
                 "            }\n" +
                 "        }\n" +
-                // end declaration
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "hello Fred bar", "http://localhost:8080/bar/foo");
@@ -89,19 +83,16 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer(port:8080) {\n" +
-                "            context(path:'/bar') {\n" +
-                "                servlet(path:'/foo', instance:new org.nanocontainer.webcontainer.DependencyInjectionTestServlet('Fred')) {\n" +
-                //"                    setFoo(foo:'bar')\n" +
-                "                }\n" +
+                "    webContainer(port:8080) {\n" +
+                "        context(path:'/bar') {\n" +
+                "            servlet(path:'/foo', instance:new org.nanocontainer.webcontainer.DependencyInjectionTestServlet('Fred')) {\n" +
+                //"                setFoo(foo:'bar')\n" +
                 "            }\n" +
                 "        }\n" +
-                // end declaration
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "hello Fred", "http://localhost:8080/bar/foo");
@@ -112,19 +103,16 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer() {\n" +
-                "            blockingChannelConnector(host:'localhost', port:8080)\n" +
-                "            context(path:'/bar') {\n" +
-                "                servlet(path:'/foo', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet)\n" +
-                "            }\n" +
+                "    webContainer() {\n" +
+                "        blockingChannelConnector(host:'localhost', port:8080)\n" +
+                "        context(path:'/bar') {\n" +
+                "            servlet(path:'/foo', class:org.nanocontainer.webcontainer.DependencyInjectionTestServlet)\n" +
                 "        }\n" +
-                // end declaration
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "hello Fred", "http://localhost:8080/bar/foo");
@@ -137,19 +125,16 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(instance:'Fred')\n" +
                 "    component(instance:new Integer(5))\n" +
                 "    component(key:StringBuffer.class, instance:new StringBuffer())\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer() {\n" +
-                "            blockingChannelConnector(host:'localhost', port:8080)\n" +
-                "            xmlWebApplication(path:'/bar', warfile:'"+testWar.getAbsolutePath()+"')" +
-                "        }\n" +
-                // end declaration
+                "    webContainer() {\n" +
+                "        blockingChannelConnector(host:'localhost', port:8080)\n" +
+                "        xmlWebApplication(path:'/bar', warfile:'"+testWar.getAbsolutePath()+"')" +
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "hello Fred bar", "http://localhost:8080/bar/foo");
@@ -161,18 +146,15 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
                 "    component(class:StringBuffer.class)\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer(port:8080) {\n" +
-                "            context(path:'/bar') {\n" +
-                "                listener(class:org.nanocontainer.webcontainer.DependencyInjectionTestListener)\n" +
-                "            }\n" +
+                "    webContainer(port:8080) {\n" +
+                "        context(path:'/bar') {\n" +
+                "            listener(class:org.nanocontainer.webcontainer.DependencyInjectionTestListener)\n" +
                 "        }\n" +
-                // end declaration
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "", "http://localhost:8080/bar/");
@@ -196,17 +178,14 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer(port:8080) {\n" +
-                "            context(path:'/bar') {\n" +
-                "                staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"')\n" +
-                "            }\n" +
+                "    webContainer(port:8080) {\n" +
+                "        context(path:'/bar') {\n" +
+                "            staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"')\n" +
                 "        }\n" +
-                // end declaration
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "<html>\n" +
@@ -231,17 +210,14 @@ public class WebContainerBuilderTestCase extends TestCase {
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
-                "builder.registerBuilder(name:'foo', class:'org.nanocontainer.webcontainer.groovy.WebContainerBuilder')\n" +
                 "nano = builder.container {\n" +
-                "    foo {\n" +
                 // declare the web container
-                "        webContainer(port:8080) {\n" +
-                "            context(path:'/bar') {\n" +
-                "                staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"', welcomePage:'hello.html')\n" +
-                "            }\n" +
+                "    webContainer(port:8080) {\n" +
+                "        context(path:'/bar') {\n" +
+                "            staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"', welcomePage:'hello.html')\n" +
                 "        }\n" +
-                // end declaration
                 "    }\n" +
+                // end declaration
                 "}\n");
 
         assertPageIsHostedWithContents(script, "<html>\n" +

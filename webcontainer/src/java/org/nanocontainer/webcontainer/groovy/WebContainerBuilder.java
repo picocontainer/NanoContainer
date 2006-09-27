@@ -14,25 +14,19 @@ import groovy.util.NodeBuilder;
 import org.picocontainer.MutablePicoContainer;
 import org.nanocontainer.webcontainer.groovy.ServerBuilder;
 import org.nanocontainer.webcontainer.PicoJettyServer;
+import org.nanocontainer.script.groovy.buildernodes.AbstractBuilderNode;
+import org.nanocontainer.NanoContainer;
 
 import java.util.Map;
 
-public class WebContainerBuilder extends NodeBuilder {
+public class WebContainerBuilder extends AbstractBuilderNode {
 
-    private final MutablePicoContainer parentContainer;
 
-    public WebContainerBuilder(MutablePicoContainer parentContainer) {
-        this.parentContainer = parentContainer;
+    public WebContainerBuilder() {
+        super("webContainer");
     }
 
-    protected Object createNode(Object name, Map map) {
-        if (name.equals("webContainer")) {
-            return makeWebContainer(map);
-        } 
-        return null;
-    }
-
-    private Object makeWebContainer(Map map) {
+    public Object createNewNode(Object current, Map map) {
         int port =0;
         if (map.containsKey("port")) {
             port = ((Integer) map.remove("port")).intValue();
@@ -43,6 +37,10 @@ public class WebContainerBuilder extends NodeBuilder {
         } else {
             host = "localhost";
         }
+
+        NanoContainer parentNano = (NanoContainer) current;
+        MutablePicoContainer parentContainer = parentNano.getPico();
+
         if (port != 0) {
             PicoJettyServer server = new PicoJettyServer(host, port, parentContainer);
             parentContainer.addChildContainer(server);
