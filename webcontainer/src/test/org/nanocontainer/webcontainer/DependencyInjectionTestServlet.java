@@ -18,7 +18,10 @@ public class DependencyInjectionTestServlet extends HttpServlet {
     }
         
     public void init(ServletConfig servletConfig) throws ServletException {
-        foo = servletConfig.getInitParameter("foo");
+        String initParameter = servletConfig.getInitParameter("foo");
+        if (initParameter!= null) {
+            foo = initParameter;
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

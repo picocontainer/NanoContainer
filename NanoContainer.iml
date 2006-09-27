@@ -161,8 +161,8 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="JettyPlusJasper" level="application" />
     <orderEntry type="module" module-name="Jasper" />
+    <orderEntry type="library" name="JettyPlusJasperFromM2Repo" level="application" />
     <orderEntryProperties />
   </component>
 </module>
