@@ -29,7 +29,6 @@ public class StaticFileTestCase extends TestCase {
 
         server.start();
 
-        System.err.println("-->!!!");
         Thread.sleep(2 * 1000);
 
         URL url = new URL("http://localhost:8080/bar/hello.html");
