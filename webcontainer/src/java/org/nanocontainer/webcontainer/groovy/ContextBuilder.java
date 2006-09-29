@@ -16,15 +16,19 @@ import java.util.Map;
 import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.nanocontainer.webcontainer.PicoContextHandler;
+import org.nanocontainer.webcontainer.groovy.adapters.WaffleAdapter;
+import org.picocontainer.MutablePicoContainer;
 
 import javax.servlet.Servlet;
 
 public class ContextBuilder extends NodeBuilder {
-        private final PicoContextHandler context;
+    private final MutablePicoContainer parentContainer;
+    private final PicoContextHandler context;
 
-        public ContextBuilder(PicoContextHandler context) {
-            this.context = context;
-        }
+    public ContextBuilder(MutablePicoContainer parentContainer, PicoContextHandler context) {
+        this.parentContainer = parentContainer;
+        this.context = context;
+    }
         protected Object createNode(Object name, Map map) {
             if (name.equals("filter")) {
                 return makeFilter(map);
@@ -35,6 +39,8 @@ public class ContextBuilder extends NodeBuilder {
             } else if (name.equals("staticContent")) {
                 setStaticContent(map);
                 return null;
+            } else if (name.equals("waffleApp")) {
+                return new WaffleAdapter(context, parentContainer, map).getNodeBuilder();
             }
 
             return null;

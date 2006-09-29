@@ -14,6 +14,7 @@ import org.mortbay.jetty.Connector;
 import org.nanocontainer.webcontainer.PicoContextHandler;
 import org.nanocontainer.webcontainer.PicoJettyServer;
 import org.nanocontainer.webcontainer.PicoWebAppContext;
+import org.nanocontainer.script.groovy.NodeCreator;
 import org.picocontainer.MutablePicoContainer;
 
 import java.util.Map;
@@ -49,12 +50,12 @@ public class ServerBuilder extends NodeBuilder {
             sessions = Boolean.valueOf((String) map.remove("sessions")).booleanValue();
         }
         PicoContextHandler context = server.createContext((String) map.remove("path"), sessions);
-        return new ContextBuilder(context);
+        return new ContextBuilder(parentContainer, context);
     }
 
     protected Object createXmlWebApplication(Map map) {
         PicoWebAppContext context = server.addWebApplication((String) map.remove("path"), (String) map.remove("warfile"));
-        return new WarFileBuilder(context);
+        return new WarFileBuilder(parentContainer, context);
     }
 
 }

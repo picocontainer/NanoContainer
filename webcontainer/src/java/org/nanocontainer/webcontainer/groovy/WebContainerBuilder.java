@@ -10,9 +10,7 @@
 
 package org.nanocontainer.webcontainer.groovy;
 
-import groovy.util.NodeBuilder;
 import org.picocontainer.MutablePicoContainer;
-import org.nanocontainer.webcontainer.groovy.ServerBuilder;
 import org.nanocontainer.webcontainer.PicoJettyServer;
 import org.nanocontainer.script.groovy.buildernodes.AbstractBuilderNode;
 import org.nanocontainer.NanoContainer;
