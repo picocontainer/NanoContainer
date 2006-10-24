@@ -43,11 +43,6 @@
 
 	<repositories>
 		<repository>
-			<id>ibiblio-repository</id>
-			<name>Ibiblio Repository</name>
-			<url>http://www.ibiblio.org/maven2</url>
-		</repository>
-		<repository>
 			<id>codehaus-repository</id>
 			<name>Codehaus Repository</name>
 			<url>http://repository.codehaus.org</url>
@@ -65,11 +60,6 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>apache-snapshot-repository</id>
-			<name>Apache Snapshot Repository</name>
-			<url>http://people.apache.org/maven-snapshot-repository/</url>
 		</repository>
         <repository>
             <id>jetty-release-repository</id>
