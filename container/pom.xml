@@ -28,6 +28,7 @@
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
       <version>0.9.1-SNAPSHOT</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>commons-cli</groupId>
