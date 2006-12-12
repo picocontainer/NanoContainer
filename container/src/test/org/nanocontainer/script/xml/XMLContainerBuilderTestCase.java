@@ -142,10 +142,11 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
     }
 
     public void testClassLoaderHierarchy() throws IOException {
-        String testcompJarFileName = System.getProperty("testcomp.jar");
-
-        assertNotNull("The testcomp.jar system property should point to nanocontainer/src/test-comp/TestComp.jar", testcompJarFileName);
+        String testcompJarFileName = System.getProperty("testcomp.jar", "src/test-comp/TestComp.jar");
+        // Paul's path to TestComp. PLEASE do not take out.
+        //testcompJarFileName = "D:/OSS/PN/java/nanocontainer/src/test-comp/TestComp.jar";
         File testCompJar = new File(testcompJarFileName);
+        assertTrue("The testcomp.jar system property should point to java/nanocontainer/src/test-comp/TestComp.jar", testCompJar.isFile());
         File testCompJar2 = new File(testCompJar.getParentFile(), "TestComp2.jar");
         File notStartableJar = new File(testCompJar.getParentFile(), "NotStartable.jar");
 

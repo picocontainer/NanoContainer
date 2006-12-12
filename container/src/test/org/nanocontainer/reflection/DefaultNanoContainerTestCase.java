@@ -90,13 +90,11 @@ public class DefaultNanoContainerTestCase extends TestCase {
 
     public void testChildContainerAdapterCanRelyOnParentContainerAdapter() throws MalformedURLException, ClassNotFoundException {
 
-        String testcompJarFileName = System.getProperty("testcomp.jar");
-
+        String testcompJarFileName = System.getProperty("testcomp.jar", "src/test-comp/TestComp.jar");
         // Paul's path to TestComp. PLEASE do not take out.
         //testcompJarFileName = "D:/OSS/PN/java/nanocontainer/src/test-comp/TestComp.jar";
-
-        assertNotNull("The testcomp.jar system property should point to java/nanocontainer/src/test-comp/TestComp.jar", testcompJarFileName);
         File testCompJar = new File(testcompJarFileName);
+        assertTrue("The testcomp.jar system property should point to java/nanocontainer/src/test-comp/TestComp.jar", testCompJar.isFile());
 
         // Set up parent
         NanoContainer parentContainer = new DefaultNanoContainer();
@@ -147,12 +145,11 @@ public class DefaultNanoContainerTestCase extends TestCase {
     public void testClassLoaderJugglingIsPossible() throws MalformedURLException, ClassNotFoundException {
         NanoContainer parentContainer = new DefaultNanoContainer();
 
-        String testcompJarFileName = System.getProperty("testcomp.jar");
+        String testcompJarFileName = System.getProperty("testcomp.jar", "src/test-comp/TestComp.jar");
         // Paul's path to TestComp. PLEASE do not take out.
         //testcompJarFileName = "D:/OSS/PN/java/nanocontainer/src/test-comp/TestComp.jar";
-        assertNotNull("The testcomp.jar system property should point to nano/reflection/src/test-comp/TestComp.jar", testcompJarFileName);
         File testCompJar = new File(testcompJarFileName);
-        assertTrue(testCompJar.isFile());
+        assertTrue("The testcomp.jar system property should point to java/nanocontainer/src/test-comp/TestComp.jar", testCompJar.isFile());
 
         parentContainer.registerComponentImplementation("foo", "org.nanocontainer.testmodel.DefaultWebServerConfig");
 
