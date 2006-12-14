@@ -14,13 +14,13 @@
 # Nanocontainer for configuring containers and components.
 #
 module Nano
-  include_class 'org.picocontainer.Parameter'
-  include_class 'org.nanocontainer.reflection.DefaultNanoPicoContainer'
-  include_class 'org.picocontainer.defaults.ComponentParameter'
-  include_class 'org.picocontainer.defaults.ConstantParameter'
-  include_class 'org.nanocontainer.script.jruby.JRubyContainerBuilder'
-  include_class 'org.nanocontainer.script.ClassPathElementHelper'
-  include_class 'org.nanocontainer.script.ComponentElementHelper'
+  Parameter = org.picocontainer.Parameter
+  DefaultNanoPicoContainer = org.nanocontainer.reflection.DefaultNanoPicoContainer
+  ComponentParameter = org.picocontainer.defaults.ComponentParameter
+  ConstantParameter = org.picocontainer.defaults.ConstantParameter
+  JRubyContainerBuilder = org.nanocontainer.script.jruby.JRubyContainerBuilder
+  ClassPathElementHelper = org.nanocontainer.script.ClassPathElementHelper
+  ComponentElementHelper = org.nanocontainer.script.ComponentElementHelper
 
   MARKUP_EXCEPTION_PREFIX = JRubyContainerBuilder::MARKUP_EXCEPTION_PREFIX
 
