@@ -8,12 +8,6 @@
  * Original code by James Strachan                                           *
  *****************************************************************************/
 
-/*
-TODO:
-
-don't depend on proxytoys - introduce a PointcutsFactoryFactory
-*/
-
 package org.nanocontainer.script.groovy;
 
 import groovy.lang.Closure;
