@@ -32,7 +32,7 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
         parentContainer.registerComponentInstance(Integer.class, new Integer(5));
 
         server = new PicoJettyServer("localhost", 8080, parentContainer);
-        WebAppContext wac = server.addWebApplication("/bar", testWar.getAbsolutePath());
+        WebAppContext wac = server.addWebApplication("/bar", testWar.getAbsolutePath().replace('\\','/'));
         assertNotNull(wac);
 
         server.start();
@@ -57,7 +57,7 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
         parentContainer.registerComponentInstance(Integer.class, new Integer(5));
 
         server = new PicoJettyServer("localhost", 8080, parentContainer);
-        WebAppContext wac = server.addWebApplication("/bar", testWar.getAbsolutePath());
+        WebAppContext wac = server.addWebApplication("/bar", testWar.getAbsolutePath().replace('\\','/'));
         assertNotNull(wac);
 
         server.start();

@@ -132,7 +132,7 @@ public class WebContainerBuilderTestCase extends TestCase {
                 // declare the web container
                 "    webContainer() {\n" +
                 "        blockingChannelConnector(host:'localhost', port:8080)\n" +
-                "        xmlWebApplication(path:'/bar', warfile:'"+testWar.getAbsolutePath()+"')" +
+                "        xmlWebApplication(path:'/bar', warfile:'"+testWar.getAbsolutePath().replace('\\','/')+"')" +
                 "    }\n" +
                 // end declaration
                 "}\n");

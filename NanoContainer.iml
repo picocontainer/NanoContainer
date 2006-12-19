@@ -47,15 +47,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/groovy/groovy-all-1.0-jsr/06/groovy-all-1.0-jsr-06.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$M2_REPOSITORY$/xstream/xstream/1.1.2/xstream-1.1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -119,24 +110,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/org/jruby/jruby/0.9.0/jruby-0.9.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$M2_REPOSITORY$/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$M2_REPOSITORY$/rhino/js/1.5R4.1/js-1.5R4.1.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -192,6 +165,33 @@
       <library>
         <CLASSES>
           <root url="jar://$M2_REPOSITORY$/tomcat/jasper-compiler/5.5.15/jasper-compiler-5.5.15.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPOSITORY$/org/mortbay/jetty/servlet-api-2.5/6.0.1/servlet-api-2.5-6.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPOSITORY$/org/jruby/jruby/0.9.1-SNAPSHOT/jruby-0.9.1-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPOSITORY$/groovy/groovy-all/1.0-RC-01/groovy-all-1.0-RC-01.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

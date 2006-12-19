@@ -530,7 +530,7 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
         } catch(PicoCompositionException e) {
             String message = e.getCause().getMessage();
             assertNotNull(message);
-            assertTrue(message.contains("undefined method `grant' for #<Nano::Container:"));
+            assertTrue(message.indexOf("undefined method `grant' for #<Nano::Container:") != -1);
         }
 
     }
