@@ -174,7 +174,9 @@ public class WebContainerBuilderTestCase extends TestCase {
 
         File testWar = TestHelper.getTestWarFile();
 
-
+		String absolutePath = testWar.getParentFile().getAbsolutePath();
+		absolutePath = absolutePath.replace('\\', '/');
+        
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
@@ -182,7 +184,7 @@ public class WebContainerBuilderTestCase extends TestCase {
                 // declare the web container
                 "    webContainer(port:8080) {\n" +
                 "        context(path:'/bar') {\n" +
-                "            staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"')\n" +
+                "            staticContent(path:'"+absolutePath+"')\n" +
                 "        }\n" +
                 "    }\n" +
                 // end declaration
@@ -206,7 +208,9 @@ public class WebContainerBuilderTestCase extends TestCase {
 
         File testWar = TestHelper.getTestWarFile();
 
-
+        String absolutePath = testWar.getParentFile().getAbsolutePath();
+        absolutePath = absolutePath.replace('\\', '/');
+        
         Reader script = new StringReader("" +
                 "package org.nanocontainer.script.groovy\n" +
                 "builder = new GroovyNodeBuilder()\n" +
@@ -214,7 +218,7 @@ public class WebContainerBuilderTestCase extends TestCase {
                 // declare the web container
                 "    webContainer(port:8080) {\n" +
                 "        context(path:'/bar') {\n" +
-                "            staticContent(path:'"+testWar.getParentFile().getAbsolutePath()+"', welcomePage:'hello.html')\n" +
+                "            staticContent(path:'" + absolutePath + "', welcomePage:'hello.html')\n" +
                 "        }\n" +
                 "    }\n" +
                 // end declaration
