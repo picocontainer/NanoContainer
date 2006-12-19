@@ -420,9 +420,7 @@
                             http://jakarta.apache.org/commons/logging/commons-logging-1.0.4/docs/apidocs/
                         </link>
                     </links>
-                    <stylesheetfile>
-                        ${basedir}/../site/xdocs/style/maven-pico-javadoc.css
-                    </stylesheetfile>
+                    <stylesheet>maven</stylesheet>
                     <header>
                         <![CDATA[<img class="logo" src="http://www.nanocontainer.org/images/pico-logo.png"></img>]]>
                     </header>
