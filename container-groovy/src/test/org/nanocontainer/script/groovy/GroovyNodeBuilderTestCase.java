@@ -537,8 +537,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
                     "        pico = builder.container {\n" +
                     "            classPathElement(path:'this/path/does/not/exist.jar')\n" +
                     "            component(class:\"FooBar\") " +
-                    "        }" +
-                    "");
+                    "        }");
 
             buildContainer(script, parent, ASSEMBLY_SCOPE);
             fail("should have barfed with bad path exception");
@@ -552,15 +551,14 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     public void testWithDynamicClassPath() {
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
         Reader script = new StringReader(
-                ""
-                        + "        builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n"
-                        + "        File testCompJar = org.nanocontainer.TestHelper.getTestCompJarFile()\n"
-                        + "        compJarPath = testCompJar.getCanonicalPath()\n"
-                        + "        child = null\n"
-                        + "        pico = builder.container {\n"
-                        + "            classPathElement(path:compJarPath)\n"
-                        + "            component(class:\"TestComp\")\n"
-                        + "        }" + "");
+                "        builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n"
+              + "        File testCompJar = org.nanocontainer.TestHelper.getTestCompJarFile()\n"
+              + "        compJarPath = testCompJar.getCanonicalPath()\n"
+              + "        child = null\n"
+              + "        pico = builder.container {\n"
+              + "            classPathElement(path:compJarPath)\n"
+              + "            component(class:\"TestComp\")\n"
+              + "        }");
 
         MutablePicoContainer pico = (MutablePicoContainer) buildContainer(script, parent, ASSEMBLY_SCOPE);
 
@@ -642,12 +640,10 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         } catch (ClassNotFoundException ex) {
             fail("Unable to load test component from the jar using a url classloader");
         }
-        Reader script = new StringReader(
-                          ""
-                        + "        pico = builder.container(parent:parent) {\n"
-                        + "            component(class:\"TestComp\")\n"
-                        + "        }"
-                        + "");
+        Reader script = new StringReader(""
+                + "pico = builder.container(parent:parent) {\n"
+                + "         component(class:\"TestComp\")\n" 
+                + "}");
 
         PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, classLoader), null, null);
         assertNotNull(pico);
@@ -660,6 +656,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
         Reader script = new StringReader(
             "import org.nanocontainer.script.NullNodeBuilderDecorationDelegate\n" +
+            "import org.nanocontainer.script.groovy.GroovyNodeBuilder\n" +
             "import org.nanocontainer.testmodel.*\n" +
             "builder = new GroovyNodeBuilder(new NullNodeBuilderDecorationDelegate(), GroovyNodeBuilder.PERFORM_ATTRIBUTE_VALIDATION)\n" +
             "nano = builder.container {\n" +
@@ -681,6 +678,7 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
         Reader script = new StringReader(
             "import org.nanocontainer.script.NullNodeBuilderDecorationDelegate\n" +
+            "import org.nanocontainer.script.groovy.GroovyNodeBuilder\n" +
             "import org.nanocontainer.testmodel.*\n" +
             "builder = new GroovyNodeBuilder(new NullNodeBuilderDecorationDelegate(), GroovyNodeBuilder.SKIP_ATTRIBUTE_VALIDATION)\n" +
             "nano = builder.container {\n" +

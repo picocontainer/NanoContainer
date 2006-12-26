@@ -19,25 +19,29 @@
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>nanocontainer-tck</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>nanocontainer-testmodel</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.0-RC-01</version>
+            <version>1.0-RC-02</version>
             <exclusions>
                 <exclusion>
                     <groupId>servletapi</groupId>
                     <artifactId>servletapi</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <!-- test scoped dependencies -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>nanocontainer-tck</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>nanocontainer-testmodel</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

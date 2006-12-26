@@ -17,17 +17,20 @@
             <artifactId>nanocontainer</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jruby</groupId>
+            <artifactId>jruby</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <!-- test scoped dependencies -->
+        <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-tck</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-testmodel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jruby</groupId>
-            <artifactId>jruby</artifactId>
-            <version>0.9.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

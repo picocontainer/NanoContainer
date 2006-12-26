@@ -9,17 +9,7 @@
 	<artifactId>nanocontainer-deployer</artifactId>
 	<name>NanoContainer Deployer</name>
 	<packaging>jar</packaging>
-	<scm>
-		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/deployer</developerConnection>
-		<url>https://svn.codehaus.org/picocontainer/java/nanoocontainer/trunk/deployer</url>
-	</scm>
-
 	<dependencies>
-		<dependency>
-			<groupId>org.picocontainer</groupId>
-			<artifactId>picocontainer</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>nanocontainer</artifactId>
@@ -28,23 +18,28 @@
 			<groupId>commons-vfs</groupId>
 			<artifactId>commons-vfs</artifactId>
 		</dependency>
-		<!-- Test scoped depedencies -->
+		<!-- Test scoped dependencies -->
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>nanocontainer-booter</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+   <build>
+        <plugins>
+            <plugin>
+                <inherited>true</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- FIXME: create target/nanodist/apps-->
+                    <excludes>
+                        <exclude>
+                            org/nanocontainer/deployer/NanoContainerDeployerTestCase.java
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

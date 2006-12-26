@@ -9,16 +9,7 @@
 	<artifactId>nanocontainer-booter</artifactId>
 	<name>NanoContainer Booter</name>
 	<packaging>jar</packaging>
-	<scm>
-		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/booter</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/booter</developerConnection>
-		<url>https://svn.codehaus.org/picocontainer/java/nanoocontainer/trunk/booter</url>
-	</scm>
 	<dependencies>
-		<dependency>
-			<groupId>org.picocontainer</groupId>
-			<artifactId>picocontainer</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>nanocontainer</artifactId>

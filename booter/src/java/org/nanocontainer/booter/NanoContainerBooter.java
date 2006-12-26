@@ -52,10 +52,10 @@ public class NanoContainerBooter {
                         commonClassLoader );
 
         Class nanoStandalone = hiddenClassLoader.loadClass("org.nanocontainer.Standalone");
-        Constructor ctor = nanoStandalone.getConstructors()[0];
-        System.out.println("NanoContainer-Booter: Booting...");
-        ctor.newInstance(new Object[]{args});
-        System.out.println("NanoContainer-Booter: Booted.");
+        Constructor constructor = nanoStandalone.getConstructors()[0];
+        System.out.println("NanoContainer Booter: Booting...");
+        constructor.newInstance(new Object[]{args});
+        System.out.println("NanoContainer Booter: Booted.");
 
     }
 

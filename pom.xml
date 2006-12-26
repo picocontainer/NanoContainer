@@ -200,7 +200,7 @@
                 <artifactId>picocontainer-tck</artifactId>
                 <version>1.2</version>
                 <scope>test</scope>
-            </dependency>            
+            </dependency>
             <dependency>
                 <groupId>${pom.groupId}</groupId>
                 <artifactId>nanocontainer-testmodel</artifactId>
@@ -311,9 +311,6 @@
                         <link>
                             http://proxytoys.codehaus.org/apidocs/
                         </link>
-                        <link>
-                            http://jakarta.apache.org/commons/logging/commons-logging-1.0.4/docs/apidocs/
-                        </link>
                     </links>
                     <stylesheet>maven</stylesheet>
                     <header>
@@ -328,8 +325,7 @@
                 <version>2.2</version>
                 <configuration>
                     <forkMode>once</forkMode>
-                    <printSummary>true</printSummary>
-                    <useFile>true</useFile>
+                    <workingDirectory>${basedir}</workingDirectory>
                     <systemProperties>
                         <property>
                             <name>test.src.dir</name>
@@ -339,7 +335,21 @@
                             <name>java.awt.headless</name>
                             <value>true</value>
                         </property>
+                        <property>
+                            <name>testcomp.jar</name>
+                            <value>
+                                ${basedir}/../container/src/test-comp/TestComp.jar
+                            </value>
+                        </property>
                     </systemProperties>
+                    <excludes>
+                        <exclude>**/Abstract*Test.java</exclude>
+                        <exclude>**/Abstract*TestCase.java</exclude>
+                    </excludes>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*TestCase.java</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
