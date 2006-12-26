@@ -37,7 +37,7 @@ import java.net.URLClassLoader;
  * @author Chris Bailey
  * @author Mauro Talevi
  */
-public class JRuby2ContainerBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
+public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuilderTestCase {
     private static final String ASSEMBLY_SCOPE = "SOME_SCOPE";
 
 
