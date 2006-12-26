@@ -16,8 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * NanoContainerBooter instantiated the NanoContainer {@link org.nanocontainer.Standalone Standalone} 
@@ -29,12 +27,21 @@ import java.util.ArrayList;
  */
 public class NanoContainerBooter {
 
+    private static final String COMMON_PATH = "lib/common";
+    private static final String HIDDEN_PATH = "lib/hidden";
+
+    /**
+     * Static entry point to NanoContainerBooter
+     * @param args the arguments passed on to Standalone
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         new NanoContainerBooter(args);
     }
 
     /**
      * Instantiates the NanoContainer Standalone class
+     * 
      * @param args the arguments passed on to Standalone
      * 
      * @throws ClassNotFoundException
@@ -45,28 +52,47 @@ public class NanoContainerBooter {
      */
     public NanoContainerBooter(String[] args) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, InstantiationException, IOException {
 
-        URLClassLoader commonClassLoader = new URLClassLoader(buildClassLoaderURLs("lib/common"),
+        URLClassLoader commonClassLoader = new URLClassLoader(toURLs(COMMON_PATH),
                         NanoContainerBooter.class.getClassLoader().getParent() );
 
-        URLClassLoader hiddenClassLoader = new URLClassLoader(buildClassLoaderURLs("lib/hidden"), 
+        URLClassLoader hiddenClassLoader = new URLClassLoader(toURLs(HIDDEN_PATH), 
                         commonClassLoader );
 
-        Class nanoStandalone = hiddenClassLoader.loadClass("org.nanocontainer.Standalone");
-        Constructor constructor = nanoStandalone.getConstructors()[0];
         System.out.println("NanoContainer Booter: Booting...");
-        constructor.newInstance(new Object[]{args});
+        newStandalone(hiddenClassLoader, args);
         System.out.println("NanoContainer Booter: Booted.");
 
     }
 
-    private URL[] buildClassLoaderURLs(String path) throws MalformedURLException{
-        List urls = new ArrayList();
-        File[] libs = new File(path).listFiles();
-        for (int i = 0; i < libs.length; i++) {
-            File file = libs[i];
-            URL fileURL = file.toURL();
-            urls.add(fileURL);
+    /**
+     * Instantiates a new Standalone 
+     * 
+     * @param classLoader the ClassLoader used to instantiate class
+     * @param args the arguments passed to Standalone
+     * 
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    private void newStandalone(URLClassLoader classLoader, String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        Class nanoStandalone = classLoader.loadClass("org.nanocontainer.Standalone");
+        Constructor constructor = nanoStandalone.getConstructors()[0];
+        constructor.newInstance(new Object[]{args});
+    }
+
+    /**
+     * Converts files path to URLs
+     * @param path the files path
+     * @return The array of URLs, one for each file in path
+     * @throws MalformedURLException
+     */
+    private URL[] toURLs(String path) throws MalformedURLException{
+        File[] files = new File(path).listFiles();
+        URL[] urls = new URL[files.length];
+        for (int i = 0; i < files.length; i++) {
+            urls[i]= files[i].toURL();
         }
-        return (URL[])urls.toArray(new URL[urls.size()]);
+        return urls;
     }
 }
