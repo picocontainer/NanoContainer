@@ -95,7 +95,7 @@ public class GroovyContainerBuilderTestCase extends AbstractScriptedContainerBui
         Reader script = new StringReader("" +
                 "parent.registerComponentImplementation('foo', java.lang.String)\n"  +
                 "pico = new org.picocontainer.defaults.DefaultPicoContainer(parent)\n" +
-                "pico.registerComponentImplementation(org.nanocontainer.script.groovy.A)\n" +
+                "pico.registerComponentImplementation(org.nanocontainer.testmodel.A)\n" +
                 "");
 
         PicoContainer parent = new DefaultPicoContainer();
@@ -111,7 +111,7 @@ public class GroovyContainerBuilderTestCase extends AbstractScriptedContainerBui
     public void testBuildingWithPicoSyntaxAndNullParent() {
         Reader script = new StringReader("" +
                 "pico = new org.picocontainer.defaults.DefaultPicoContainer(parent)\n" +
-                "pico.registerComponentImplementation(org.nanocontainer.script.groovy.A)\n" +
+                "pico.registerComponentImplementation(org.nanocontainer.testmodel.A)\n" +
                 "");
 
         PicoContainer parent = null;
