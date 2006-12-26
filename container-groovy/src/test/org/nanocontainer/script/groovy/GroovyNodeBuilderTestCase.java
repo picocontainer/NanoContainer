@@ -16,7 +16,13 @@ import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.BarDecoratingPicoContainer;
 import org.nanocontainer.script.FooDecoratingPicoContainer;
 import org.nanocontainer.script.NanoContainerMarkupException;
+import org.nanocontainer.testmodel.A;
+import org.nanocontainer.testmodel.B;
+import org.nanocontainer.testmodel.HasParams;
+import org.nanocontainer.testmodel.ParentAssemblyScope;
+import org.nanocontainer.testmodel.SomeAssemblyScope;
 import org.nanocontainer.testmodel.WebServerConfig;
+import org.nanocontainer.testmodel.X;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
@@ -89,12 +95,12 @@ public class GroovyNodeBuilderTestCase extends AbstractScriptedContainerBuilderT
     public void testShouldAcceptConstantParametersForComponent() throws PicoCompositionException {
         Reader script = new StringReader("" +
                 "import org.picocontainer.defaults.ConstantParameter\n" +
-                "import org.nanocontainer.script.groovy.HasParams\n" +
+                "import org.nanocontainer.testmodel.HasParams\n" +
                 "" +
                 "builder = new org.nanocontainer.script.groovy.GroovyNodeBuilder()\n" +
                 "nano = builder.container {\n" +
                 "    component(key:'byClass', class:HasParams, parameters:[ 'a', 'b', new ConstantParameter('c') ])\n" +
-                "    component(key:'byClassString', class:'org.nanocontainer.script.groovy.HasParams', parameters:[ 'c', 'a', 't' ])\n" +
+                "    component(key:'byClassString', class:'org.nanocontainer.testmodel.HasParams', parameters:[ 'c', 'a', 't' ])\n" +
                 "}");
 
         PicoContainer pico = buildContainer(script, null, ASSEMBLY_SCOPE);

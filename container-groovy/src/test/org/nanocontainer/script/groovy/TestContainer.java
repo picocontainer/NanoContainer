@@ -6,7 +6,7 @@ import org.picocontainer.defaults.ComponentAdapterFactory;
 
 /**
  * @author Paul Hammant
- * @version $Revision$
+ * @version $Revision: 3144 $
  */
 public class TestContainer extends DefaultNanoPicoContainer {
 

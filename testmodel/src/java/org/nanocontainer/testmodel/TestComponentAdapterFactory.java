@@ -1,4 +1,4 @@
-package org.nanocontainer.script.groovy;
+package org.nanocontainer.testmodel;
 
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.Parameter;

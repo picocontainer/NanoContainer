@@ -9,7 +9,7 @@
         <version>1.1-SNAPSHOT</version>
     </parent>
     <artifactId>nanocontainer-jruby</artifactId>
-    <name>NanoContainer JRury</name>
+    <name>NanoContainer JRuby</name>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

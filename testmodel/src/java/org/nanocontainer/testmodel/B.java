@@ -1,4 +1,4 @@
-package org.nanocontainer.script.groovy;
+package org.nanocontainer.testmodel;
 
 import junit.framework.Assert;
 
@@ -7,7 +7,7 @@ import junit.framework.Assert;
  * @author Mauro Talevi
  */
 public class B extends X {
-    A a;
+    public A a;
 
     public B(A a) {
         Assert.assertNotNull(a);

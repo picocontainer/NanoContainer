@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * @author Paul Hammant
- * @version $Revision$
+ * @version $Revision: 3144 $
  */
 public class TestingChildBuilder extends NodeBuilder {
 

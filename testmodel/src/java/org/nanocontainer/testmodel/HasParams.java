@@ -7,33 +7,20 @@
  *                                                                           *
  * Idea by Rachel Davies, Original code by various                           *
  *****************************************************************************/
-package org.nanocontainer.script.groovy;
+package org.nanocontainer.testmodel;
 
 /**
  * @author Stephen Molitor
- * @version $Revision$
  */
-public class StringBean {
+public class HasParams {
 
-    private String firstName;
-    private String lastName;
+    private String params;
 
-    public StringBean() {
-    }
-    
-    public String getFirstName() {
-        return firstName;
+    public HasParams(String a, String b, String c) {
+        params = a + b + c;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getParams() {
+        return params;
     }
 }

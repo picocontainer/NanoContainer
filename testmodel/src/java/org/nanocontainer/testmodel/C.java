@@ -1,4 +1,4 @@
-package org.nanocontainer.script.groovy;
+package org.nanocontainer.testmodel;
 
 /**
  * @author Mauro Talevi

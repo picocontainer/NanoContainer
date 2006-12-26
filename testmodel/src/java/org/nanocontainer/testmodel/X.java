@@ -6,16 +6,15 @@
  * the LICENSE.txt file.                                                     *
  *                                                                           *
  *****************************************************************************/
-package org.nanocontainer.script.groovy;
+package org.nanocontainer.testmodel;
 
-import junit.framework.Assert;
 import org.picocontainer.Disposable;
 import org.picocontainer.Startable;
 
 /**
  * An abstract component and three dependancies used for testing.
  */
-public abstract class Xxx implements Startable, Disposable {
+public abstract class X implements Startable, Disposable {
 
     public static String componentRecorder = "";
 
@@ -37,25 +36,7 @@ public abstract class Xxx implements Startable, Disposable {
 
     private String code() {
         String name = getClass().getName();
-        return name.substring(name.indexOf('$') + 1, name.length());
+        return name.substring(name.lastIndexOf('.') + 1, name.length());
     }
 
-    public static class A extends Xxx {
-    }
-
-    public static class B extends Xxx {
-        A a;
-
-        public B(A a) {
-            Assert.assertNotNull(a);
-            this.a = a;
-        }
-
-        public A getA() {
-            return a;
-        }
-    }
-
-    public static class C extends Xxx {
-    }
 }
