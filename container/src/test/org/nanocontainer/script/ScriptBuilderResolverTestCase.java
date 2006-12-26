@@ -29,10 +29,6 @@ public class ScriptBuilderResolverTestCase extends TestCase {
     public void testGetAllSupportedExtensions() {
         Set allExtensions = new TreeSet();
 
-        allExtensions.add(ScriptBuilderResolver.BEANSHELL);
-        allExtensions.add(ScriptBuilderResolver.GROOVY);
-        allExtensions.add(ScriptBuilderResolver.JAVASCRIPT);
-        allExtensions.add(ScriptBuilderResolver.JYTHON);
         allExtensions.add(ScriptBuilderResolver.XML);
 
         String[] actualReturn = scriptBuilderResolver.getAllSupportedExtensions();
@@ -42,23 +38,30 @@ public class ScriptBuilderResolverTestCase extends TestCase {
         boolean someMerged = allExtensions.removeAll(returnAsList);
         assertTrue(someMerged);
         assertTrue(allExtensions.size() == 0);
-
     }
 
     public void testGetBuilderClassNameForFile() {
-
-        File compositionFile = new File("test.groovy");
-        String expectedReturn = ScriptBuilderResolver.DEFAULT_GROOVY_BUILDER;
-        String actualReturn = scriptBuilderResolver.getBuilderClassName(compositionFile);
-        assertEquals("return value", expectedReturn, actualReturn);
+        File compositionFile = new File("test.xml");
+        String expected = ScriptBuilderResolver.DEFAULT_XML_BUILDER;
+        String actual = scriptBuilderResolver.getBuilderClassName(compositionFile);
+        assertEquals("return value", expected, actual);
     }
 
+    public void testGetBuilderClassNameForResource() {
+        final String resourceName = "/org/nanocontainer/nanocontainer.xml";
+        URL compositionURL = this.getClass().getResource(resourceName);
+        if (compositionURL == null) {
+            fail("This test depended on resource '"+ resourceName + "' which appears to have been moved");
+        }
+        String expected = ScriptBuilderResolver.DEFAULT_XML_BUILDER;
+        String actual = scriptBuilderResolver.getBuilderClassName(compositionURL);
+        assertEquals("return value", expected, actual);
+    }
 
     public void testGetBuilderClassNameForExtension() throws UnsupportedScriptTypeException {
-        String expectedReturn = ScriptBuilderResolver.DEFAULT_JAVASCRIPT_BUILDER;
-        String actualReturn = scriptBuilderResolver.getBuilderClassName(".js");
+        String expectedReturn = ScriptBuilderResolver.DEFAULT_XML_BUILDER;
+        String actualReturn = scriptBuilderResolver.getBuilderClassName(".xml");
         assertEquals("return value", expectedReturn, actualReturn);
-
     }
 
     public void testGetBuilderForExtensionThrowsExceptionForUnknownBuilderType() {
@@ -68,18 +71,6 @@ public class ScriptBuilderResolverTestCase extends TestCase {
         } catch (UnsupportedScriptTypeException ex) {
             assertEquals(".foo",ex.getRequestedExtension());
         }
-
-    }
-
-    public void testGetBuilderClassName2() {
-        final String resourceName = "/org/nanocontainer/script/groovy/GroovyNodeBuilderScriptedTestCase.groovy";
-        URL compositionURL = this.getClass().getResource(resourceName);
-        if (compositionURL == null) {
-            fail("This test depended on resource '"+ resourceName + "' which appears to have been moved");
-        }
-        String expectedReturn = ScriptBuilderResolver.DEFAULT_GROOVY_BUILDER;
-        String actualReturn = scriptBuilderResolver.getBuilderClassName(compositionURL);
-        assertEquals("return value", expectedReturn, actualReturn);
     }
 
     public void testRegisterBuilder() {

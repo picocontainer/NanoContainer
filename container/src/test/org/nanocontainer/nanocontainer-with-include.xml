@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE container [
-<!ENTITY subone SYSTEM "subone.xml">
+<!ENTITY include SYSTEM "include.xml">
 ]>
 
 <container>
-    &subone;
+    &include;
 </container>

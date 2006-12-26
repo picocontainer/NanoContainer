@@ -35,7 +35,7 @@ public class StandaloneTestCase extends TestCase {
     public void testShouldBeAbleToInvokeMainMethodWithScriptFromClasspathWithXmlIncludes() throws IOException, ClassNotFoundException {
         Standalone.main(new String[] {
             "-r",
-            "/org/nanocontainer/standalone_test.xml", //I don't see this in the code base?? -MR
+            "/org/nanocontainer/nanocontainer-with-include.xml", 
             "-n"
         });
     }
@@ -46,7 +46,7 @@ public class StandaloneTestCase extends TestCase {
         URL classURL = Standalone.class.getResource(relativeClassPath);
         String absoluteClassPath = classURL.getFile();
         File absoluteDirPath = new File(absoluteClassPath).getParentFile();
-        File absoluteScriptPath = new File(absoluteDirPath, "nanocontainer.groovy");
+        File absoluteScriptPath = new File(absoluteDirPath, "nanocontainer.xml");
         return absoluteScriptPath;
     }
 
