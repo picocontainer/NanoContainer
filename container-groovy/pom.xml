@@ -19,8 +19,6 @@
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-aop</artifactId>
-            <version>${pom.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>

@@ -7,7 +7,7 @@
  *                                                                           *
  * Idea by Rachel Davies, Original code by various                           *
  *****************************************************************************/
-package org.nanocontainer.aop.dynaop;
+package org.nanocontainer.script.groovy;
 
 import org.nanocontainer.aop.defaults.AopNodeBuilderDecorationDelegate;
 import org.nanocontainer.aop.dynaop.DynaopAspectsManager;

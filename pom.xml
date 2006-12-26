@@ -129,7 +129,22 @@
             </dependency>
             <dependency>
                 <groupId>${pom.groupId}</groupId>
+                <artifactId>nanocontainer-aop</artifactId>
+                <version>${pom.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${pom.groupId}</groupId>
+                <artifactId>nanocontainer-groovy</artifactId>
+                <version>${pom.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${pom.groupId}</groupId>
                 <artifactId>nanocontainer-tck</artifactId>
+                <version>${pom.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${pom.groupId}</groupId>
+                <artifactId>nanocontainer-test</artifactId>
                 <version>${pom.version}</version>
             </dependency>
             <dependency>
