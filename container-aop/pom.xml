@@ -17,10 +17,6 @@
             <artifactId>nanocontainer</artifactId>
         </dependency>
         <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>nanocontainer-testmodel</artifactId>
-        </dependency>
-        <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
             <version>1.0</version>
@@ -29,6 +25,30 @@
             <groupId>dynaop</groupId>
             <artifactId>dynaop</artifactId>
             <version>1.0-beta</version>
+        </dependency>
+        <dependency>
+            <groupId>oro</groupId>
+            <artifactId>oro</artifactId>
+            <version>2.0.8</version>
+            <optional>true</optional>
+        </dependency>
+        <!--  test scoped dependencies -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>nanocontainer-testmodel</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-asm</artifactId>
+            <version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -32,14 +32,6 @@
       <groupId>xpp3</groupId>
       <artifactId>xpp3_min</artifactId>
     </dependency>
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib-asm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
-    </dependency>
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.picocontainer</groupId>
