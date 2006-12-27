@@ -22,7 +22,7 @@ import java.io.File;
  */
 public class NanoContainerDeployerTestCase extends TestCase {
 
-    private String jarsDir = "target/nanodist/apps";
+    private String jarsDir = "target/deployer/apps";
     private String folderPath = "src/deploytest";
 
     public void testZipWithDeploymentScriptAndClassesCanBeDeployed() throws FileSystemException, MalformedURLException, ClassNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
