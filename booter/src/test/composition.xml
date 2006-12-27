@@ -2,17 +2,17 @@
 
 <container>
     <classpath>
-        <element file="comps/api.jar"/>
+        <element file="lib/hidden/api.jar"/>
     </classpath>
     <classloader>
         <classpath>
-            <element file="comps/honeyimpl.jar"/>
+            <element file="lib/hidden/honeyimpl.jar"/>
         </classpath>
         <component key="org.nanocontainer.booter.Honey" class="org.nanocontainer.booter.BeeHiveHoney"/>
     </classloader>
     <classloader>
         <classpath>
-            <element file="comps/bearimpl.jar">
+            <element file="lib/hidden/bearimpl.jar">
                 <grant classname="java.net.SocketPermission" context="yahoo.com:80" value="connect"/>
             </element>
         </classpath>

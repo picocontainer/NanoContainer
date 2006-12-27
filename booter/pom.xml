@@ -21,6 +21,12 @@
             <artifactId>commons-cli</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>1.6.1</version>
+            <scope>integration-test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -30,7 +36,9 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.nanocontainer.booter.NanoContainerBooter</mainClass>
+                            <mainClass>
+                                org.nanocontainer.booter.NanoContainerBooter
+                            </mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -49,6 +57,15 @@
                                 <!--  Create test components -->
                                 <mkdir
                                     dir="${project.build.directory}/test-comps" />
+
+                                <jar
+                                    jarfile="${project.build.directory}/test-comps/api.jar">
+                                    <fileset
+                                        dir="${project.build.directory}/test-classes/">
+                                        <include name="**/Bear.class" />
+                                        <include name="**/Honey.class" />
+                                    </fileset>
+                                </jar>
                                 <jar
                                     jarfile="${project.build.directory}/test-comps/bearimpl.jar">
                                     <fileset
@@ -67,11 +84,15 @@
                                     </fileset>
                                 </jar>
 
-                                <!-- Copy to booter dist -->
+                                <!-- Copy to booter bin dist -->
                                 <copy
                                     todir="${project.build.directory}/booter">
-                                    <fileset dir="src/">
+                                    <fileset dir="src/bin">
+                                        <include name="booter.policy" />
                                         <include name="nanocontainer.*" />
+                                    </fileset>
+                                    <fileset dir="src/test">
+                                        <include name="composition.*" />
                                     </fileset>
                                     <filterset>
                                         <filter token="VER"
@@ -80,9 +101,6 @@
                                 </copy>
                                 <copy
                                     todir="${project.build.directory}/booter/lib">
-                                    <fileset dir="src/">
-                                        <include name="booter.policy" />
-                                    </fileset>
                                     <fileset
                                         dir="${project.build.directory}">
                                         <include
@@ -115,7 +133,9 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>${pom.groupId}</groupId>
-                                    <artifactId>nanocontainer</artifactId>
+                                    <artifactId>
+                                        nanocontainer
+                                    </artifactId>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>
