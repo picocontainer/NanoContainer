@@ -90,6 +90,14 @@
 
     <pluginRepositories>
         <pluginRepository>
+            <id>apache-plugin-snapshots-repository</id>
+            <name>Apache Plugin Snapshots Repository</name>
+            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
             <id>codehaus-plugin-snapshots-repository</id>
             <name>Codehaus Plugin Snapshots Repository</name>
             <url>http://snapshots.maven.codehaus.org/maven2/</url>
