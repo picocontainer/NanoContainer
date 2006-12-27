@@ -8,11 +8,6 @@
 	</parent>
 	<artifactId>nanocontainer-testmodel</artifactId>
 	<name>NanoContainer Test Model</name>
-	<scm>
-		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/testmodel</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/scm/picocontainer/java/nanocontainer/trunk/testmodel</developerConnection>
-		<url>https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/testmodel</url>
-	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.picocontainer</groupId>

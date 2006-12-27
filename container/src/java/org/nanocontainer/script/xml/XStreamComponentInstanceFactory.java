@@ -8,10 +8,12 @@
  *****************************************************************************/
 package org.nanocontainer.script.xml;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomReader;
 import org.picocontainer.PicoContainer;
 import org.w3c.dom.Element;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.DomReader;
 
 /**
  * Implementation of XMLComponentInstanceFactory that uses 
@@ -30,7 +32,7 @@ public class XStreamComponentInstanceFactory implements XMLComponentInstanceFact
 	 * of XStream
 	 */
 	public XStreamComponentInstanceFactory(){
-		this(new XStream());
+		this(new XStream(new DomDriver()));
 	}
 	
 	/**

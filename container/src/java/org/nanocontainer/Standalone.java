@@ -42,7 +42,7 @@ public class Standalone {
     private static final char QUIET_OPT = 'q';
     private static final char NOWAIT_OPT = 'n';
 
-    private static final String DFT_COMP_FILE = "composition.groovy";
+    private static final String DEFAULT_COMPOSITION_FILE = "composition.groovy";
 
     static final Options createOptions() {
         Options options = new Options();
@@ -66,17 +66,17 @@ public class Standalone {
     }
 
     public Standalone(String[] args) throws IOException, ClassNotFoundException {
-        File dftCompFile = new File(DFT_COMP_FILE);
+        File defaultCompositionFile = new File(DEFAULT_COMPOSITION_FILE);
         CommandLine cl = null;
         Options options = createOptions();
-        if (args.length == 0 && !dftCompFile.exists()) {
+        if (args.length == 0 && !defaultCompositionFile.exists()) {
             printUsage(options);
             System.exit(-1);
          }
         try {
             cl = getCommandLine(args, options);
         } catch (ParseException e) {
-            System.out.println("NanoContainer-Standalone: Error in parsing arguments: ");
+            System.out.println("NanoContainer Standalone: Error in parsing arguments: ");
             e.printStackTrace();
             System.exit(-1);
         }
@@ -101,24 +101,24 @@ public class Standalone {
             } else if (compositionResource != null) {
                 buildAndStartContainer(Standalone.class.getResource(compositionResource), quiet, nowait);
             } else {
-                if (dftCompFile.exists()) {
-                    buildAndStartContainer(dftCompFile, quiet, nowait);
+                if (defaultCompositionFile.exists()) {
+                    buildAndStartContainer(defaultCompositionFile, quiet, nowait);
                 } else {
                     printUsage(options);
                     System.exit(10);
                 }
             }
         } catch (RuntimeException e) {
-            System.err.println("NanoContainer-Standalone: Failed to start application. Cause : " + e.getMessage());
+            System.err.println("NanoContainer Standalone: Failed to start application. Cause : " + e.getMessage());
             e.printStackTrace();
             throw e;
         } catch (ClassNotFoundException e) {
-            System.err.println("NanoContainer-Standalone: Failed to start application. A Class was not found. Exception message : " + e.getMessage());
+            System.err.println("NanoContainer Standalone: Failed to start application. A Class was not found. Exception message : " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
         if (!quiet) {
-            System.out.println("NanoContainer-Standalone: Exiting main method.");
+            System.out.println("NanoContainer Standalone: Exiting main method.");
         }
     }
 
@@ -182,7 +182,7 @@ public class Standalone {
             e.printStackTrace();
         } finally {
             if (!quiet) {
-                System.out.println("NanoContainer-Standalone: Exiting Virtual Machine");
+                System.out.println("NanoContainer Standalone: Exiting Virtual Machine");
             }
         }
     }
@@ -198,13 +198,13 @@ public class Standalone {
 
         final StringBuffer usage = new StringBuffer();
         usage.append(lineSeparator);
-        usage.append("NanoContainer-Standalone: -c <composition-file> [-q|-n|-h|-v]");
+        usage.append("NanoContainer Standalone: -c <composition-file> [-q|-n|-h|-v]");
         usage.append(options.getOptions());
         System.out.println(usage.toString());
     }
 
     private static void printVersion() {
-        System.out.println("1.0");
+        System.out.println("1.1");
     }
 
 
