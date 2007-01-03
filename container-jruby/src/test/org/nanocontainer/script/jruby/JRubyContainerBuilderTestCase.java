@@ -1,6 +1,15 @@
 package org.nanocontainer.script.jruby;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 import org.jmock.Mock;
+import org.jruby.exceptions.RaiseException;
 import org.nanocontainer.NanoPicoContainer;
 import org.nanocontainer.TestHelper;
 import org.nanocontainer.integrationkit.PicoCompositionException;
@@ -22,14 +31,6 @@ import org.picocontainer.defaults.InstanceComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapter;
 import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 import org.picocontainer.defaults.UnsatisfiableDependenciesException;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
  * @author Nick Sieger
@@ -526,13 +527,11 @@ public class JRubyContainerBuilderTestCase extends AbstractScriptedContainerBuil
                 "}");
 
             buildContainer(script, parent, ASSEMBLY_SCOPE);
-            fail("should barf with [Don't know how to create a 'grant' child] exception");
+            fail("should barf with RaiseException");
         } catch(PicoCompositionException e) {
-            String message = e.getCause().getMessage();
-            assertNotNull(message);
-            assertTrue(message.indexOf("undefined method `grant' for #<Nano::Container:") != -1);
+            assertNotNull(e.getCause());
+            assertTrue(e.getCause() instanceof RaiseException);
         }
-
     }
 
 
