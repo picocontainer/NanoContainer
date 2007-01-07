@@ -22,6 +22,17 @@
             <version>1.0</version>
         </dependency>
         <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>nanocontainer-groovy</artifactId>
+            <scope>integration-test</scope>
+        </dependency>
+        <dependency>
+            <groupId>groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.0</version>
+            <scope>integration-test</scope>
+        </dependency>
+        <dependency>
             <groupId>qdox</groupId>
             <artifactId>qdox</artifactId>
             <version>1.6.1</version>
@@ -94,6 +105,14 @@
                                 <artifactItem>
                                     <groupId>${pom.groupId}</groupId>
                                     <artifactId>nanocontainer</artifactId>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>${pom.groupId}</groupId>
+                                    <artifactId>nanocontainer-groovy</artifactId>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>groovy</groupId>
+                                    <artifactId>groovy-all</artifactId>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>
