@@ -24,13 +24,7 @@
         <dependency>
             <groupId>groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.0-RC-02</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>servletapi</groupId>
-                    <artifactId>servletapi</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>1.0</version>
         </dependency>
         <!-- test scoped dependencies -->
         <dependency>
