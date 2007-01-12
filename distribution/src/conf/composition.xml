@@ -1,1 +1,0 @@
-// NanoContainer Standalone composition file

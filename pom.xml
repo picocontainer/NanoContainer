@@ -23,6 +23,7 @@
         <module>booter</module>
         <module>deployer</module>
         <module>webcontainer</module>
+        <module>distribution</module>
     </modules>
 
     <organization>
