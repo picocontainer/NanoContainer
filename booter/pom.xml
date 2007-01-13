@@ -1,12 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.nanocontainer</groupId>
         <artifactId>nanocontainer-parent</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1-RC-1</version>
     </parent>
     <artifactId>nanocontainer-booter</artifactId>
     <name>NanoContainer Booter</name>
@@ -138,38 +135,28 @@
                         <configuration>
                             <tasks>
                                 <!--  Create test components -->
-                                <mkdir
-                                    dir="${project.build.directory}/test-comps" />
+                                <mkdir dir="${project.build.directory}/test-comps" />
 
-                                <jar
-                                    jarfile="${project.build.directory}/test-comps/api.jar">
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/">
+                                <jar jarfile="${project.build.directory}/test-comps/api.jar">
+                                    <fileset dir="${project.build.directory}/test-classes/">
                                         <include name="**/Bear.class" />
                                         <include name="**/Honey.class" />
                                     </fileset>
                                 </jar>
-                                <jar
-                                    jarfile="${project.build.directory}/test-comps/bearimpl.jar">
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/">
-                                        <include
-                                            name="**/BrownBear.class" />
+                                <jar jarfile="${project.build.directory}/test-comps/bearimpl.jar">
+                                    <fileset dir="${project.build.directory}/test-classes/">
+                                        <include name="**/BrownBear.class" />
                                     </fileset>
                                 </jar>
 
-                                <jar
-                                    jarfile="${project.build.directory}/test-comps/honeyimpl.jar">
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/">
-                                        <include
-                                            name="**/BeeHiveHoney.class" />
+                                <jar jarfile="${project.build.directory}/test-comps/honeyimpl.jar">
+                                    <fileset dir="${project.build.directory}/test-classes/">
+                                        <include name="**/BeeHiveHoney.class" />
                                     </fileset>
                                 </jar>
 
                                 <!-- Copy to booter bin dist -->
-                                <copy
-                                    todir="${project.build.directory}/booter">
+                                <copy todir="${project.build.directory}/booter">
                                     <fileset dir="src/bin">
                                         <include name="booter.policy" />
                                         <include name="nanocontainer.*" />
@@ -178,24 +165,18 @@
                                         <include name="composition.*" />
                                     </fileset>
                                     <filterset>
-                                        <filter token="VER"
-                                            value="${pom.version}" />
+                                        <filter token="VER" value="${pom.version}" />
                                     </filterset>
                                 </copy>
-                                <copy
-                                    todir="${project.build.directory}/booter/lib">
-                                    <fileset
-                                        dir="${project.build.directory}">
-                                        <include
-                                            name="${pom.artifactId}-${pom.version}.jar" />
+                                <copy todir="${project.build.directory}/booter/lib">
+                                    <fileset dir="${project.build.directory}">
+                                        <include name="${pom.artifactId}-${pom.version}.jar" />
                                     </fileset>
                                 </copy>
                                 
                                 <!-- Copy to booter/test-comps -->
-                                <copy
-                                    todir="${project.build.directory}/booter/test-comps">
-                                    <fileset
-                                        dir="${project.build.directory}/test-comps">
+                                <copy todir="${project.build.directory}/booter/test-comps">
+                                    <fileset dir="${project.build.directory}/test-comps">
                                         <include name="*.jar" />
                                     </fileset>
                                 </copy>                                

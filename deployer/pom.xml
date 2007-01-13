@@ -1,12 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.nanocontainer</groupId>
         <artifactId>nanocontainer-parent</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1-RC-1</version>
     </parent>
     <artifactId>nanocontainer-deployer</artifactId>
     <name>NanoContainer Deployer</name>
@@ -43,42 +40,30 @@
                         <configuration>
                             <tasks>
                                 <!--  Create test components -->
-                                <mkdir
-                                    dir="${project.build.directory}/test-jars/" />
-                                <jar
-                                    jarfile="${project.build.directory}/test-jars/successful-deploy.jar">
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/">
+                                <mkdir dir="${project.build.directory}/test-jars/" />
+                                <jar jarfile="${project.build.directory}/test-jars/successful-deploy.jar">
+                                    <fileset dir="${project.build.directory}/test-classes/">
                                         <include name="foo/**" />
                                     </fileset>
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/successful-deploy" />
+                                    <fileset dir="${project.build.directory}/test-classes/successful-deploy" />
                                 </jar>
 
-                                <jar
-                                    jarfile="${project.build.directory}/test-jars/badscript-deploy.jar">
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/">
+                                <jar jarfile="${project.build.directory}/test-jars/badscript-deploy.jar">
+                                    <fileset dir="${project.build.directory}/test-classes/">
                                         <include name="foo/**" />
                                     </fileset>
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/badscript-deploy" />
+                                    <fileset dir="${project.build.directory}/test-classes/badscript-deploy" />
                                 </jar>
 
-                                <jar
-                                    jarfile="${project.build.directory}/test-jars/malformed-deploy.jar">
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/">
+                                <jar jarfile="${project.build.directory}/test-jars/malformed-deploy.jar">
+                                    <fileset dir="${project.build.directory}/test-classes/">
                                         <include name="foo/**" />
                                     </fileset>
-                                    <fileset
-                                        dir="${project.build.directory}/test-classes/malformed-deploy" />
+                                    <fileset dir="${project.build.directory}/test-classes/malformed-deploy" />
                                 </jar>
 
-                                <copy
-                                    todir="${project.build.directory}/deployer/apps">
-                                    <fileset
-                                        dir="${project.build.directory}/test-jars">
+                                <copy todir="${project.build.directory}/deployer/apps">
+                                    <fileset dir="${project.build.directory}/test-jars">
                                         <include name="*.jar" />
                                     </fileset>
                                 </copy>
