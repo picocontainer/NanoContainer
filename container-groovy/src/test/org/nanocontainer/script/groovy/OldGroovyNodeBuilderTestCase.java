@@ -175,7 +175,7 @@ public class OldGroovyNodeBuilderTestCase extends AbstractScriptedContainerBuild
                 "nano = builder.container {\n" +
                 "    component(key:'a', class:A)\n" +
                 "    newBuilder(class:'org.nanocontainer.script.groovy.TestingChildBuilder') {\n" +
-                "      component(key:'b', class:B)\n" +
+                "      elephant(key:'b', class:B)\n" +
                 "    }\n" +
                 "}");
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module version="4" relativePaths="true" type="JAVA_MODULE">
+<module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="ModuleRootManager" />
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/container/target/classes" />
@@ -7,6 +7,10 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/booter/src/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/booter/src/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/container-aop/src/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/container-aop/src/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/container-groovy/src/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/container-groovy/src/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/container/src/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/container/src/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/deployer/src/java" isTestSource="false" />

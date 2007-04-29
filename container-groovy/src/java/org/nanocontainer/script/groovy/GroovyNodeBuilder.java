@@ -123,7 +123,6 @@ public class GroovyNodeBuilder extends BuilderSupport {
             setNode((BuilderNode) factory.getPico().getComponentInstance("wc"));
         } catch (ClassNotFoundException cnfe) {
         }
-
     }
 
     /**

@@ -28,7 +28,7 @@ public class TestingChildBuilder extends NodeBuilder {
     }
 
     protected Object createNode(Object name, Map map) {
-        if (name.equals("component")) {
+        if (name.equals("elephant")) {
             return toOperateOn.registerComponentImplementation(map.remove("key"), (Class) map.remove("class"));
         } else {
             return null;
