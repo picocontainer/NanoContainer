@@ -93,21 +93,21 @@
 
     <distributionManagement>
         <repository>
-            <id>codehaus-nanocontainer-repository</id>
+            <id>codehaus.org</id>
             <name>Codehaus NanoContainer Repository</name>
             <url>
                 dav:https://dav.codehaus.org/repository/nanocontainer/
             </url>
         </repository>
         <snapshotRepository>
-            <id>codehaus-nanocontainer-snapshot-repository</id>
+            <id>codehaus.org</id>
             <name>Codehaus NanoContainer Snapshots Repository</name>
             <url>
                 dav:https://dav.codehaus.org/snapshots.repository/nanocontainer/
             </url>
         </snapshotRepository>
         <site>
-            <id>nanocontainer-site</id>
+            <id>codehaus.org</id>
             <url>dav:https://dav.codehaus.org/nanocontainer/</url>
         </site>
     </distributionManagement>
