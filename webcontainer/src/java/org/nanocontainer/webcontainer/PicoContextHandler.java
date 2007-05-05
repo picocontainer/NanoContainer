@@ -147,4 +147,8 @@ public class PicoContextHandler {
     //    writeErrorPage(request, writer, code, message, _showStacks);
    // }
 
+    public void setAttribute(String name, Object value) {
+        context.setAttribute(name, value);
+    }
+
 }

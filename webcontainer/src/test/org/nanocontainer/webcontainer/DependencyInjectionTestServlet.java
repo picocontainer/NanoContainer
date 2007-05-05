@@ -15,7 +15,7 @@ public class DependencyInjectionTestServlet extends HttpServlet {
     public DependencyInjectionTestServlet(String name) {
         this.name = name;
     }
-        
+
     public void init(ServletConfig servletConfig) throws ServletException {
         String initParameter = servletConfig.getInitParameter("foo");
         if (initParameter!= null) {
