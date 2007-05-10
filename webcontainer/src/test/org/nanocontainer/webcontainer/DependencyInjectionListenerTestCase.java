@@ -42,7 +42,7 @@ public class DependencyInjectionListenerTestCase extends TestCase {
 
     }
 
-    public void testListenerInvokedBeforeServlet() throws InterruptedException, IOException {
+    public void testListenerInvokedBeforeFilterBeforeServlet() throws InterruptedException, IOException {
 
         final DefaultPicoContainer parentContainer = new DefaultPicoContainer();
         StringBuffer sb = new StringBuffer();
@@ -53,18 +53,18 @@ public class DependencyInjectionListenerTestCase extends TestCase {
         Class listenerClass = DependencyInjectionTestListener.class;
         barContext.addListener(listenerClass);
         barContext.addServletWithMapping(DependencyInjectionTestServlet2.class, "/foo");
+        barContext.addFilterWithMapping(DependencyInjectionTestFilter2.class, "/foo", 0);
 
         server.start();
 
-        Thread.sleep(1 * 1000);
         URL url = new URL("http://localhost:8080/bar/foo");
         url.openStream();
 
-        assertEquals("-contextInitialized-hello", sb.toString());
+        assertEquals("-contextInitialized-Filter-Servlet", sb.toString());
 
         server.stop();
 
-        assertEquals("-contextInitialized-hello-contextDestroyed", sb.toString());
+        assertEquals("-contextInitialized-Filter-Servlet-contextDestroyed", sb.toString());
 
     }
 

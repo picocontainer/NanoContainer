@@ -26,8 +26,15 @@ public class PicoServletHandler extends ServletHandler {
         return new PicoServletHolder(servletClass, parentContainer);
     }
 
+    public ServletHolder newServletHolder() {
+        return new PicoServletHolder(parentContainer);
+    }
+
     public FilterHolder newFilterHolder(Class filterClass) {
         return new PicoFilterHolder(filterClass, parentContainer);
     }
 
+    public FilterHolder newFilterHolder() {
+        return new PicoFilterHolder(parentContainer);
+    }
 }

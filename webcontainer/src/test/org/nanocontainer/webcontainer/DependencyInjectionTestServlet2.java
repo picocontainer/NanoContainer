@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DependencyInjectionTestServlet2 extends HttpServlet {
 
     public DependencyInjectionTestServlet2(StringBuffer buffer) {
-        buffer.append("-hello");
+        buffer.append("-Servlet");
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
