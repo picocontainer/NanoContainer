@@ -11,7 +11,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.Socket;
 
-public class JspTestCase extends TestCase {
+public class JspTestCase extends WebContainerTestCase {
 
     PicoJettyServer server;
 
@@ -19,7 +19,6 @@ public class JspTestCase extends TestCase {
         if (server != null) {
             server.stop();
         }
-        Thread.sleep(1 * 1000);
     }
 
 
@@ -41,9 +40,6 @@ public class JspTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/test.jsp");
         assertEquals("<HTML>\n" +
                 "  <HEAD>\n" +
                 "    <TITLE>Test JSP</TITLE>\n" +
@@ -51,9 +47,8 @@ public class JspTestCase extends TestCase {
                 "  <BODY>\n" +
                 "    hello\n" +
                 "  </BODY>\n" +
-                "</HTML>", IO.toString(url.openStream()));
+                "</HTML>", getPage("http://localhost:8080/bar/test.jsp"));
 
-        Thread.sleep(1 * 1000);
 
 
     }
@@ -73,9 +68,6 @@ public class JspTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-
         Socket socket = new Socket("localhost", 8080);
         PrintWriter writer = new PrintWriter(socket.getOutputStream());
         writer.write("GET /bar/barfs.jsp HTTP/1.0\n\n\n");
@@ -90,9 +82,6 @@ public class JspTestCase extends TestCase {
 
         assertTrue(result.indexOf("Banzai") != -1);
         assertTrue(result.indexOf("HTTP/1.1 500") != -1);
-
-        Thread.sleep(1 * 1000);
-
 
     }
     private static class MyErrorHandler extends ErrorHandler {

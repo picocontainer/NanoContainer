@@ -13,6 +13,7 @@ package org.nanocontainer.webcontainer.groovy;
 import junit.framework.TestCase;
 import org.nanocontainer.script.groovy.GroovyContainerBuilder;
 import org.nanocontainer.webcontainer.TestHelper;
+import org.nanocontainer.webcontainer.WebContainerTestCase;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ObjectReference;
 import org.picocontainer.defaults.SimpleReference;
@@ -22,7 +23,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.ConnectException;
 
-public class WebContainerBuilderTestCase extends TestCase {
+public class WebContainerBuilderTestCase extends WebContainerTestCase {
 
     private ObjectReference containerRef = new SimpleReference();
     private ObjectReference parentContainerRef = new SimpleReference();
@@ -157,7 +158,7 @@ public class WebContainerBuilderTestCase extends TestCase {
                 // end declaration
                 "}\n");
 
-        assertPageIsHostedWithContents(script, "", "http://localhost:8080/bar/");
+        assertPageIsHostedWithContents(script, "java.io.FileNotFoundException:http://localhost:8080/bar/", "http://localhost:8080/bar/");
 
         StringBuffer stringBuffer = (StringBuffer) pico.getComponentInstance(StringBuffer.class);
 
@@ -241,16 +242,8 @@ public class WebContainerBuilderTestCase extends TestCase {
         pico = buildContainer(script, null, "SOME_SCOPE");
         assertNotNull(pico);
         
+        String actual = getPage(url);
 
-        String actual = null;
-        try {
-            actual = IO.toString(new URL(url).openStream());
-        } catch (ConnectException e) {
-            Thread.sleep(1 * 1000);
-            actual = IO.toString(new URL(url).openStream());
-        } catch (FileNotFoundException e) {
-            actual = "";
-        }
         assertEquals(message, actual);
     }
 

@@ -10,7 +10,7 @@ import java.net.URL;
 import org.picocontainer.alternatives.EmptyPicoContainer;
 import org.mortbay.util.IO;
 
-public class StaticFileTestCase extends TestCase {
+public class StaticFileTestCase extends WebContainerTestCase {
 
     PicoJettyServer server;
     protected void tearDown() throws Exception {
@@ -29,16 +29,11 @@ public class StaticFileTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/hello.html");
         assertEquals("<html>\n" +
                 " <body>\n" +
                 "   hello\n" +
                 " </body>\n" +
-                "</html>", IO.toString(url.openStream()));
-
-        Thread.sleep(1 * 1000);
+                "</html>", getPage("http://localhost:8080/bar/hello.html"));
 
     }
 
@@ -52,16 +47,12 @@ public class StaticFileTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/");
         assertEquals("<html>\n" +
                 " <body>\n" +
                 "   hello\n" +
                 " </body>\n" +
-                "</html>", IO.toString(url.openStream()));
+                "</html>", getPage("http://localhost:8080/bar/"));
 
-        Thread.sleep(1 * 1000);
 
     }
 
@@ -75,8 +66,6 @@ public class StaticFileTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
         URL url = new URL("http://localhost:8080/bar/HearMeRoar!");
         try {
             url.openStream();
@@ -84,8 +73,6 @@ public class StaticFileTestCase extends TestCase {
         } catch (FileNotFoundException e) {
             // expected
         }
-
-        Thread.sleep(1 * 1000);
 
     }
 

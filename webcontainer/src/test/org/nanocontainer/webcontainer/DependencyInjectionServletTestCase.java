@@ -18,14 +18,13 @@ import org.mortbay.util.IO;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.alternatives.EmptyPicoContainer;
 
-public class DependencyInjectionServletTestCase extends TestCase {
+public class DependencyInjectionServletTestCase extends WebContainerTestCase {
 
     PicoJettyServer server;
     protected void tearDown() throws Exception {
         if (server != null) {
             server.stop();
         }
-        Thread.sleep(1 * 1000);
     }
 
     public void testCanInstantiateWebContainerContextAndServlet() throws InterruptedException, IOException {
@@ -41,10 +40,7 @@ public class DependencyInjectionServletTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/foo");
-        assertEquals("hello Fred bar", IO.toString(url.openStream()));
+        assertEquals("hello Fred bar", getPage("http://localhost:8080/bar/foo"));
 
 
     }
@@ -62,11 +58,7 @@ public class DependencyInjectionServletTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/foo");
-        assertEquals("hello Fred bar", IO.toString(url.openStream()));
-
+        assertEquals("hello Fred bar", getPage("http://localhost:8080/bar/foo"));
 
     }
 

@@ -10,14 +10,13 @@ import org.mortbay.jetty.webapp.WebAppContext;
 import org.mortbay.util.IO;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-public class DependencyInjectionServletWarFileTestCase extends TestCase {
+public class DependencyInjectionServletWarFileTestCase extends WebContainerTestCase {
 
     PicoJettyServer server;
     protected void tearDown() throws Exception {
         if (server != null) {
             server.stop();
         }
-        Thread.sleep(1 * 1000);
     }
 
     public void testCanInstantiateWebContainerContextAndServlet()
@@ -37,10 +36,8 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
 
-        URL url = new URL("http://localhost:8080/bar/foo");
-        assertEquals("hello Fred bar", IO.toString(url.openStream()));
+        assertEquals("hello Fred bar", getPage("http://localhost:8080/bar/foo"));
 
         assertEquals("-contextInitialized", sb.toString());
 
@@ -62,9 +59,6 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
 
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/test.jsp");
         assertEquals("<HTML>\n" +
                 "  <HEAD>\n" +
                 "    <TITLE>Test JSP</TITLE>\n" +
@@ -72,7 +66,7 @@ public class DependencyInjectionServletWarFileTestCase extends TestCase {
                 "  <BODY>\n" +
                 "    hello\n" +
                 "  </BODY>\n" +
-                "</HTML>", IO.toString(url.openStream()));
+                "</HTML>", getPage("http://localhost:8080/bar/test.jsp"));
 
 
     }

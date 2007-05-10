@@ -10,14 +10,13 @@ import org.mortbay.util.IO;
 
 import javax.servlet.Filter;
 
-public class DependencyInjectionFilterTestCase extends TestCase {
+public class DependencyInjectionFilterTestCase extends WebContainerTestCase {
 
     PicoJettyServer server;
     protected void tearDown() throws Exception {
         if (server != null) {
             server.stop();
         }
-        Thread.sleep(1 * 1000);
     }
 
     public void testCanInstantiateWebContainerContextAndFilter() throws InterruptedException, IOException {
@@ -34,12 +33,7 @@ public class DependencyInjectionFilterTestCase extends TestCase {
         barContext.addServletWithMapping(DependencyInjectionTestServlet.class, "/foo2");
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/foo2");
-
-        assertEquals("hello Fred Filtered!(int= 5 bau)", IO.toString(url.openStream()));
-
+        assertEquals("hello Fred Filtered!(int= 5 bau)", getPage("http://localhost:8080/bar/foo2"));
 
     }
 
@@ -56,12 +50,7 @@ public class DependencyInjectionFilterTestCase extends TestCase {
         barContext.addServletWithMapping(DependencyInjectionTestServlet.class, "/foo2");
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/foo2");
-
-        assertEquals("hello Fred Filtered!(int= 5 bau)", IO.toString(url.openStream()));
-
+        assertEquals("hello Fred Filtered!(int= 5 bau)", getPage("http://localhost:8080/bar/foo2"));
 
     }
 
@@ -79,11 +68,7 @@ public class DependencyInjectionFilterTestCase extends TestCase {
         holder.setInitParameter("foo", "bau");
         server.start();
 
-        Thread.sleep(2 * 1000);
-
-        URL url = new URL("http://localhost:8080/bar/foo2");
-
-        assertEquals("hello Fred Filtered!(int= 5) bau", IO.toString(url.openStream()));
+        assertEquals("hello Fred Filtered!(int= 5) bau", getPage("http://localhost:8080/bar/foo2"));
 
     }
 
