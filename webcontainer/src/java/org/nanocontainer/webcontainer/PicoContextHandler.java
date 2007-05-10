@@ -20,6 +20,8 @@ import org.picocontainer.defaults.DefaultPicoContainer;
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
 import java.util.EventListener;
+import java.util.Map;
+import java.util.HashMap;
 
 // TODO rename to PicoContext
 public class PicoContextHandler {
@@ -63,6 +65,13 @@ public class PicoContextHandler {
     public Filter addFilterWithMapping(Filter filter, String pathMapping, int dispatchers) {
         context.addFilter(new FilterHolder(filter), pathMapping, dispatchers);
         return filter;
+    }
+
+    public void addInitParam(String param, String value) {
+        Map params = new HashMap(context.getInitParams());
+        params.put(param, value);
+        context.setInitParams(params);
+
     }
 
 
