@@ -10,21 +10,15 @@ import java.util.Map;
 
 import groovy.util.NodeBuilder;
 
-/**
- * 
- * @author Paul Hammant
- * @author Mauro Talevi
- * @deprecated Use NodeBuilderAdapter
- */
-public class WaffleAdapter {
+public class NodeBuilderAdapter {
     
-    private static final String WAFFLE_NODE_BUILDER = "org.codehaus.waffle.groovy.WaffleNodeBuilder";
-    
+    private final String nodeBuilderClassName;    
     private final PicoContextHandler context;
     private final MutablePicoContainer parentContainer;
     private final Map attributes;
-    
-    public WaffleAdapter(PicoContextHandler context, MutablePicoContainer parentContainer, Map attributes) {
+
+    public NodeBuilderAdapter(String nodeBuilderClassName, PicoContextHandler context, MutablePicoContainer parentContainer, Map attributes) {
+        this.nodeBuilderClassName = nodeBuilderClassName;
         this.context = context;
         this.parentContainer = parentContainer;
         this.attributes = attributes;
@@ -36,10 +30,10 @@ public class WaffleAdapter {
         factory.getPico().registerComponentInstance(PicoContainer.class, parentContainer);
         factory.getPico().registerComponentInstance(Map.class, attributes);
         try {
-            factory.registerComponentImplementation("waffleNodeBuilder", WAFFLE_NODE_BUILDER);
-            return (NodeBuilder) factory.getPico().getComponentInstance("waffleNodeBuilder");
+            factory.registerComponentImplementation("nodeBuilder", nodeBuilderClassName);
+            return (NodeBuilder) factory.getPico().getComponentInstance("nodeBuilder");
         } catch (ClassNotFoundException e) {
-            throw new org.nanocontainer.script.BuilderClassNotFoundException(WAFFLE_NODE_BUILDER + " class name not found", e);
+            throw new org.nanocontainer.script.BuilderClassNotFoundException(nodeBuilderClassName + " class name not found", e);
         }
     }
 
