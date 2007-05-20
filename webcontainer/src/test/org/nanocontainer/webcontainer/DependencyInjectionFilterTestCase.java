@@ -1,14 +1,8 @@
 package org.nanocontainer.webcontainer;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
-import java.net.URL;
 
 import org.picocontainer.defaults.DefaultPicoContainer;
-import org.mortbay.util.IO;
-
-import javax.servlet.Filter;
 
 public class DependencyInjectionFilterTestCase extends WebContainerTestCase {
 

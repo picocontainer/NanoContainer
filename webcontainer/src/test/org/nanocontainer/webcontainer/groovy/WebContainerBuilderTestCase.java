@@ -196,10 +196,8 @@ public class WebContainerBuilderTestCase extends WebContainerTestCase {
                 " </body>\n" +
                 "</html>", "http://localhost:8080/bar/hello.html");
 
-
         pico.stop();
         pico = null;
-
 
     }
 

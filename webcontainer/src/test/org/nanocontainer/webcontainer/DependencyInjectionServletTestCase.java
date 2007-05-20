@@ -10,13 +10,9 @@
 package org.nanocontainer.webcontainer;
 
 import java.io.IOException;
-import java.net.URL;
 
-import junit.framework.TestCase;
-
-import org.mortbay.util.IO;
-import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.alternatives.EmptyPicoContainer;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
 public class DependencyInjectionServletTestCase extends WebContainerTestCase {
 

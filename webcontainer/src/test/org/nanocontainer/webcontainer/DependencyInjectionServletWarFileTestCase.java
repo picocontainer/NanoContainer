@@ -1,13 +1,9 @@
 package org.nanocontainer.webcontainer;
 
-import java.io.IOException;
 import java.io.File;
-import java.net.URL;
-
-import junit.framework.TestCase;
+import java.io.IOException;
 
 import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.util.IO;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 public class DependencyInjectionServletWarFileTestCase extends WebContainerTestCase {

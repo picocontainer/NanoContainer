@@ -12,7 +12,6 @@ package org.nanocontainer.webcontainer;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.RequestLog;
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.ErrorHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.RequestLogHandler;
 import org.mortbay.jetty.nio.BlockingChannelConnector;
@@ -25,8 +24,7 @@ public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer
 
     private final Server server;
     private final PicoContainer parentContainer;
-    private ErrorHandler errorHandler;
-
+    
     public PicoJettyServer(PicoContainer parentContainer) {
         this.parentContainer = parentContainer;
         server = new Server();
@@ -51,23 +49,20 @@ public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer
         return new PicoContext(context, parentContainer, withSessionHandler);
     }
 
-
     public PicoWebAppContext addWebApplication(String contextPath, String warFile) {
-        PicoWebAppContext wah = new PicoWebAppContext(parentContainer);
-        wah.setContextPath(contextPath);
-        wah.setExtractWAR(true);
-        wah.setWar(warFile);
-        wah.setParentLoaderPriority(true);
-        server.addHandler(wah);
-        return wah;
+        PicoWebAppContext context = new PicoWebAppContext(parentContainer);
+        context.setContextPath(contextPath);
+        context.setExtractWAR(true);
+        context.setWar(warFile);
+        context.setParentLoaderPriority(true);
+        server.addHandler(context);
+        return context;
     }
-
 
     public void start() {
         try {
             server.start();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new JettyServerLifecycleException("Jetty couldn't start", e);
         }
     }
@@ -81,10 +76,9 @@ public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer
     }
 
     public void addRequestLog(RequestLog requestLog) {
-        RequestLogHandler requestLogHandler = new RequestLogHandler();
-        requestLogHandler.setRequestLog(requestLog);
-        server.addHandler(requestLogHandler);
-
+        RequestLogHandler handler = new RequestLogHandler();
+        handler.setRequestLog(requestLog);
+        server.addHandler(handler);
     }
 
 }

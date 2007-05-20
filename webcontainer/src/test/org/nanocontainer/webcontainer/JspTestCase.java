@@ -1,15 +1,17 @@
 package org.nanocontainer.webcontainer;
 
-import junit.framework.TestCase;
-import org.mortbay.util.IO;
-import org.mortbay.jetty.handler.ErrorHandler;
-
-import org.picocontainer.alternatives.EmptyPicoContainer;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.net.Socket;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.URL;
-import java.net.Socket;
+
+import org.mortbay.jetty.handler.ErrorHandler;
+import org.picocontainer.alternatives.EmptyPicoContainer;
 
 public class JspTestCase extends WebContainerTestCase {
 

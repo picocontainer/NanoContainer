@@ -1,15 +1,12 @@
 package org.nanocontainer.webcontainer;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.net.URL;
 
-import org.picocontainer.defaults.DefaultPicoContainer;
+import junit.framework.TestCase;
+
 import org.picocontainer.alternatives.EmptyPicoContainer;
-import org.nanocontainer.webcontainer.PicoJettyServer;
-import org.nanocontainer.webcontainer.PicoContext;
-import org.mortbay.util.IO;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
 public class DependencyInjectionListenerTestCase extends TestCase {
 

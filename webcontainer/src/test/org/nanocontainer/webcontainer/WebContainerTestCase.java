@@ -1,9 +1,9 @@
 package org.nanocontainer.webcontainer;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.net.URL;
+
+import junit.framework.TestCase;
 
 import org.mortbay.util.IO;
 
