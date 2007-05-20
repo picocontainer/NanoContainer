@@ -9,27 +9,27 @@
 
 package org.nanocontainer.webcontainer;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.ContextHandler;
-import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.handler.ErrorHandler;
-import org.mortbay.jetty.servlet.*;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.defaults.DefaultPicoContainer;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
-import java.util.EventListener;
-import java.util.Map;
-import java.util.HashMap;
 
-// TODO rename to PicoContext
-public class PicoContextHandler {
+import org.mortbay.jetty.handler.ErrorHandler;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.DefaultServlet;
+import org.mortbay.jetty.servlet.ErrorPageErrorHandler;
+import org.mortbay.jetty.servlet.FilterHolder;
+import org.mortbay.jetty.servlet.ServletHolder;
+import org.picocontainer.PicoContainer;
+import org.picocontainer.defaults.DefaultPicoContainer;
+
+public class PicoContext {
 
     private final Context context;
     private final PicoContainer parentContainer;
     private final boolean withSessionHandler;
-    private PicoServletHandler servletHandler;
 
     public static final int DEFAULT = 0;
     public static final int REQUEST = 1;
@@ -38,10 +38,10 @@ public class PicoContextHandler {
     public static final int ERROR = 8;
     public static final int ALL = 15;
 
-    public PicoContextHandler(Context context, PicoContainer parentContainer, boolean sessionManager) {
+    public PicoContext(Context context, PicoContainer parentContainer, boolean withSessionHandler) {
         this.context = context;
         this.parentContainer = parentContainer;
-        this.withSessionHandler = sessionManager;
+        this.withSessionHandler = withSessionHandler;
     }
 
     public PicoServletHolder addServletWithMapping(Class servletClass, String pathMapping) {
@@ -71,7 +71,6 @@ public class PicoContextHandler {
         Map params = new HashMap(context.getInitParams());
         params.put(param, value);
         context.setInitParams(params);
-
     }
 
 
@@ -123,11 +122,5 @@ public class PicoContextHandler {
     public void addErrorHandler(ErrorHandler handler) {
         context.setErrorHandler(handler);
     }
-
-    //     protected void handleErrorPage(HttpServletRequest request, Writer writer, int code, String message)
-//        throws IOException
-  //  {
-    //    writeErrorPage(request, writer, code, message, _showStacks);
-   // }
 
 }

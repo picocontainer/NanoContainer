@@ -25,7 +25,7 @@ public class WebContainerBuilder extends AbstractBuilderNode {
     }
 
     public Object createNewNode(Object current, Map map) {
-        int port =0;
+        int port = 0;
         if (map.containsKey("port")) {
             port = ((Integer) map.remove("port")).intValue();
         }
@@ -39,15 +39,14 @@ public class WebContainerBuilder extends AbstractBuilderNode {
         NanoContainer parentNano = (NanoContainer) current;
         MutablePicoContainer parentContainer = parentNano.getPico();
 
+        PicoJettyServer server = null;
         if (port != 0) {
-            PicoJettyServer server = new PicoJettyServer(host, port, parentContainer);
-            parentContainer.addChildContainer(server);
-            return new ServerBuilder(server, parentContainer);
+            server = new PicoJettyServer(host, port, parentContainer);
         } else {
-            PicoJettyServer server = new PicoJettyServer(parentContainer);
-            parentContainer.addChildContainer(server);
-            return new ServerBuilder(server, parentContainer);
+            server = new PicoJettyServer(parentContainer);
         }
+        parentContainer.addChildContainer(server);
+        return new ServerBuilder(server, parentContainer);
     }
 
 

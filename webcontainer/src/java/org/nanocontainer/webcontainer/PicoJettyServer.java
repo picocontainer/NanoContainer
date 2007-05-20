@@ -10,15 +10,13 @@
 package org.nanocontainer.webcontainer;
 
 import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
 import org.mortbay.jetty.RequestLog;
-import org.mortbay.jetty.servlet.ErrorPageErrorHandler;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.handler.ContextHandler;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.ErrorHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.RequestLogHandler;
-import org.mortbay.jetty.handler.ErrorHandler;
 import org.mortbay.jetty.nio.BlockingChannelConnector;
+import org.mortbay.jetty.servlet.Context;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.Startable;
 import org.picocontainer.alternatives.EmptyPicoContainer;
@@ -48,9 +46,9 @@ public class PicoJettyServer extends EmptyPicoContainer implements PicoContainer
         return connector;
     }
 
-    public PicoContextHandler createContext(String contextPath, boolean withSessionHandler) {
+    public PicoContext createContext(String contextPath, boolean withSessionHandler) {
         Context context = new Context(server, contextPath, Context.SESSIONS);
-        return new PicoContextHandler(context, parentContainer, withSessionHandler);
+        return new PicoContext(context, parentContainer, withSessionHandler);
     }
 
 

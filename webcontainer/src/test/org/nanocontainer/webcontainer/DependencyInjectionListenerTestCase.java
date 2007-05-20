@@ -8,7 +8,7 @@ import java.net.URL;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.alternatives.EmptyPicoContainer;
 import org.nanocontainer.webcontainer.PicoJettyServer;
-import org.nanocontainer.webcontainer.PicoContextHandler;
+import org.nanocontainer.webcontainer.PicoContext;
 import org.mortbay.util.IO;
 
 public class DependencyInjectionListenerTestCase extends TestCase {
@@ -27,7 +27,7 @@ public class DependencyInjectionListenerTestCase extends TestCase {
         parentContainer.registerComponentInstance(StringBuffer.class, sb);
 
         server = new PicoJettyServer("localhost", 8080, parentContainer);
-        PicoContextHandler barContext = server.createContext("/bar", false);
+        PicoContext barContext = server.createContext("/bar", false);
         Class listenerClass = DependencyInjectionTestListener.class;
         barContext.addListener(listenerClass);
 
@@ -48,7 +48,7 @@ public class DependencyInjectionListenerTestCase extends TestCase {
         parentContainer.registerComponentInstance(StringBuffer.class, sb);
 
         server = new PicoJettyServer("localhost", 8080, parentContainer);
-        PicoContextHandler barContext = server.createContext("/bar", false);
+        PicoContext barContext = server.createContext("/bar", false);
         Class listenerClass = DependencyInjectionTestListener.class;
         barContext.addListener(listenerClass);
         barContext.addServletWithMapping(DependencyInjectionTestServlet2.class, "/foo");
@@ -73,7 +73,7 @@ public class DependencyInjectionListenerTestCase extends TestCase {
         StringBuffer sb = new StringBuffer();
 
         server = new PicoJettyServer("localhost", 8080, new EmptyPicoContainer());
-        PicoContextHandler barContext = server.createContext("/bar", false);
+        PicoContext barContext = server.createContext("/bar", false);
         barContext.addListener(new DependencyInjectionTestListener(sb));
 
         server.start();

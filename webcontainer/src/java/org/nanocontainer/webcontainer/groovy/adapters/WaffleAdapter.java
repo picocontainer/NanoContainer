@@ -1,6 +1,6 @@
 package org.nanocontainer.webcontainer.groovy.adapters;
 
-import org.nanocontainer.webcontainer.PicoContextHandler;
+import org.nanocontainer.webcontainer.PicoContext;
 import org.nanocontainer.NanoContainer;
 import org.nanocontainer.DefaultNanoContainer;
 import org.picocontainer.MutablePicoContainer;
@@ -20,11 +20,11 @@ public class WaffleAdapter {
     
     private static final String WAFFLE_NODE_BUILDER = "org.codehaus.waffle.groovy.WaffleNodeBuilder";
     
-    private final PicoContextHandler context;
+    private final PicoContext context;
     private final MutablePicoContainer parentContainer;
     private final Map attributes;
     
-    public WaffleAdapter(PicoContextHandler context, MutablePicoContainer parentContainer, Map attributes) {
+    public WaffleAdapter(PicoContext context, MutablePicoContainer parentContainer, Map attributes) {
         this.context = context;
         this.parentContainer = parentContainer;
         this.attributes = attributes;
@@ -32,7 +32,7 @@ public class WaffleAdapter {
     
     public NodeBuilder getNodeBuilder() {
         NanoContainer factory = new DefaultNanoContainer();
-        factory.getPico().registerComponentInstance(PicoContextHandler.class, context);
+        factory.getPico().registerComponentInstance(PicoContext.class, context);
         factory.getPico().registerComponentInstance(PicoContainer.class, parentContainer);
         factory.getPico().registerComponentInstance(Map.class, attributes);
         try {

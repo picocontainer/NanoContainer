@@ -10,14 +10,13 @@
 package org.nanocontainer.webcontainer.groovy;
 
 import groovy.util.NodeBuilder;
-import org.mortbay.jetty.Connector;
-import org.nanocontainer.webcontainer.PicoContextHandler;
-import org.nanocontainer.webcontainer.PicoJettyServer;
-import org.nanocontainer.webcontainer.PicoWebAppContext;
-import org.nanocontainer.script.groovy.NodeCreator;
-import org.picocontainer.MutablePicoContainer;
 
 import java.util.Map;
+
+import org.nanocontainer.webcontainer.PicoContext;
+import org.nanocontainer.webcontainer.PicoJettyServer;
+import org.nanocontainer.webcontainer.PicoWebAppContext;
+import org.picocontainer.MutablePicoContainer;
 
 public class ServerBuilder extends NodeBuilder {
     private final PicoJettyServer server;
@@ -49,7 +48,7 @@ public class ServerBuilder extends NodeBuilder {
         if (map.containsKey("sessions")) {
             sessions = Boolean.valueOf((String) map.remove("sessions")).booleanValue();
         }
-        PicoContextHandler context = server.createContext((String) map.remove("path"), sessions);
+        PicoContext context = server.createContext((String) map.remove("path"), sessions);
         return new ContextBuilder(parentContainer, context);
     }
 

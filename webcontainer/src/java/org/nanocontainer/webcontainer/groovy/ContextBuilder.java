@@ -17,16 +17,16 @@ import javax.servlet.Servlet;
 
 import org.mortbay.jetty.servlet.FilterHolder;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.nanocontainer.webcontainer.PicoContextHandler;
+import org.nanocontainer.webcontainer.PicoContext;
 import org.nanocontainer.webcontainer.groovy.adapters.NodeBuilderAdapter;
 import org.nanocontainer.webcontainer.groovy.adapters.WaffleAdapter;
 import org.picocontainer.MutablePicoContainer;
 
 public class ContextBuilder extends NodeBuilder {
     private final MutablePicoContainer parentContainer;
-    private final PicoContextHandler context;
+    private final PicoContext context;
 
-    public ContextBuilder(MutablePicoContainer parentContainer, PicoContextHandler context) {
+    public ContextBuilder(MutablePicoContainer parentContainer, PicoContext context) {
         this.parentContainer = parentContainer;
         this.context = context;
     }
