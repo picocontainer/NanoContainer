@@ -80,6 +80,9 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
     private final static String FACTORY = "factory";
     private final static String FILE = "file";
     private final static String KEY = "key";
+    private final static String EMPTY_COLLECTION = "empty-collection";
+    private final static String COMPONENT_VALUE_TYPE = "component-value-type";
+    private final static String COMPONENT_KEY_TYPE = "component-key-type";
     private final static String PARAMETER = "parameter";
     private final static String URL = "url";
 
@@ -351,12 +354,83 @@ public class XMLContainerBuilder extends ScriptedContainerBuilder implements Con
         return parameters;
     }
 
+    /**
+     * Build the org.picocontainer.Parameter from the <code>parameter</code> element. This could
+     * create either a ComponentParameter or ConstantParameter instance,
+     * depending on the values of the element's attributes. This is somewhat
+     * complex because there are five constructors for ComponentParameter and one for 
+     * ConstantParameter. These are:
+     * 
+     * <a href="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html">ComponentParameter Javadocs</a>:
+     * 
+     * <code>ComponentParameter() - Expect any scalar paramter of the appropriate type or an Array.
+     *       ComponentParameter(boolean emptyCollection) - Expect any scalar paramter of the appropriate type or an Array.
+     *       ComponentParameter(Class componentValueType, boolean emptyCollection) - Expect any scalar paramter of the appropriate type or the collecting type Array,Collectionor Map.
+     *       ComponentParameter(Class componentKeyType, Class componentValueType, boolean emptyCollection) - Expect any scalar paramter of the appropriate type or the collecting type Array,Collectionor Map.
+     *       ComponentParameter(Object componentKey) - Expect a parameter matching a component of a specific key.</code>
+     * 
+     * and
+     * 
+     * <a href="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ConstantParameter.html">ConstantParameter Javadocs</a>:
+     * 
+     * <code>ConstantParameter(Object value)</code>
+     * 
+     * The rules for this are, in order:
+     * 
+     * 1) If the <code>key</code> attribute is not null/empty, the fifth constructor will be used.
+     * 2) If the <code>componentKeyType</code> attribute is not null/empty, the fourth constructor will be used.  
+     *    In this case, both the <code>componentValueType</code> and <code>emptyCollection</code> attributes must be non-null/empty or an exception will be thrown.
+     * 3) If the <code>componentValueType</code> attribute is not null/empty, the third constructor will be used.
+     *    In this case, the <code>emptyCollection</code> attribute must be non-null/empty.
+     * 4) If the <code>emptyCollection</code> attribute is not null/empty, the second constructor will be used.
+     * 5) If there is no child element of the parameter, the first constructor will be used.
+     * 6) Otherwise, the return value will be a ConstantParameter with the return from the createInstance value. 
+     */
     private Parameter createParameter(PicoContainer pico, Element element) throws ClassNotFoundException, MalformedURLException {
         final Parameter parameter;
         String key = element.getAttribute(KEY);
+        String emptyCollectionString = element.getAttribute(EMPTY_COLLECTION);
+        String componentValueTypeString = element.getAttribute(COMPONENT_VALUE_TYPE);
+        String componentKeyTypeString = element.getAttribute(COMPONENT_KEY_TYPE);
+
+        // key not null/empty takes precidence 
         if (key != null && !EMPTY.equals(key)) {
             parameter = new ComponentParameter(key);
-        } else if (getFirstChildElement(element, false) == null) {
+        } else if (componentKeyTypeString != null && !EMPTY.equals(componentKeyTypeString)) {
+            if (emptyCollectionString == null || componentValueTypeString == null || 
+                    EMPTY.equals(emptyCollectionString) || EMPTY.equals(componentValueTypeString)) {
+                
+                throw new NanoContainerMarkupException("The componentKeyType attribute was specified (" +
+                        componentKeyTypeString + ") but one or both of the emptyCollection (" + 
+                        emptyCollectionString + ") or componentValueType (" + componentValueTypeString + 
+                        ") was empty or null.");
+            }
+            
+            Class componentKeyType = getClassLoader().loadClass(componentKeyTypeString);
+            Class componentValueType = getClassLoader().loadClass(componentValueTypeString);
+            
+            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
+            
+            parameter = new ComponentParameter(componentKeyType, componentValueType, emptyCollection);
+        } else if (componentValueTypeString != null && !EMPTY.equals(componentValueTypeString)) {
+            if (emptyCollectionString == null || EMPTY.equals(emptyCollectionString)) {
+                
+                throw new NanoContainerMarkupException("The componentValueType attribute was specified (" +
+                        componentValueTypeString + ") but the emptyCollection (" + 
+                        emptyCollectionString + ") was empty or null.");
+            }
+            
+            Class componentValueType = getClassLoader().loadClass(componentValueTypeString);
+            
+            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
+            
+            parameter = new ComponentParameter(componentValueType, emptyCollection);
+        } else if (emptyCollectionString != null && !EMPTY.equals(emptyCollectionString)) {
+            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
+            
+            parameter = new ComponentParameter(emptyCollection);
+        }
+        else if (getFirstChildElement(element, false) == null) {
             parameter = new ComponentParameter();
         } else {
             Object instance = createInstance(pico, element);

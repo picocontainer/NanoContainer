@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -28,7 +29,12 @@ import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
 import org.nanocontainer.script.BarDecoratingPicoContainer;
 import org.nanocontainer.script.FooDecoratingPicoContainer;
 import org.nanocontainer.script.NanoContainerMarkupException;
+import org.nanocontainer.testmodel.CustomerEntityImpl;
 import org.nanocontainer.testmodel.DefaultWebServerConfig;
+import org.nanocontainer.testmodel.Entity;
+import org.nanocontainer.testmodel.ListSupport;
+import org.nanocontainer.testmodel.MapSupport;
+import org.nanocontainer.testmodel.OrderEntityImpl;
 import org.nanocontainer.testmodel.WebServerConfig;
 import org.nanocontainer.testmodel.WebServerConfigComp;
 import org.picocontainer.ComponentAdapter;
@@ -733,6 +739,94 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
         // decorators are fairly dirty - they replace a very select implementation in this TestCase.
         assertNotNull(pico.getComponentInstanceOfType(Touchable.class));
     }
+    
+    public void testListSupport() {
+
+        Reader script = new StringReader("" +
+                 "<container>\n" +
+                "   <component-implementation class='"+ListSupport.class.getName()+"'>" +
+                "       <parameter empty-collection='false' component-value-type='"+Entity.class.getName()+"'/>" +
+                "   </component-implementation>" +               
+                "   <component-implementation class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
+                "   <component-implementation class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
+                 "</container>");
+
+         PicoContainer pico = buildContainer(script);
+         
+         ListSupport listSupport = (ListSupport)pico.getComponentInstanceOfType(ListSupport.class);
+
+         assertNotNull(listSupport);
+         assertNotNull(listSupport.getAListOfEntityObjects());
+         assertEquals(2, listSupport.getAListOfEntityObjects().size());
+
+         Entity entity1 = (Entity)listSupport.getAListOfEntityObjects().get(0);
+         Entity entity2 = (Entity)listSupport.getAListOfEntityObjects().get(1);
+         
+         assertNotNull(entity1);
+         assertEquals(CustomerEntityImpl.class, entity1.getClass());
+         
+         assertNotNull(entity2);
+         assertEquals(OrderEntityImpl.class, entity2.getClass());
+     }
+    
+    public void testNoEmptyCollectionWithComponentKeyTypeFailure() {
+
+        Reader script = new StringReader("" +
+                 "<container>\n" +
+                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
+                "       <parameter empty-collection='false' component-key-type='"+Entity.class.getName()+"'/>" +
+                "   </component-implementation>" +               
+                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
+                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
+                 "</container>");
+
+        try {
+            buildContainer(script);
+            fail("Thrown " + PicoException.class.getName() + " expected");
+        } catch (final PicoException e) {
+            assertTrue(e.getMessage().indexOf("one or both of the emptyCollection")>0);
+        }
+     }
+    
+    public void testNoComponentValueTypeWithComponentKeyTypeFailure() {
+
+        Reader script = new StringReader("" +
+                 "<container>\n" +
+                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
+                "       <parameter component-value-type='"+Entity.class.getName()+"' component-key-type='"+Entity.class.getName()+"'/>" +
+                "   </component-implementation>" +               
+                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
+                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
+                 "</container>");
+
+        try {
+            buildContainer(script);
+            fail("Thrown " + PicoException.class.getName() + " expected");
+        } catch (final PicoException e) {
+            assertTrue(e.getMessage().indexOf("but one or both of the emptyCollection")>0);
+        }
+     }   
+    
+    public void testNoEmptyCollectionWithComponentValueTypeFailure() {
+
+        Reader script = new StringReader("" +
+                 "<container>\n" +
+                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
+                "       <parameter component-value-type='"+Entity.class.getName()+"'/>" +
+                "   </component-implementation>" +               
+                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
+                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
+                 "</container>");
+
+        try {
+            buildContainer(script);
+            fail("Thrown " + PicoException.class.getName() + " expected");
+        } catch (final PicoException e) {
+            System.out.println(e);
+            
+            assertTrue(e.getMessage().indexOf("but the emptyCollection () was empty or null")>0);
+        }
+     }
 
     private PicoContainer buildContainer(Reader script) {
         return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");

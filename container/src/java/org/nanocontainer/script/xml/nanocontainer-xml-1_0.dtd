@@ -173,6 +173,28 @@
 <!ATTLIST parameter key CDATA #IMPLIED>
 
 <!--
+    Parameters may specify whether empty-collections are allowed or not.  This is used, for example, in this constructor:
+    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(boolean)
+-->
+<!ATTLIST parameter empty-collection CDATA #IMPLIED>
+
+<!--
+    Parameters may specify the component's type.  This is used, for example, in this constructor:
+    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(java.lang.Class,%20boolean)
+    
+    If this is specified, the empty-collection attribute must also be specified.
+-->
+<!ATTLIST parameter component-value-type CDATA #IMPLIED>
+
+<!--
+    Parameters may specify the component adapter's key type.  This is used in this constructor:
+    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(java.lang.Class,%20java.lang.Class,%20boolean)
+    
+    If this is specified, both empty-collection and component-value-type attributes must also be specified.
+-->
+<!ATTLIST parameter component-key-type CDATA #IMPLIED>
+
+<!--
     Defines the parameter element used by the NanoContainer
     default org.nanocontainer.script.xml.XMLComponentInstanceFactory.
 -->
