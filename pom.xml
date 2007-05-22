@@ -47,9 +47,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/tags/nanocontainer-1_1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/tags/nanocontainer-1_1</developerConnection>
-        <url>https://svn.codehaus.org/picocontainer/java/nanocontainer/tags/nanocontainer-1_1</url>
+        <connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</developerConnection>
+        <url>http://fisheye.codehaus.org/browse/picocontainer/java/nanocontainer/trunk</url>
     </scm>
 
     <repositories>
@@ -148,11 +148,13 @@
                 <groupId>${pom.groupId}</groupId>
                 <artifactId>nanocontainer-tck</artifactId>
                 <version>${pom.version}</version>
+	            <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>${pom.groupId}</groupId>
                 <artifactId>nanocontainer-testmodel</artifactId>
                 <version>${pom.version}</version>
+				<scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>${pom.groupId}</groupId>
@@ -163,11 +165,13 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>3.8.1</version>
+            	<scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>jmock</groupId>
                 <artifactId>jmock</artifactId>
                 <version>1.0.1</version>
+            	<scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>proxytoys</groupId>
@@ -181,17 +185,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.picocontainer</groupId>
             <artifactId>picocontainer-tck</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>proxytoys</groupId>
@@ -279,6 +280,7 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <workingDirectory>${basedir}</workingDirectory>
+                    <useFile>false</useFile>
                     <systemProperties>
                         <property>
                             <name>test.src.dir</name>
