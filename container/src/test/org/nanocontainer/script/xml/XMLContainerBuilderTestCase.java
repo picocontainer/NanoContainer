@@ -768,7 +768,38 @@ public class XMLContainerBuilderTestCase extends AbstractScriptedContainerBuilde
          assertNotNull(entity2);
          assertEquals(OrderEntityImpl.class, entity2.getClass());
      }
-    
+
+    public void testMapSupport() {
+
+        Reader script = new StringReader("" +
+                "<container>\n" +
+                "   <component-implementation class='" + MapSupport.class.getName() + "'>" +
+                "       <parameter empty-collection='false' component-value-type='" + Entity.class.getName() + "'/>" +
+                "   </component-implementation>" +
+                "   <component-implementation key='customer' class=\'" + CustomerEntityImpl.class.getName() + "\'/>" +
+                "   <component-implementation key='order' class=\'" + OrderEntityImpl.class.getName() + "\'/>" +
+                "</container>");
+
+        PicoContainer pico = buildContainer(script);
+
+        MapSupport mapSupport = (MapSupport) pico.getComponentInstanceOfType(MapSupport.class);
+
+        assertNotNull(mapSupport);
+        assertNotNull(mapSupport.getAMapOfEntities());
+        assertEquals(2, mapSupport.getAMapOfEntities().size());
+
+        Map aMapOfEntities = mapSupport.getAMapOfEntities();
+
+        Entity entity1 = (Entity) aMapOfEntities.get("customer");
+        Entity entity2 = (Entity) aMapOfEntities.get("order");
+
+        assertNotNull(entity1);
+        assertEquals(CustomerEntityImpl.class, entity1.getClass());
+
+        assertNotNull(entity2);
+        assertEquals(OrderEntityImpl.class, entity2.getClass());
+    }
+
     public void testNoEmptyCollectionWithComponentKeyTypeFailure() {
 
         Reader script = new StringReader("" +
