@@ -14,7 +14,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Collections;
 
-import org.jruby.IRuby;
+import org.jruby.Ruby;
 import org.jruby.exceptions.RaiseException;
 import org.jruby.javasupport.JavaEmbedUtils;
 import org.jruby.runtime.builtin.IRubyObject;
@@ -62,7 +62,7 @@ public class JRubyContainerBuilder extends ScriptedContainerBuilder {
         }
         parentContainer = new DefaultNanoPicoContainer(getClassLoader(), parentContainer);
 
-        IRuby ruby = JavaEmbedUtils.initialize(Collections.EMPTY_LIST);
+        Ruby ruby = JavaEmbedUtils.initialize(Collections.EMPTY_LIST);
         ruby.getLoadService().require("org/nanocontainer/script/jruby/nanobuilder");
         ruby.defineReadonlyVariable("$parent", JavaEmbedUtils.javaToRuby(ruby, parentContainer));
         ruby.defineReadonlyVariable("$assembly_scope", JavaEmbedUtils.javaToRuby(ruby, assemblyScope));

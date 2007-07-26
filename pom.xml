@@ -40,16 +40,16 @@
     <licenses>
         <license>
             <url>
-                https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk/LICENSE.txt
+                https://svn.codehaus.org/picocontainer/java/1.x/nanocontainer/trunk/LICENSE.txt
             </url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/nanocontainer/trunk</developerConnection>
-        <url>http://fisheye.codehaus.org/browse/picocontainer/java/nanocontainer/trunk</url>
+        <connection>scm:svn:https://svn.codehaus.org/picocontainer/java/1.x/nanocontainer/trunk/</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/1.x/nanocontainer/trunk/</developerConnection>
+        <url>http://fisheye.codehaus.org/browse/picocontainer/java/1.x/nanocontainer/trunk/</url>
     </scm>
 
     <repositories>
@@ -84,7 +84,7 @@
         <pluginRepository>
             <id>codehaus-plugin-snapshots-repository</id>
             <name>Codehaus Plugin Snapshots Repository</name>
-            <url>http://snapshots.maven.codehaus.org/maven2/</url>
+            <url>http://snapshots.repository.codehaus.org</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -170,7 +170,7 @@
             <dependency>
                 <groupId>jmock</groupId>
                 <artifactId>jmock</artifactId>
-                <version>1.0.1</version>
+                <version>1.2.0</version>
             	<scope>test</scope>
             </dependency>
             <dependency>
