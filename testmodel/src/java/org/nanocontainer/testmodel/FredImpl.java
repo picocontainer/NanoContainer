@@ -10,14 +10,15 @@
 
 package org.nanocontainer.testmodel;
 
-import junit.framework.Assert;
 
 public class FredImpl {
     Wilma wilma;
 
     public FredImpl(Wilma wilma) {
         this.wilma = wilma;
-        Assert.assertNotNull("Wilma cannot be passed in as null", wilma);
+		if (wilma == null) {
+			throw new NullPointerException("Wilma cannot be passed in as null");
+		}
         wilma.hello();
     }
 

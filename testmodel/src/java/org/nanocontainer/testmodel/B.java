@@ -1,6 +1,5 @@
 package org.nanocontainer.testmodel;
 
-import junit.framework.Assert;
 
 
 /**
@@ -10,7 +9,9 @@ public class B extends X {
     public A a;
 
     public B(A a) {
-        Assert.assertNotNull(a);
+		if (a == null) {
+			throw new NullPointerException("a");
+		}
         this.a = a;
     }
 
