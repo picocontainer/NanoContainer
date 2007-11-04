@@ -24,9 +24,9 @@
             <scope>integration-test</scope>
         </dependency>
         <dependency>
-            <groupId>groovy</groupId>
+            <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.1-beta-2</version>
+            <version>1.1-rc-2</version>
             <scope>integration-test</scope>
         </dependency>
         <dependency>
@@ -108,7 +108,7 @@
                                     <artifactId>nanocontainer-groovy</artifactId>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>groovy</groupId>
+                                    <groupId>org.codehaus.groovy</groupId>
                                     <artifactId>groovy-all</artifactId>
                                 </artifactItem>
                             </artifactItems>
