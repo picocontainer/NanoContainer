@@ -13,57 +13,46 @@
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>nanocontainer</artifactId>
-			<version>${pom.version}</version>
 		</dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-aop</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-bsh</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-groovy</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-jruby</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-jython</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-rhino</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-tck</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-booter</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-deployer</artifactId>
-            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>nanocontainer-webcontainer</artifactId>
-            <version>${pom.version}</version>
         </dependency>
 	</dependencies>
 	<build>
