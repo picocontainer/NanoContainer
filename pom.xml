@@ -3,7 +3,7 @@
 	<groupId>org.nanocontainer</groupId>
 	<artifactId>nanocontainer-parent</artifactId>
 	<name>NanoContainer Parent</name>
-	<version>1.1.2</version>
+	<version>1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>http://www.nanocontainer.org</url>
 
@@ -47,9 +47,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/1.x/nanocontainer/tags/nanocontainer-1.1.2</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/1.x/nanocontainer/tags/nanocontainer-1.1.2</developerConnection>
-		<url>http://fisheye.codehaus.org/browse/picocontainer/java/1.x/nanocontainer/tags/nanocontainer-1.1.2</url>
+		<connection>scm:svn:https://svn.codehaus.org/picocontainer/java/1.x/nanocontainer/trunk/</connection>
+		<developerConnection>scm:svn:https://svn.codehaus.org/picocontainer/java/1.x/nanocontainer/trunk/</developerConnection>
+		<url>http://fisheye.codehaus.org/browse/picocontainer/java/1.x/nanocontainer/trunk/</url>
 	</scm>
 
 	<repositories>
@@ -132,64 +132,64 @@
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-tck</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-testmodel</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-booter</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-deployer</artifactId>
-                <version>1.1.2</version>
+                <version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-webcontainer</artifactId>
-                <version>1.1.2</version>
+                <version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-aop</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-bsh</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-groovy</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-jruby</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-jython</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>${pom.groupId}</groupId>
 				<artifactId>nanocontainer-rhino</artifactId>
-				<version>1.1.2</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
