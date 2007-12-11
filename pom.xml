@@ -271,45 +271,47 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
+			  <inherited>true</inherited>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-source-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <id>attach-sources</id>
+			      <goals>
+			        <goal>jar</goal>
+			      </goals>
+			    </execution>
+			  </executions>
 			</plugin>
 			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<links>
-						<link>
-							http://java.sun.com/j2se/1.4.2/docs/api/
-						</link>
-						<link>
-							http://proxytoys.codehaus.org/apidocs/
-						</link>
-					</links>
-					<stylesheet>maven</stylesheet>
-					<header>
-						<![CDATA[<img class="logo" src="http://www.nanocontainer.org/images/pico-logo.png"></img>]]>
-					</header>
-					<linksource>true</linksource>
-				</configuration>
+              <inherited>true</inherited>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-jar-plugin</artifactId>
+			  <version>2.1</version>
+			</plugin>
+			<plugin>
+			  <inherited>true</inherited>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-javadoc-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <id>attach-javadocs</id>
+			      <goals>
+			        <goal>jar</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			  <configuration>
+			    <links>
+			      <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+			      <link>http://proxytoys.codehaus.org/apidocs/</link>
+			    </links>
+			    <stylesheet>maven</stylesheet>
+			    <header>
+			      <![CDATA[<img class="logo" src="http://www.nanocontainer.org/images/pico-logo.png"></img>]]>
+			    </header>
+			    <linksource>true</linksource>
+			  </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
